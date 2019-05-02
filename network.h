@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include "neural.h"
 
 
 class Network
@@ -10,19 +11,21 @@ class Network
 public:
 	Network();
 	~Network();
-	void train();
-	void test()
-	void weights();
-	void loadweights();
+	//void train();
+	//void test()
+	//void weights();
+	//void loadweights();
 	//training data set
-	float *input;
-	float *output;
+	//float *input;
+	//float *output;
+	//void layer();
+	void middleLayer();
 
 private:
-	void inputLayer();
-	void outputLayer();
-	void middleLayer();
-	Neural * neuronptr;
+	//void inputLayer();
+	//void outputLayer();
+	//void middleLayer();
+	Neural ** neuronptr;
 
 
 };

@@ -15,9 +15,9 @@ public:
 protected:
 	float *x;
 	float *error;
-	void Normalize(Neural * neuronptr);
-	float findMin();
-	float findMax();
+	//void Normalize(Neural * neuronptr);
+	//float findMin();
+	//float findMax();
 
 };
 
