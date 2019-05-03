@@ -67,6 +67,8 @@ bool Network::setConfig(std::string constname, float value)
 	std::cout << "constname" << constname << std::endl;
 	if (constname == "ON")
 	{
+		//THIS IS TEMPORARY WHILE I GET CODE TO CONVERT TO STRING TO FLOAT
+		inNodes = 3;
 		on = value;
 		std::cout << "on " << on << std::endl;
 		return true;
@@ -80,5 +82,13 @@ bool Network::setConfig(std::string constname, float value)
 	//else if (constname == "ONSOFT")
 		//setConfig(constvalue);
 	//return value;
+
+}
+
+void Network::inputLayer()
+{
+	//nptr = new inNeuron[inNodes];
+	//inNeuron(inNodes);
+	std::cout << "inNOdes " << inNodes << std::endl;
 
 }

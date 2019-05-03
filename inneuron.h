@@ -8,10 +8,11 @@
 class inNeuron : public Neural
 {
 public:
-
+	inNeuron();
+	~inNeuron();
 
 private:
-
+	//int nodenum;
 
 };
 

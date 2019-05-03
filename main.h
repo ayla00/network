@@ -3,6 +3,7 @@
 
 
 #include "network.h"
+#include <bits/stdc++.h>
 
 void readConfigFile(std::ifstream &cfile, std::string configfile);
 //void readDataFile(std::ifstream &dfile, std::string datafile);

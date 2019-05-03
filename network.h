@@ -9,6 +9,7 @@
 #include <math.h>
 #include "neural.h"
 #include "midneuron.h"
+#include "inneuron.h"
 
 
 class Network
@@ -28,11 +29,23 @@ public:
 	bool setConfig(std::string constname, float value);
 
 private:
-	//void inputLayer();
+	void inputLayer();
 	//void outputLayer();
 	//void middleLayer();
 	//Neural ** neuronptr;
+	//Neural *nptr; //has same name as a pointer in Neural, change it
+	int inNodes;
+	int midNodes;
+	int outNodes;
+	int maxEpoch;
 	float on;
+	float off;
+	float offSoft;
+	float onSoft;
+	float lr;
+	float ee;
+	float **inputData;
+	float **outputData;
 
 };
 

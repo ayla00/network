@@ -200,19 +200,47 @@ bool getConfig(std::string extract, Network & extractconfig)
 		//	}
 			//else
 			//{
-				cfgdata += extract[i];
+				cfgdata += extract[j];
+
 				std::cout << "extract " << cfgdata << std::endl;
 			}
 
 		}
 	}
+		//std::string orbits("686.97 365.24");
+		//std::string::size_type sz;     // alias of size_t
+		//std::size_t size = cfgdata.size();
+		//std::size_t* idx = &size;
+		//std::string orbits = cfgdata + "  " + "2.5";
+		//float mars = std::stof(orbits, &sz);
+		//float mars = std::stof(orbits, &sz);
+	//std::string orbits("ON 365.24");
+	//std::string orbits[2];
+	//orbits[0] = "686.97";
+	//orbits[1] = "365.24";
+	std::string test = cfgdata + " 2.5";
+	std::string test2 = test;
+	std::string orbits = test;
+	std::string::size_type sz;     // alias of size_t
 
+	//std::string orbits = "2.3 2.3";
+	float mars = std::stof(orbits, &sz);
+	float earth = std::stof(orbits.substr(sz));
+	std::cout << "mars " << mars << std::endl;
+	std::cout << "earth " << earth << std::endl;
+	std::cout << "One martian year takes " << (mars / earth) << " Earth years.\n";
+	
+	//std::size_t* pos;
 		std::cout << "inputconstant " << inputconstant << std::endl;
 		std::cout << "you are in getConfig\n";
-		//configdata = stof(cfgdata); //check this variables too
-		//configdata = cfgdata;
-
-		if (assignConstant(inputconstant, 1.5, extractconfig))
+		//configdata = std::strtof(cfgdata); //check this variables too
+		std::cout << "configdata " << configdata << std::endl;
+		std::cout << "configdata " << cfgdata.size() << std::endl;
+		//configdata = stof(cfgdata, cfgdata.substr(sz));
+		//configdata = std::stof(orbits, &sz);
+		//float earth = std::stof(orbits.substr(sz));
+		
+		if (assignConstant(inputconstant, 1.0, extractconfig))
 			return true;
 		else
 			return false;
