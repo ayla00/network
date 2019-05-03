@@ -57,3 +57,8 @@ void Network::middleLayer()
 
 
 }
+
+const float Network::getConfig(const float value)
+{
+	return value;
+}

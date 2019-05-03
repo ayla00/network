@@ -9,7 +9,7 @@ class midNeuron : public Neural
 {
 public:
 
-protected:
+private:
 	
 
 
