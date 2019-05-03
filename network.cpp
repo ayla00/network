@@ -49,4 +49,11 @@ void Network::middleLayer()
 			}
 
 	}
+
+	Neural neural;
+	midNeuron mid;
+	mid.x;
+	neural.x;
+
+
 }

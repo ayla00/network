@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "neural.h"
+#include "midneuron.h"
 
 
 class Network
