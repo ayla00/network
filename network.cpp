@@ -2,7 +2,8 @@
 
 Network::Network()
 {
-	neuronptr = new Neural*[3];
+	//on = setConfig(value);
+	//neuronptr = new Neural*[3];
 }
 
 Network::~Network()
@@ -11,6 +12,7 @@ Network::~Network()
 	//neuronptr = nullptr;
 }
 
+/*
 void Network::middleLayer()
 {
 	/*
@@ -32,7 +34,7 @@ void Network::middleLayer()
 	*/
 
 	//neuronptr = new midNeuron*[6];
-
+/*
 	for (int j = 0; j < 3; j++)
 	{
 			std::cout << " * * * * * * * \n";
@@ -57,8 +59,26 @@ void Network::middleLayer()
 
 
 }
+*/
 
-const float Network::getConfig(const float value)
+bool Network::setConfig(std::string constname, float value)
 {
-	return value;
+	std::cout << "you are in setCOnfig\n";
+	std::cout << "constname" << constname << std::endl;
+	if (constname == "ON")
+	{
+		on = value;
+		std::cout << "on " << on << std::endl;
+		return true;
+	}
+	else
+		return false;
+	//else if (constname == "OFF")
+	//	;
+//	else if (constname == "OFFSOFT")
+	//	setConfig(constvalue);
+	//else if (constname == "ONSOFT")
+		//setConfig(constvalue);
+	//return value;
+
 }

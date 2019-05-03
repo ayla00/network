@@ -24,15 +24,15 @@ public:
 	//float *input;
 	//float *output;
 	//void layer();
-	void middleLayer();
-	const float getConfig(const float value);
+	//void middleLayer();
+	bool setConfig(std::string constname, float value);
 
 private:
 	//void inputLayer();
 	//void outputLayer();
 	//void middleLayer();
-	Neural ** neuronptr;
-	const float ON = getconfig(const float value);
+	//Neural ** neuronptr;
+	float on;
 
 };
 

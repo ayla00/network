@@ -6,9 +6,9 @@ void readConfigFile(std::ifstream &cfile, std::string configfile)
 	int linenumber;
 	std::string textline;
 	int count = 0;
-	inputfile.open(configfile);
+	cfile.open(configfile);
 
-	if (inputfile.is_open())
+	if ((cfile.is_open()))
 	{
 		//linenumber = countLines(inputfile);
 		//puts file at the beginning again so it can be re-read
@@ -16,18 +16,19 @@ void readConfigFile(std::ifstream &cfile, std::string configfile)
 
 		Network info;
 
-		while (getline(inputfile, textline))
+		while (getline(cfile, textline))
 		{
+			std::cout << "line " << textline << std::endl;
 			//reads number of lines
-			if (!textline.empty())
-			{
-				if (getInfo(textline, info) == true)
+			//if (!textline.empty())
+			//{
+				if (getConfig(textline, info) == true)
 					count += 1;
 				else
 					count = count;
-			}
-			else
-				count = count;
+			//}
+			//else
+			//	count = count;
 		}
 
 
@@ -37,8 +38,8 @@ void readConfigFile(std::ifstream &cfile, std::string configfile)
 		}
 
 
-		info.printList();
-		std::cout << "\n\ntotal entries:\t" << info.CountEntries() << std::endl;
+		//info.printList();
+		//std::cout << "\n\ntotal entries:\t" << info.CountEntries() << std::endl;
 
 	}
 	else
@@ -47,9 +48,10 @@ void readConfigFile(std::ifstream &cfile, std::string configfile)
 		std::cout << "please enter a correct filename\n";
 	}
 
-	inputfile.close();
+	cfile.close();
 }
 
+/*
 void readDataFile(std::ifstream & dfile, std::string datafile)
 {
 	int linenumber;
@@ -160,6 +162,7 @@ bool getData(std::string extract, Network & extractdata)
 	}
 
 }
+*/
 
 bool getConfig(std::string extract, Network & extractconfig)
 {
@@ -171,35 +174,45 @@ bool getConfig(std::string extract, Network & extractconfig)
 	std::string inputconstant = "";
 	std::string cfgdata = "";
 
-	Network getconfig;
-
+	//Network getconfig;
+	std::cout << "extract string " << extract << std::endl;
 	for (int i = 0; i < LINESIZE; i++)
 	{
 		//takes care of constant name
 		if (extract[i] != ' ')  //maybe add != '\n'
 		{
-			inputconstant += extract[i]; 
+			inputconstant += extract[i];
 		}
 		else
 		{
-
+			for (int j = i + 1; j < LINESIZE; j++ )
+			{ 
+				i = LINESIZE; //to prevent code going through loop again
 			//checks for alphabet characters in number input
 			//assigns number value to constant
-			if ((extract[i] >= -1) && (extract[i] <= 255))
-			{
-				alphacheck = extract[i];
-				if (!isalpha(alphacheck))
-					cfgdata += extract[i];
-				else
-					throw NOTANUMBER;
-			}
-			else
+			//if ((extract[i] >= -1) && (extract[i] <= 255))
+			//{
+			//	alphacheck = extract[i];
+			//	if (!isalpha(alphacheck))
+			//		cfgdata += extract[i];
+			//	else
+			//		throw NOTANUMBER;
+		//	}
+			//else
+			//{
 				cfgdata += extract[i];
+				std::cout << "extract " << cfgdata << std::endl;
+			}
+
 		}
+	}
 
-		cfgdata = stof(input); //check this variables too
+		std::cout << "inputconstant " << inputconstant << std::endl;
+		std::cout << "you are in getConfig\n";
+		//configdata = stof(cfgdata); //check this variables too
+		//configdata = cfgdata;
 
-		if (assignConstant(inputconstant, cfgdata))
+		if (assignConstant(inputconstant, 1.5, extractconfig))
 			return true;
 		else
 			return false;
@@ -229,21 +242,19 @@ bool getConfig(std::string extract, Network & extractconfig)
 
 			}
 			*/
-		}
-	}
+		
+	
 
 }
 
-void assignConstat(std::string constname, float constvalue)
+bool assignConstant(std::string constname, float constvalue, Network &extractconfig)
 {
-	Network netconst;
-	if (constname == 'ON')
-		netconst.getConfig(constvalue);
-	else if (constname == 'OFF')
-		netconst.getConfig(constvalue);
-	else if (constname == 'OFFSOFT')
-		netconst.getConfig(constvalue);
-	else if (constname == 'ONSOFT')
-		netconst.getConfig(constvalue);
+	//Network netconst;
+	std::cout << "constname " << constname << "\t constvalue " << constvalue << std::endl;
+
+	if (extractconfig.setConfig(constname, constvalue))
+		return true;
+	else
+		return false;
 
 }
