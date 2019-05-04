@@ -208,42 +208,29 @@ bool getConfig(std::string extract, Network & extractconfig)
 
 		}
 	}
-		//std::string orbits("686.97 365.24");
-		//std::string::size_type sz;     // alias of size_t
-		//std::size_t size = cfgdata.size();
-		//std::size_t* idx = &size;
-		//std::string orbits = cfgdata + "  " + "2.5";
-		//float mars = std::stof(orbits, &sz);
-		//float mars = std::stof(orbits, &sz);
-	//std::string orbits("ON 365.24");
-	//std::string orbits[2];
-	//orbits[0] = "686.97";
-	//orbits[1] = "365.24";
-	
+
 	std::string dummystring = " 2.5";
 	std::string trickextract = cfgdata + dummystring;
 	std::string::size_type sz;     // alias of size_t
 
-	//std::string orbits = "2.3 2.3";
+	//VALUE OF EE IS GETTING TRUNCATED (AT LEAST ON DISPLAY), FIX THIS LATER
 	float actualdata = std::stof(trickextract, &sz);
 	float dummyfloat = std::stof(trickextract.substr(sz));
 	std::cout << "config data " << actualdata << std::endl;
 	std::cout << "dummy # " << dummyfloat << std::endl;
 	
-	//std::size_t* pos;
 		std::cout << "inputconstant " << inputconstant << std::endl;
-		std::cout << "you are in getConfig\n";
-		//configdata = std::strtof(cfgdata); //check this variables too
-		std::cout << "configdata " << configdata << std::endl;
-		std::cout << "configdata " << cfgdata.size() << std::endl;
-		//configdata = stof(cfgdata, cfgdata.substr(sz));
-		//configdata = std::stof(orbits, &sz);
-		//float earth = std::stof(orbits.substr(sz));
-		
-		if (assignConstant(inputconstant, 1.0, extractconfig))
+
+		if (assignConstant(inputconstant, actualdata, extractconfig))
+		{
+			extractconfig.displayVariables();
 			return true;
+		}
 		else
 			return false;
+
+
+		
 
 			//getinfo.id = alphacheck; CHANGE THIS TO NAME OF INPUT FOR NETWORK
 
@@ -283,6 +270,11 @@ bool assignConstant(std::string constname, float constvalue, Network &extractcon
 	if (extractconfig.setConfig(constname, constvalue))
 		return true;
 	else
+	{
+		std::cout << "am i in else?\n";
 		return false;
+
+	}
+		
 
 }

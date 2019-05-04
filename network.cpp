@@ -8,6 +8,7 @@ Network::Network()
 
 Network::~Network()
 {
+	std::cout << "you are out of network\n";
 	//delete[] neuronptr;
 	//neuronptr = nullptr;
 }
@@ -63,26 +64,47 @@ void Network::middleLayer()
 
 bool Network::setConfig(std::string constname, float value)
 {
-	std::cout << "you are in setCOnfig\n";
-	std::cout << "constname" << constname << std::endl;
+	bool returnvalue = true;
+
 	if (constname == "ON")
-	{
-		//THIS IS TEMPORARY WHILE I GET CODE TO CONVERT TO STRING TO FLOAT
-		inNodes = 3;
 		on = value;
-		std::cout << "on " << on << std::endl;
-		return true;
-	}
+	else if (constname == "OFF")
+		off = value;
+	else if (constname == "OFFSOFT")
+		offSoft = value;
+	else if (constname == "ONSOFT")
+		onSoft = value;
+	else if (constname == "I_UNITS")
+		inNodes = value;
+	else if (constname == "H_UNITS")
+		midNodes = value;
+	else if (constname == "O_UNITS")
+		outNodes = value;
+	else if (constname == "MAX_EPOCH")
+		maxEpoch = value;
+	else if (constname == "LR")
+		lr = value;
+	else if (constname == "EE")
+		ee = value;
 	else
 		return false;
-	//else if (constname == "OFF")
-	//	;
-//	else if (constname == "OFFSOFT")
-	//	setConfig(constvalue);
-	//else if (constname == "ONSOFT")
-		//setConfig(constvalue);
-	//return value;
 
+	return returnvalue; //maybe just return true here instead of using variable
+}
+
+void Network::displayVariables()
+{
+	std::cout << "on " << on << std::endl;
+	std::cout << "off " << off << std::endl;
+	std::cout << "offsoft " << offSoft << std::endl;
+	std::cout << "onsoft " << onSoft << std::endl;
+	std::cout << "i units " << inNodes << std::endl;
+	std::cout << "h units " << midNodes << std::endl;
+	std::cout << "o units " << outNodes << std::endl;
+	std::cout << "max epoch " << maxEpoch << std::endl;
+	std::cout << "lr " << lr << std::endl;
+	std::cout << "ee " << ee << std::endl;
+	
 }
 
 void Network::inputLayer()

@@ -27,6 +27,7 @@ public:
 	//void layer();
 	//void middleLayer();
 	bool setConfig(std::string constname, float value);
+	void displayVariables();
 
 private:
 	void inputLayer();
