@@ -130,9 +130,9 @@ void Network::inputLayer()
 	
 	for (int j = 0; j < inNodes; j++)
 	{
-		for (int k = 0; k < rows; k++)
+		for (int k = 0; k < row; k++)
 		{
-			*(nnptr + j) = inputData[j][k]; //if this won't work, try *inputData[][]
+			(nnptr + j)->x = inputData[j][k];// *((inputData + j) + k); //if this won't work, try *inputData[][]
 		}
 		
 	}

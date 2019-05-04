@@ -12,7 +12,7 @@ inNeuron::~inNeuron()
 	//nptr = nullptr;
 }
 
-void inNeuron::setInput(Neural * setptr)
+void inNeuron::setInput(inNeuron * setptr)
 {
 	netptr->;
 }

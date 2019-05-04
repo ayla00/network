@@ -10,7 +10,7 @@ class inNeuron : public Neural
 public:
 	inNeuron();
 	~inNeuron();
-	void setInput(Neural *setptr); //maybe change pointer type to inNeural * setptr
+	void setInput(inNeuron *setptr); //maybe add override
 private:
 	//int nodenum;
 

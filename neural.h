@@ -8,7 +8,7 @@
 class Neural
 {
 public:
-	Neural(float **inputvalues);
+	Neural();
 	~Neural();
 	float getx();
 	float geterror();

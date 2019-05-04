@@ -8,6 +8,8 @@
 class midNeuron : public Neural
 {
 public:
+	midNeuron();
+	~midNeuron();
 
 private:
 	
