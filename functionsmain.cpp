@@ -107,7 +107,7 @@ bool getData(std::string extract, Network & extractdata)
 	int alphacheck; //used to check for alphabet characther and to convert string to int;
 	bool returnvalue = false;
 	const int LINESIZE = extract.size();
-
+	int count = 0;
 	std::string input = "";
 	std::string otherdata = "";
 
@@ -151,9 +151,20 @@ bool getData(std::string extract, Network & extractdata)
 					//getinfo.data = checkCharLimit(palabra);
 
 					if (extractdata.add(getdata.id, getdata.data))
+					{
+						count = count + 1;
 						returnvalue = true;
+					}
 					else
 						returnvalue = false;
+
+
+					if (count%2 != 0)
+					{
+						throw UNEVENPAIRNUM;
+					}
+					else
+
 
 					return returnvalue; //code must be here to exit
 				}
@@ -270,11 +281,6 @@ bool assignConstant(std::string constname, float constvalue, Network &extractcon
 	if (extractconfig.setConfig(constname, constvalue))
 		return true;
 	else
-	{
-		std::cout << "am i in else?\n";
 		return false;
-
-	}
-		
 
 }

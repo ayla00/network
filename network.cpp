@@ -9,8 +9,8 @@ Network::Network()
 Network::~Network()
 {
 	std::cout << "you are out of network\n";
-	//delete[] neuronptr;
-	//neuronptr = nullptr;
+	delete[] nnptr;
+	nnptr = nullptr;
 }
 
 /*
@@ -107,10 +107,34 @@ void Network::displayVariables()
 	
 }
 
+bool Network::setInArrayNumbers(int inrow, int incolumn)
+{
+	row = inrow;
+	column = incolumn;
+	return false;
+}
+
+int Network::getInputColumn()
+{
+	return column;
+}
+
+int Network::getInputRow()
+{
+	return row;
+}
+
 void Network::inputLayer()
 {
-	//nptr = new inNeuron[inNodes];
-	//inNeuron(inNodes);
-	std::cout << "inNOdes " << inNodes << std::endl;
+	nnptr = new inNeuron[inNodes];
+	
+	for (int j = 0; j < inNodes; j++)
+	{
+		for (int k = 0; k < rows; k++)
+		{
+			*(nnptr + j) = inputData[j][k]; //if this won't work, try *inputData[][]
+		}
+		
+	}
 
 }

@@ -2,10 +2,18 @@
 
 Neural::Neural()
 {
+	netptr = new Network;
 }
 
 Neural::~Neural()
 {
+	delete netptr;
+	netptr = nullptr;
+}
+
+void Neural::setx(Neural *setptr)
+{
+	setptr->x;
 }
 
 /*
@@ -14,7 +22,7 @@ float Neural::Normalize(float *x)
 	return ((*x - findMin()) / (findMax() - findMin()));
 }
 
-Neural::findMin()
+float Neural::findMin()
 {
 	float min = x[0];
 
@@ -29,7 +37,7 @@ Neural::findMin()
 	return min;
 }
 
-Neural::findMax()
+float Neural::findMax()
 {
 	float max = x[0];
 

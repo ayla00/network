@@ -3,18 +3,16 @@
 
 inNeuron::inNeuron()
 {
-	//nodenum(nodes);
-	//nptr = new inNeuron[nodenum];
-	/*
-	for (int n = 0; n < nodenum; n++)
-	{
-		(nptr + n)->x = 
-	}
-	*/
+	Neural();
 }
 
 inNeuron::~inNeuron()
 {
 	//delete[] nptr;
 	//nptr = nullptr;
+}
+
+void inNeuron::setInput(Neural * setptr)
+{
+	netptr->;
 }

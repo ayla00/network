@@ -28,13 +28,18 @@ public:
 	//void middleLayer();
 	bool setConfig(std::string constname, float value);
 	void displayVariables();
+	bool setInArrayNumbers(int inrow, int incolumn);
+	int getInputRow();
+	int getInputColumn();
 
 private:
 	void inputLayer();
 	//void outputLayer();
 	//void middleLayer();
 	//Neural ** neuronptr;
-	//Neural *nptr; //has same name as a pointer in Neural, change it
+	Neural *nnptr; //has same name as a pointer in Neural, change it
+	int row;
+	int column;
 	int inNodes;
 	int midNodes;
 	int outNodes;

@@ -11,5 +11,6 @@ void readConfigFile(std::ifstream &cfile, std::string configfile);
 bool getConfig(std::string extract, Network &extractconfig);
 const int NOTANUMBER = -999999;
 bool assignConstant(std::string constname, float constvalue, Network &extractconfig);
+const int UNEVENPAIRSNUM = -888888;
 
 #endif  //MAIN_H

@@ -3,16 +3,17 @@
 
 #include <iostream>
 #include <string>
-
+#include "network.h"
 
 class Neural
 {
 public:
-	Neural();
+	Neural(float **inputvalues);
 	~Neural();
 	float getx();
 	float geterror();
 	float getweights();
+	void setx();
 
 	int y;
 protected:
@@ -20,6 +21,7 @@ protected:
 	float *error;
 	float *weights;
 	Neural * nptr;
+	Network *netptr;
 	//float Normalize(float *x); // or Neural *neuronptr?
 	//float findMin();
 	//float findMax();
