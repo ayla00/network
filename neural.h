@@ -20,7 +20,7 @@ protected:
 	float *error;
 	float *weights;
 	Neural * nptr;
-	//void Normalize(Neural * neuronptr);
+	//float Normalize(float *x); // or Neural *neuronptr?
 	//float findMin();
 	//float findMax();
 

@@ -9,37 +9,38 @@ Neural::~Neural()
 }
 
 /*
-Neural::Normalize()
+float Neural::Normalize(float *x)
 {
+	return ((*x - findMin()) / (findMax() - findMin()));
+}
 
+Neural::findMin()
+{
+	float min = x[0];
 
-	Neural::findMin()
+	for (int j = 1; j < x.size; j++)
 	{
-		float min = x[0];
-
-		for (int j = 1; j < x.size; j++)
-		{
-			if (min < x[j])
-				min = min;
-			else
-				min = x[j];
-		}
-
-		return min;
+		if (min < x[j])
+			min = min;
+		else
+			min = x[j];
 	}
 
-	Neural::findMax()
+	return min;
+}
+
+Neural::findMax()
+{
+	float max = x[0];
+
+	for (int j = 1; j < x.size; j++)
 	{
-		float max = x[0];
-
-		for (int j = 1; j < x.size; j++)
-		{
-			if (max > x[j])
-				max = max;
-			else
-				max = x[j];
-		}
-
-		return max;
+		if (max > x[j])
+			max = max;
+		else
+			max = x[j];
 	}
-	*/
+
+	return max;
+}
+*/
