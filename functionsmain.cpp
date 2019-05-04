@@ -16,19 +16,20 @@ void readConfigFile(std::ifstream &cfile, std::string configfile)
 
 		Network info;
 
-		while (getline(cfile, textline))
+		while (getline(cfile, textline) && !cfile.eof())
 		{
 			std::cout << "line " << textline << std::endl;
-			//reads number of lines
-			//if (!textline.empty())
-			//{
+
+			//reads number of lines & takes care of emtpy lines as well, except eof
+			if (!textline.empty())
+			{
 				if (getConfig(textline, info) == true)
 					count += 1;
 				else
 					count = count;
-			//}
-			//else
-			//	count = count;
+			}
+			else
+				count = count;
 		}
 
 
@@ -179,7 +180,7 @@ bool getConfig(std::string extract, Network & extractconfig)
 	for (int i = 0; i < LINESIZE; i++)
 	{
 		//takes care of constant name
-		if (extract[i] != ' ')  //maybe add != '\n'
+		if (extract[i] != ' ') //maybe add != '\n'
 		{
 			inputconstant += extract[i];
 		}
@@ -218,17 +219,16 @@ bool getConfig(std::string extract, Network & extractconfig)
 	//std::string orbits[2];
 	//orbits[0] = "686.97";
 	//orbits[1] = "365.24";
-	std::string test = cfgdata + " 2.5";
-	std::string test2 = test;
-	std::string orbits = test;
+	
+	std::string dummystring = " 2.5";
+	std::string trickextract = cfgdata + dummystring;
 	std::string::size_type sz;     // alias of size_t
 
 	//std::string orbits = "2.3 2.3";
-	float mars = std::stof(orbits, &sz);
-	float earth = std::stof(orbits.substr(sz));
-	std::cout << "mars " << mars << std::endl;
-	std::cout << "earth " << earth << std::endl;
-	std::cout << "One martian year takes " << (mars / earth) << " Earth years.\n";
+	float actualdata = std::stof(trickextract, &sz);
+	float dummyfloat = std::stof(trickextract.substr(sz));
+	std::cout << "config data " << actualdata << std::endl;
+	std::cout << "dummy # " << dummyfloat << std::endl;
 	
 	//std::size_t* pos;
 		std::cout << "inputconstant " << inputconstant << std::endl;
