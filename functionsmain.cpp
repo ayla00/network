@@ -96,7 +96,7 @@ void readDataFile(std::ifstream & dfile, std::string datafile, Network * neta)
 
 		dfile.seekg(0); //returns file position to 0 to be read again
 		//dfile.clear(); //needed so file can be read again
-		
+
 		//this round gets data
 		while (getline(dfile, textline) && !dfile.eof())
 		{

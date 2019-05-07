@@ -1,17 +1,18 @@
 #include "network.h"
+#include "neural.h"
 
 Network::Network()
 {
-	nnptr = new Neural;
+	//nnptr = new Neural;
 	//on = setConfig(value);
-	//neuronptr = new Neural*[3];
+	//neuronptr = new Network;
 }
 
 Network::~Network()
 {
-	std::cout << "you are out of network\n";
-	//delete[] nnptr;
-	//nnptr = nullptr;
+	//std::cout << "you are out of network\n";
+	//delete neuronptr;
+	//neuronptr = nullptr;
 }
 
 /*
@@ -166,18 +167,17 @@ void Network::displayInput()
 	{
 		for (int k = 0; k < 2; k++)
 		{
-			//value = *(*(inputData + j) + k);
-			std::cout << "input " << *(*(inputData + j) + k) << std::endl;// *((inputData + j) + k); //if this won't work, try *inputData[][]
+			std::cout << "input " << *(*(inputData + j) + k) << std::endl;
 		}
 
 	}
 
 	for (int j = 0; j < 4; j++)
 	{
-		for (int k = 0; k < 2; k++)
-		{
-			std::cout << "output " << *(*(outputData + j) + k) << std::endl;// *((inputData + j) + k); //if this won't work, try *inputData[][]
-		}
+		//for (int k = 0; k < 2; k++)
+		//{
+		std::cout << "output " << *(*(outputData + j)) << std::endl;// *(*(outputData + j) + k);
+	//}
 
 	}
 }
@@ -195,6 +195,13 @@ void Network::setInputColumn(int num)
 	column = num;
 }
 
+void Network::loadLayers()
+{
+	std::cout << "in Nodes " << inNodes << std::endl;
+	std::cout << "you are in loadLayers\n";
+	inputLayer();
+}
+
 void Network::setInputRow(int num)
 {
 	row = num;
@@ -208,17 +215,8 @@ int Network::getInputRow()
 
 void Network::inputLayer()
 {
-	nnptr = new Neural[inNodes];
-
-	//nnptr->inNeuron.x;
-	/*
-	for (int j = 0; j < inNodes; j++)
-	{
-		for (int k = 0; k < 2; k++)//make dynamic
-		{
-			*(nnptr + j)-> // *((inputData + j) + k); //if this won't work, try *inputData[][]
-		}
-
-	}
-	*/
+	std::cout << "in Nodes " << inNodes << std::endl;
+	Neural neural(inNodes);
+	std::cout << "in Nodes " << neural.inNodes << std::endl;
+	neural.getInput();
 }

@@ -1,23 +1,50 @@
 #include "neural.h"
 
-Neural::Neural()
+Neural::Neural(int nodes)
 {
-	netptr = new Network;
+	innodes = nodes;
+	//Neural nnet;
+	//Network();
+	//netptr = new Network;
+	std::cout << "innodes " << innodes << std::endl;
+	//in.x = new float[inNodes];
+	//nptr = new Neural;
 }
 
 Neural::~Neural()
 {
-	delete netptr;
-	netptr = nullptr;
+	//delete netptr;
+	//netptr = nullptr;
+
+	//delete nptr;
+	//nptr = nullptr;
 }
 
-float Neural::loadInput()
+void Neural::getInput()
 {
-	inNeuron in;
+	std::cout << "in Nodes " << inNodes << std::endl;
+	std::cout << "you are in getInput\n";
 	in.x = new float[inNodes];
-	for (int k = 0; k < inNodes; k++)
+	for (int k = 0; k < 4; k++)
 	{
-		(in->x)->
+		for (int j = 0; j < inNodes; j++) //make this dynamic
+		{
+			*(in.x + k) = *(*(inputData + k) + j);
+			std::cout << *(in.x + k) << std::endl;
+		}
+
+
+	}
+
+	display(in.x); //erase this 
+}
+
+void Neural::display(float * values)
+{
+	for (int j = 0; j < inNodes; j++)
+	{
+		for (int k = 0; k < 4; k++) //make this dynamic
+			std::cout << "input " << *(in.x + k) << std::endl;
 	}
 }
 /*

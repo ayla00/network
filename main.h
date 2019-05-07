@@ -3,6 +3,7 @@
 
 
 #include "network.h"
+//#include "neural.h"
 
 
 void readConfigFile(std::ifstream &cfile, std::string configfile, Network * neta);

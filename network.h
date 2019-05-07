@@ -1,3 +1,10 @@
+/*
+Notes: cannot create a pointer to derived class here, compiler gives memory
+access violation when it tries to run; if a pointer is created in cpp file, and the
+pointer is declared as derived class, it won't grab the function from derived class
+
+*/
+
 #ifndef NETWORK_H
 #define NETWORK_H
 
@@ -7,9 +14,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
-#include "neural.h"
-//#include "midneuron.h"
-//#include "inneuron.h"
 
 
 class Network
@@ -26,7 +30,7 @@ public:
 	//float *output;
 	//void layer();
 	//void middleLayer();
-	void loadInput(int inrow, int incoloumn, float value);
+	virtual void loadInput(int inrow, int incoloumn, float value);
 	void loadOutput(int inrow, int incolumn, float value);
 	bool setConfig(std::string constname, float value);
 	void displayVariables();
@@ -35,15 +39,15 @@ public:
 	void setInputRow(int num);
 	int getInputRow();
 	void setInputColumn(int num);
-	//inNeuron * inptr;
+	void loadLayers();
+
 
 protected:
 	void inputLayer();
 	//void outputLayer();
 	//void middleLayer();
-	//Neural ** neuronptr;
-	Neural * nnptr; //has same name as a pointer in Neural, change it
-	//inNeuron * inptr;
+	//Network *neuronptr;
+	//Neural * nnptr; //has same name as a pointer in Neural, change it
 	int row;
 	int column;
 	int inNodes;
