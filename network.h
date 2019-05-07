@@ -9,7 +9,7 @@
 #include <math.h>
 #include "neural.h"
 //#include "midneuron.h"
-#include "inneuron.h"
+//#include "inneuron.h"
 
 
 class Network
@@ -35,14 +35,15 @@ public:
 	void setInputRow(int num);
 	int getInputRow();
 	void setInputColumn(int num);
+	//inNeuron * inptr;
 
-private:
+protected:
 	void inputLayer();
 	//void outputLayer();
 	//void middleLayer();
 	//Neural ** neuronptr;
 	Neural * nnptr; //has same name as a pointer in Neural, change it
-	//Neural * inptr;
+	//inNeuron * inptr;
 	int row;
 	int column;
 	int inNodes;

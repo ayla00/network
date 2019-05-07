@@ -10,6 +10,16 @@ Neural::~Neural()
 	delete netptr;
 	netptr = nullptr;
 }
+
+float Neural::loadInput()
+{
+	inNeuron in;
+	in.x = new float[inNodes];
+	for (int k = 0; k < inNodes; k++)
+	{
+		(in->x)->
+	}
+}
 /*
 void Neural::setx(Neural *setptr)
 {
