@@ -10,7 +10,7 @@ Neural::~Neural()
 	delete netptr;
 	netptr = nullptr;
 }
-
+/*
 void Neural::setx(Neural *setptr)
 {
 	setptr->x;

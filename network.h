@@ -8,7 +8,7 @@
 #include <time.h>
 #include <math.h>
 #include "neural.h"
-#include "midneuron.h"
+//#include "midneuron.h"
 #include "inneuron.h"
 
 
@@ -26,18 +26,23 @@ public:
 	//float *output;
 	//void layer();
 	//void middleLayer();
+	void loadInput(int inrow, int incoloumn, float value);
+	void loadOutput(int inrow, int incolumn, float value);
 	bool setConfig(std::string constname, float value);
 	void displayVariables();
-	bool setInArrayNumbers(int inrow, int incolumn);
+	void displayInput();
+	//bool setInArrayNumbers(int inrow, int incolumn);
+	void setInputRow(int num);
 	int getInputRow();
-	int getInputColumn();
+	void setInputColumn(int num);
 
 private:
 	void inputLayer();
 	//void outputLayer();
 	//void middleLayer();
 	//Neural ** neuronptr;
-	Neural *nnptr; //has same name as a pointer in Neural, change it
+	Neural * nnptr; //has same name as a pointer in Neural, change it
+	//Neural * inptr;
 	int row;
 	int column;
 	int inNodes;

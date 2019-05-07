@@ -2,6 +2,8 @@
 
 Network::Network()
 {
+	//inputData = new inputData*;
+	//outputData = nullptr;
 	//on = setConfig(value);
 	//neuronptr = new Neural*[3];
 }
@@ -9,8 +11,8 @@ Network::Network()
 Network::~Network()
 {
 	std::cout << "you are out of network\n";
-	delete[] nnptr;
-	nnptr = nullptr;
+	//delete[] nnptr;
+	//nnptr = nullptr;
 }
 
 /*
@@ -62,6 +64,88 @@ void Network::middleLayer()
 }
 */
 
+void Network::loadInput(int inrow, int incolumn, float value)
+{
+	if ((inrow == 0) && (incolumn == 0))
+	{
+		inputData = new float*[(row / 2)];
+		inputData[inrow] = new float[2];//make this dynamic next
+		std::cout << "row 1 " << inrow << std::endl;
+		std::cout << "col " << incolumn << std::endl;
+		std::cout << "value " << value << std::endl;
+	}
+	else if ((inrow != 0) && (incolumn == 0))
+	{
+		std::cout << "you are else if assing\n";
+		inputData[inrow] = new float[2];
+	}
+	/*else
+	{
+		std::cout << "row2 " << inrow << std::endl;
+		std::cout << "col " << incolumn << std::endl;
+		std::cout << "value " << value << std::endl;
+		std::cout << "pointer " << ((inputData + inrow) + incolumn) << std::endl;
+	}*/
+
+	std::cout << "row 1 " << inrow << std::endl;
+	std::cout << "col " << incolumn << std::endl;
+	//std::cout << "pointer value " << *((inputData + inrow) + incolumn) << std::endl;
+	*(*(inputData + inrow) + incolumn) = value;
+	std::cout << "value " << value << *(*(inputData + inrow) + incolumn) << std::endl;
+	if ((inrow == 3) && (incolumn == 1))
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			for (int k = 0; k < 2; k++)
+			{
+				//value = *(*(inputData + j) + k);
+				std::cout << "input " << *(*(inputData + j) + k) << std::endl;// *((inputData + j) + k); //if this won't work, try *inputData[][]
+			}
+
+		}
+	}
+
+
+}
+
+void Network::loadOutput(int inrow, int incolumn, float value)
+{
+	std::cout << "you are in load output\n";
+	std::cout << "row 1 " << inrow << std::endl;
+	std::cout << "col " << incolumn << std::endl;
+	std::cout << "value " << value << std::endl;
+	if ((inrow == 0) && (incolumn == 0))
+	{
+		std::cout << "you are in if loadoutput\n";
+		outputData = new float*[(row / 2)];
+		outputData[inrow] = new float[1]; //make this dynamic next, size of array is determined here, must be set at very beginning, no update
+		std::cout << "row 1 " << inrow << std::endl;
+		std::cout << "col " << incolumn << std::endl;
+		std::cout << "value " << value << std::endl;
+	}
+	else if ((inrow != 0) && (incolumn == 0))
+	{
+		std::cout << "you are else if assing\n";
+		outputData[inrow] = new float[1]; //make this dynamic next,
+		//inputData[inrow] = new float[incolumn];
+	}
+	/*else
+	{
+		std::cout << "row2 " << inrow << std::endl;
+		std::cout << "col " << incolumn << std::endl;
+		std::cout << "value " << value << std::endl;
+		std::cout << "pointer " << ((inputData + inrow) + incolumn) << std::endl;
+	}*/
+
+	//if ((outputData + inrow) + incolumn)
+	//std::cout << "pointer " << ((outputData + inrow) + incolumn) << std::endl;
+	*(*(outputData + inrow) + incolumn) = value;
+
+
+	//outputData[inrow][incolumn] = value;
+}
+
+
 bool Network::setConfig(std::string constname, float value)
 {
 	bool returnvalue = true;
@@ -104,19 +188,48 @@ void Network::displayVariables()
 	std::cout << "max epoch " << maxEpoch << std::endl;
 	std::cout << "lr " << lr << std::endl;
 	std::cout << "ee " << ee << std::endl;
-	
+
 }
 
+void Network::displayInput()
+{
+	float value;
+	for (int j = 0; j < 4; j++)
+	{
+		for (int k = 0; k < 2; k++)
+		{
+			//value = *(*(inputData + j) + k);
+			std::cout << "input " << *(*(inputData + j) + k) << std::endl;// *((inputData + j) + k); //if this won't work, try *inputData[][]
+		}
+
+	}
+
+	for (int j = 0; j < 4; j++)
+	{
+		for (int k = 0; k < 2; k++)
+		{
+			//std::cout << "output " << *(*(outputData + j) + k) << std::endl;// *((inputData + j) + k); //if this won't work, try *inputData[][]
+		}
+
+	}
+}
+
+/*
 bool Network::setInArrayNumbers(int inrow, int incolumn)
 {
 	row = inrow;
 	column = incolumn;
 	return false;
 }
-
-int Network::getInputColumn()
+*/
+void Network::setInputColumn(int num)
 {
-	return column;
+	column = num;
+}
+
+void Network::setInputRow(int num)
+{
+	row = num;
 }
 
 int Network::getInputRow()
@@ -124,17 +237,18 @@ int Network::getInputRow()
 	return row;
 }
 
+
 void Network::inputLayer()
 {
 	nnptr = new inNeuron[inNodes];
-	
+
 	for (int j = 0; j < inNodes; j++)
 	{
-		for (int k = 0; k < row; k++)
+		for (int k = 0; k < 2; k++)//make dynamic
 		{
-			(nnptr + j)->x = inputData[j][k];// *((inputData + j) + k); //if this won't work, try *inputData[][]
+			//*(nnptr + j)->getx() = *(*(inputData + j) + k);// *((inputData + j) + k); //if this won't work, try *inputData[][]
 		}
-		
+
 	}
 
 }

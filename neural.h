@@ -10,17 +10,17 @@ class Neural
 public:
 	Neural();
 	~Neural();
-	float getx();
-	float geterror();
-	float getweights();
-	void setx();
+	//float getx();
+	////float geterror();
+	//float getweights();
+	//void setx();
 
 	int y;
 protected:
-	float *x;
-	float *error;
-	float *weights;
-	Neural * nptr;
+	//float *x;
+	//float *error;
+	//float *weights;
+	//Neural * nptr;
 	Network *netptr;
 	//float Normalize(float *x); // or Neural *neuronptr?
 	//float findMin();
