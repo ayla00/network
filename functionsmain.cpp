@@ -271,10 +271,10 @@ bool getConfig(std::string extract, Network * neta)
 	//VALUE OF EE IS GETTING TRUNCATED (AT LEAST ON DISPLAY), FIX THIS LATER
 	float actualdata = std::stof(trickextract, &sz);
 	float dummyfloat = std::stof(trickextract.substr(sz));
-	std::cout << "config data " << actualdata << std::endl;
-	std::cout << "dummy # " << dummyfloat << std::endl;
+	//std::cout << "config data " << actualdata << std::endl;
+	//std::cout << "dummy # " << dummyfloat << std::endl;
 
-	std::cout << "inputconstant " << inputconstant << std::endl;
+	//std::cout << "inputconstant " << inputconstant << std::endl;
 
 	if (assignConstant(inputconstant, actualdata, neta))
 	{
