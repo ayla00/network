@@ -3,6 +3,7 @@
 
 Network::Network()
 {
+	iopairs = 0;
 	//nnptr = new Neural;
 	//on = setConfig(value);
 	//neuronptr = new Network;
@@ -64,8 +65,41 @@ void Network::middleLayer()
 }
 */
 
+std::vector<float> Network::randomWeights()
+{
+	std::cout << "iopairs " << iopairs << std::endl;
+	
+	float randomnum;
+	std::vector<float> randomweights;
+	for (int i = 0; i < (iopairs/2); i++)
+	{
+		//this gives more variety of numbers
+		do
+		{
+			randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
+		} while ((randomnum < -1.0) || (randomnum > 1.0));
+		
+		if ((randomnum <= 1.0) && (randomnum >= -1.0))
+		{
+			randomweights.push_back(randomnum);
+			std::cout << randomweights.at(i) << std::endl;
+		}
+		else
+		{
+			//this makes sure every weight gets an assingment if something filtered through other loop,
+			//also makes sure it's a weight less than 1
+			randomnum = (static_cast<float> (-1 + rand() % 3)) / (static_cast<float> (1 + rand() % 5));
+			randomweights.push_back(randomnum);
+			std::cout << randomweights.at(i) << std::endl;
+		}
+
+	}
+	return randomweights;
+}
+
 void Network::loadInput(int inrow, int incolumn, float value)
 {
+	
 	if ((inrow == 0) && (incolumn == 0))
 	{
 		inputData = new float*[(row / 2)];
@@ -80,6 +114,7 @@ void Network::loadInput(int inrow, int incolumn, float value)
 		inputData[inrow] = new float[2];
 	}
 
+	iopairs = iopairs + 1;
 	//std::cout << "row 1 " << inrow << std::endl;
 	//std::cout << "col " << incolumn << std::endl;
 	//std::cout << "pointer value " << *((inputData + inrow) + incolumn) << std::endl;
@@ -216,7 +251,8 @@ int Network::getInputRow()
 void Network::inputLayer()
 {
 	std::cout << "in Nodes " << inNodes << std::endl;
-	Neural neural(inNodes);
-	std::cout << "in Nodes " << neural.inNodes << std::endl;
-	neural.getInput();
+	Neural neural;
+	//std::cout << "in Nodes " << neural.inNodes << std::endl;
+	neural.getInput(inNodes, inputData, outputData);
+	neural.getWeights(randomWeights());
 }

@@ -14,6 +14,10 @@ pointer is declared as derived class, it won't grab the function from derived cl
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
+#include <vector>
+#include <stdlib.h> //library where rand is located
+#include <stdio.h>
+#include <time.h> 
 
 
 class Network
@@ -30,7 +34,8 @@ public:
 	//float *output;
 	//void layer();
 	//void middleLayer();
-	virtual void loadInput(int inrow, int incoloumn, float value);
+	std::vector<float> randomWeights();
+	void loadInput(int inrow, int incoloumn, float value);
 	void loadOutput(int inrow, int incolumn, float value);
 	bool setConfig(std::string constname, float value);
 	void displayVariables();
@@ -40,6 +45,7 @@ public:
 	int getInputRow();
 	void setInputColumn(int num);
 	void loadLayers();
+	int test;
 
 
 protected:
@@ -48,7 +54,8 @@ protected:
 	//void middleLayer();
 	//Network *neuronptr;
 	//Neural * nnptr; //has same name as a pointer in Neural, change it
-	int row;
+	int iopairs;
+	int row = iopairs/2;
 	int column;
 	int inNodes;
 	int midNodes;

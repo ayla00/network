@@ -31,12 +31,12 @@ struct outNeuron
 class Neural : public Network
 {
 public:
-	Neural(int innodes);// : Network() {};
+	Neural();// : Network() {};
 	~Neural();
-	void getInput();
+	void getInput(int inNodes, float **inputData, float **outputData);
 	void display(float *values);
 	////float geterror();
-	//float getweights();
+	void getWeights(std::vector<float> weights);
 	//void setx();
 
 	int y;
@@ -44,7 +44,7 @@ protected:
 	//float *x;
 	//float *error;
 	//float *weights;
-	Neural * nptr;
+	//Neural * nptr;
 	//Network * netptr;
 	//float Normalize(float *x); // or Neural *neuronptr?
 	//float findMin();
