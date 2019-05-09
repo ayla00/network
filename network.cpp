@@ -254,5 +254,5 @@ void Network::inputLayer()
 	Neural neural;
 	//std::cout << "in Nodes " << neural.inNodes << std::endl;
 	neural.getInput(inNodes, inputData, outputData);
-	neural.getWeights(randomWeights());
+	//neural.getWeights(randomWeights());
 }

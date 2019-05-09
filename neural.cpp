@@ -24,31 +24,26 @@ Neural::~Neural()
 void Neural::getInput(int inNodes, float **inputData, float**outputData)
 {
 	//in = new inNeuron[2];
+	//inNeuron inn[2];
+	//in = 
+	//(in + 2)->x = new float[4];
 
-
-	for (int j = 0; j < 4; j++)
-	{
 		for (int k = 0; k < 2; k++) //make this dynamic
 		{
-			std::cout << "for loop\n";
+
+			//this place is the only definition that will let this work
 			(in + k)->x = new float[4];
 
-			(in + k)->x[j] = *(*(inputData + j) + k);
-			std::cout << "making sure " << (in + k)->x[j] << std::endl;
+			for (int j = 0; j < 4; j++)
+			{
+
+				(in + k)->x[j] = *(*(inputData + j) + k);
+				std::cout << "values " << (in + k)->x[j] << std::endl;
+			}
+
 
 		}
-	}
 
-	for (int j = 0; j < 4; j++)
-	{
-
-		for (int k = 0; k < 2; k++) //make this dynamic
-		{
-			std::cout << "testin display\n";
-			std::cout << (in + k)->x[j] << std::endl;
-
-		}
-	}
 
 	display(in->x); //erase this 
 }
@@ -64,6 +59,7 @@ void Neural::display(float * values)
 	}
 }
 
+
 void Neural::getWeights(std::vector<float> weights)
 {
 	std::cout << "in Nodes " << inNodes << std::endl;
@@ -78,12 +74,11 @@ void Neural::getWeights(std::vector<float> weights)
 
 			*(in->weight + j) = weights.at(j);
 		}
-
-
 	}
 
 	display(in->weight); //erase this 
 }
+
 
 /*
 void Neural::setx(Neural *setptr)
