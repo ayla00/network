@@ -1,13 +1,15 @@
 #include "neural.h"
 
-Neural::Neural()
+Neural::Neural(int nodes)
 {
 	//innodes = nodes;
 	//Neural nnet;
-	//Network();
-	//netptr = new Network;
+	Network();
+	netptr = new Network;
 	std::cout << "test " << test << std::endl;
 	in = new inNeuron[2]; //make this dynamic
+	innodes = nodes;
+	std::cout << "test " << innodes << std::endl;
 	//in[2].x = new float[4];
 	//nptr = new Neural;
 }
@@ -21,31 +23,24 @@ Neural::~Neural()
 	//nptr = nullptr;
 }
 
-void Neural::getInput(int inNodes, float **inputData, float**outputData)
+void Neural::setInput(int inNodes, float **inputData, float**outputData)
 {
 	//in = new inNeuron[2];
 	//inNeuron inn[2];
-	//in = 
-	//(in + 2)->x = new float[4];
 
 		for (int k = 0; k < 2; k++) //make this dynamic
 		{
-
-			//this place is the only definition that will let this work
+			//this place is the only one that will let this definition work
 			(in + k)->x = new float[4];
 
 			for (int j = 0; j < 4; j++)
 			{
-
 				(in + k)->x[j] = *(*(inputData + j) + k);
 				std::cout << "values " << (in + k)->x[j] << std::endl;
 			}
-
-
 		}
 
-
-	display(in->x); //erase this 
+	//display(in->x); //erase this 
 }
 /*
 void Neural::display(float * values)
@@ -61,29 +56,63 @@ void Neural::display(float * values)
 */
 
 
-void Neural::getWeights(std::vector<float> weights)
+float Neural::randomWeights()
+{
+	//netptr->iopairs;
+	std::cout << "iopairs " << innodes << std::endl;//netptr->iopairs << std::endl;
+	float randomnum;
+	//std::vector<float> randomweights;
+	for (int i = 0; i < innodes; i++)
+	{
+		//this gives more variety of numbers
+		do
+		{
+			randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
+		} while ((randomnum < -1.0) || (randomnum > 1.0));
+
+		if ((randomnum <= 1.0) && (randomnum >= -1.0))
+		{
+			//randomweights.push_back(randomnum);
+			//std::cout << randomweights.at(i) << std::endl;
+			return randomnum;
+		}
+		else
+		{
+			//this makes sure every weight gets an assingment if something filtered through other loop,
+			//also makes sure it's a weight less than 1
+			randomnum = (static_cast<float> (-1 + rand() % 3)) / (static_cast<float> (1 + rand() % 5));
+			return randomnum;
+			//randomweights.push_back(randomnum);
+			//std::cout << randomweights.at(i) << std::endl;
+		}
+
+	}
+	//return randomweights;
+}
+
+void Neural::setWeights()
 {
 	std::cout << "in Nodes " << inNodes << std::endl;
-	std::cout << "you are in getInput\n";
-	//in->weight = new float[inNodes];
+	std::cout << "you are in getWeights\n";
 
-
-	
-		//in->weight = new float[inNodes];
-		for (int k = 0; k < inNodes; k++) //make this dynamic
+		for (int k = 0; k < 2; k++) //make this dynamic
 		{
-			(in + k)->weight = new float[inNodes];
-			for(int j = 0; j < 4; j++)
-				(in + k)->weight[j] = weights.at(j);
+			(in + k)->weight = new float[4];
+			for (int j = 0; j < 4; j++)
+			{
+				(in + k)->weight[j] = randomWeights();
+				std::cout << "weights " << (in + k)->weight[j] << std::endl;
+			}
+				
 		}
 	
 		for (int k = 0; k < inNodes; k++) //make this dynamic
 		{
 			//(in + k)->weight = new float[inNodes];
 			for (int j = 0; j < 4; j++)
-				std::cout << "weights " << (in + k)->weight[j];
+				std::cout << "weights " << (in + k)->weight[j] << std::endl;
 		}
-	display(in->weight); //erase this 
+	//display(in->weight); //erase this 
 }
 
 
@@ -128,4 +157,31 @@ float Neural::findMax()
 
 	return max;
 }
+
+void Neural::setWeights(float weights)
+{
+	std::cout << "in Nodes " << inNodes << std::endl;
+	std::cout << "you are in getWeights\n";
+
+		for (int k = 0; k < 2; k++) //make this dynamic
+		{
+			(in + k)->weight = new float[4];
+			for (int j = 0; j < 4; j++)
+			{
+				(in + k)->weight[j] = randomWeights();//weights.at(j);
+				std::cout << "weights " << (in + k)->weight[j] << std::endl;
+			}
+
+		}
+
+		for (int k = 0; k < inNodes; k++) //make this dynamic
+		{
+			//(in + k)->weight = new float[inNodes];
+			for (int j = 0; j < 4; j++)
+				std::cout << "weights " << (in + k)->weight[j] << std::endl;
+		}
+	//display(in->weight); //erase this
+}
+
+
 */

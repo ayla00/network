@@ -6,6 +6,7 @@ int main()
 {
 	srand(time(NULL));
 	Network * neta = new Network;
+	//Neural * neural = new Neural;
 	//Neural * n = new Neural;
 	std::string file = "configuration.txt";
 	std::ifstream cfgfile;
@@ -28,8 +29,8 @@ int main()
 
 	delete neta;
 	neta = nullptr;
-	//delete n;
-	//n = nullptr;
+	//delete neural;
+	//neural = nullptr;
 
 	return 0;
 }

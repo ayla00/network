@@ -34,7 +34,8 @@ public:
 	//float *output;
 	//void layer();
 	//void middleLayer();
-	std::vector<float> randomWeights();
+	//std::vector<float> randomWeights();
+	virtual float randomWeights();
 	void loadInput(int inrow, int incoloumn, float value);
 	void loadOutput(int inrow, int incolumn, float value);
 	bool setConfig(std::string constname, float value);
