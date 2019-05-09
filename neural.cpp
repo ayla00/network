@@ -1,6 +1,6 @@
 #include "neural.h"
 
-Neural::Neural(int nodes, int iopairs)
+Neural::Neural(int nodes, int niopairs, float nee)
 {
 	//innodes = nodes;
 	//Neural nnet;
@@ -9,7 +9,8 @@ Neural::Neural(int nodes, int iopairs)
 	std::cout << "test " << test << std::endl;
 	in = new inNeuron[2]; //make this dynamic
 	innodes = nodes;
-	iopairs = iopairs;
+	iopairs = niopairs;
+	ee = nee;
 	std::cout << "test " << innodes << std::endl;
 	//in[2].x = new float[4];
 	//nptr = new Neural;
@@ -119,19 +120,29 @@ void Neural::setWeights()
 	//display(in->weight); //erase this 
 }
 
-void Neural::sumInputs()
+float Neural::sumInputs()
 {
 	std::cout << "you are in sumINputs\n";
 	float total = 0;
-	for (int w = 0; w < 2; w++)
+	for (int s = 0; s < 2; s++)
 	{
-		for (int s = 0; s < 4; s++)
+		for (int w = 0; w < 4; w++)
 		{
-			total += ((in + w)->x[s])*((in + w)->weight[s]);
+			total += ((in + s)->x[w])*((in + s)->weight[w]);
 		}
 	}
 
 	std::cout << "total " << total << std::endl;
+	return total;
+}
+
+float Neural::activation()
+{
+	//if(activfunction == 1 )  //MAYBE WORK ON THIS ON THE END TO HAVE A RANGE OF FUNCTIONS TO CHOOSE FROM
+	std::cout << "EE " << ee << std::endl;
+	sigmoid = (1.0 / (1.0 + pow(ee, -sumInputs())));
+	std::cout << "sigmoid " << sigmoid << std::endl;
+	return sigmoid;
 }
 
 
