@@ -7,7 +7,8 @@ Neural::Neural()
 	//Network();
 	//netptr = new Network;
 	std::cout << "test " << test << std::endl;
-	//in.x = new float[inNodes];
+	in = new inNeuron[2]; //make this dynamic
+	//in[2].x = new float[4];
 	//nptr = new Neural;
 }
 
@@ -22,30 +23,44 @@ Neural::~Neural()
 
 void Neural::getInput(int inNodes, float **inputData, float**outputData)
 {
-	std::cout << "in Nodes " << inNodes << std::endl;
-	std::cout << "you are in getInput\n";
-	in.x = new float[inNodes];
+	//in = new inNeuron[2];
+
+
 	for (int j = 0; j < 4; j++)
 	{
-		for (int k = 0; k < inNodes; k++) //make this dynamic
+		for (int k = 0; k < 2; k++) //make this dynamic
 		{
-			std::cout << "data " << *(*(inputData + j) + k) << std::endl;
-			*(in.x + k) = *(*(inputData + j) + k);
-			std::cout << *(in.x + k) << std::endl;
+			std::cout << "for loop\n";
+			(in + k)->x = new float[4];
+
+			(in + k)->x[j] = *(*(inputData + j) + k);
+			std::cout << "making sure " << (in + k)->x[j] << std::endl;
+
 		}
-
-
 	}
 
-	display(in.x); //erase this 
+	for (int j = 0; j < 4; j++)
+	{
+
+		for (int k = 0; k < 2; k++) //make this dynamic
+		{
+			std::cout << "testin display\n";
+			std::cout << (in + k)->x[j] << std::endl;
+
+		}
+	}
+
+	display(in->x); //erase this 
 }
 
 void Neural::display(float * values)
 {
-	for (int j = 0; j < inNodes; j++)
+	std::cout << "you are in display\n";
+	std::cout << "in Nodes " << inNodes << std::endl;
+	for (int j = 0; j < 4; j++)
 	{
-		for (int k = 0; k < 4; k++) //make this dynamic
-			std::cout << "input " << *values << std::endl;
+		//for (int k = 0; k < 2; k++) //make this dynamic
+		std::cout << "input " << values[j] << std::endl;
 	}
 }
 
@@ -53,19 +68,21 @@ void Neural::getWeights(std::vector<float> weights)
 {
 	std::cout << "in Nodes " << inNodes << std::endl;
 	std::cout << "you are in getInput\n";
-	in.weight = new float[inNodes];
+	in->weight = new float[inNodes];
+
+
 	for (int j = 0; j < 4; j++)
 	{
 		for (int k = 0; k < inNodes; k++) //make this dynamic
 		{
-			
-			*(in.weight + j) = weights.at(j);
+
+			*(in->weight + j) = weights.at(j);
 		}
 
 
 	}
 
-	display(in.weight); //erase this 
+	display(in->weight); //erase this 
 }
 
 /*

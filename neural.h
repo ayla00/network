@@ -5,6 +5,7 @@
 
 struct inNeuron
 {
+	//std::vector<float*> x;
 	float *x;
 	float *error;
 	float *weight;
@@ -13,7 +14,7 @@ struct inNeuron
 
 struct midNeuron
 {
-	float *x;
+	float* x;
 	float *error;
 	float *weight;
 	//Neural * nptr;
@@ -22,7 +23,7 @@ struct midNeuron
 
 struct outNeuron
 {
-	float *x;
+	float* x;
 	float *error;
 	float *weight;
 	//Neural * nptr;
@@ -49,9 +50,9 @@ protected:
 	//float Normalize(float *x); // or Neural *neuronptr?
 	//float findMin();
 	//float findMax();
-	inNeuron in;
-	midNeuron mid;
-	outNeuron out;
+	inNeuron * in;
+	midNeuron * mid;
+	outNeuron * out;
 	int innodes;
 
 };

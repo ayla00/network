@@ -20,8 +20,8 @@ int main()
 	neta->displayVariables();
 	neta->displayInput();
 	std::cout << "you are out of displayInput\n";
-	Neural n;
-	std::cout << "test " << n.test << std::endl;
+	//Neural n;
+	//std::cout << "test " << n.test << std::endl;
 	neta->loadLayers();
 	//n->display();
 	//n->getInput();

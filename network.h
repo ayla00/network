@@ -55,7 +55,7 @@ protected:
 	//Network *neuronptr;
 	//Neural * nnptr; //has same name as a pointer in Neural, change it
 	int iopairs;
-	int row = iopairs/2;
+	int row = iopairs / 2;
 	int column;
 	int inNodes;
 	int midNodes;

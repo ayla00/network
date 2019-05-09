@@ -68,17 +68,17 @@ void Network::middleLayer()
 std::vector<float> Network::randomWeights()
 {
 	std::cout << "iopairs " << iopairs << std::endl;
-	
+
 	float randomnum;
 	std::vector<float> randomweights;
-	for (int i = 0; i < (iopairs/2); i++)
+	for (int i = 0; i < (iopairs / 2); i++)
 	{
 		//this gives more variety of numbers
 		do
 		{
 			randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
 		} while ((randomnum < -1.0) || (randomnum > 1.0));
-		
+
 		if ((randomnum <= 1.0) && (randomnum >= -1.0))
 		{
 			randomweights.push_back(randomnum);
@@ -99,7 +99,7 @@ std::vector<float> Network::randomWeights()
 
 void Network::loadInput(int inrow, int incolumn, float value)
 {
-	
+
 	if ((inrow == 0) && (incolumn == 0))
 	{
 		inputData = new float*[(row / 2)];
