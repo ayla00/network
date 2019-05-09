@@ -32,7 +32,7 @@ struct outNeuron
 class Neural : public Network
 {
 public:
-	Neural(int nodes);// : Network() {};
+	Neural(int nodes, int iopairs);// : Network() {};
 	~Neural();
 	void setInput(int inNodes, float **inputData, float **outputData);
 	//void display(float *values);
@@ -41,6 +41,7 @@ public:
 	float randomWeights();
 	void setWeights();
 	//void setx();
+	void sumInputs();
 
 	int y;
 protected:
@@ -48,6 +49,7 @@ protected:
 	//float *error;
 	//float *weights;
 	//Neural * nptr;
+	
 	Network * netptr;
 	//float Normalize(float *x); // or Neural *neuronptr?
 	//float findMin();

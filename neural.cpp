@@ -1,6 +1,6 @@
 #include "neural.h"
 
-Neural::Neural(int nodes)
+Neural::Neural(int nodes, int iopairs)
 {
 	//innodes = nodes;
 	//Neural nnet;
@@ -9,6 +9,7 @@ Neural::Neural(int nodes)
 	std::cout << "test " << test << std::endl;
 	in = new inNeuron[2]; //make this dynamic
 	innodes = nodes;
+	iopairs = iopairs;
 	std::cout << "test " << innodes << std::endl;
 	//in[2].x = new float[4];
 	//nptr = new Neural;
@@ -59,11 +60,12 @@ void Neural::display(float * values)
 float Neural::randomWeights()
 {
 	//netptr->iopairs;
-	std::cout << "iopairs " << innodes << std::endl;//netptr->iopairs << std::endl;
+	std::cout << "iopairs " << iopairs << std::endl;//netptr->iopairs << std::endl;
+	std::cout << "innodes " << innodes << std::endl;
 	float randomnum;
 	//std::vector<float> randomweights;
-	for (int i = 0; i < innodes; i++)
-	{
+	//for (int i = 0; i < iopairs; i++)
+	//{
 		//this gives more variety of numbers
 		do
 		{
@@ -86,7 +88,7 @@ float Neural::randomWeights()
 			//std::cout << randomweights.at(i) << std::endl;
 		}
 
-	}
+	//}
 	//return randomweights;
 }
 
@@ -106,13 +108,30 @@ void Neural::setWeights()
 				
 		}
 	
-		for (int k = 0; k < inNodes; k++) //make this dynamic
+		for (int k = 0; k < innodes; k++) //make this dynamic
 		{
 			//(in + k)->weight = new float[inNodes];
 			for (int j = 0; j < 4; j++)
 				std::cout << "weights " << (in + k)->weight[j] << std::endl;
 		}
+
+		std::cout << "about to get out of weights \n" <<  std::endl;
 	//display(in->weight); //erase this 
+}
+
+void Neural::sumInputs()
+{
+	std::cout << "you are in sumINputs\n";
+	float total = 0;
+	for (int w = 0; w < 2; w++)
+	{
+		for (int s = 0; s < 4; s++)
+		{
+			total += ((in + w)->x[s])*((in + w)->weight[s]);
+		}
+	}
+
+	std::cout << "total " << total << std::endl;
 }
 
 

@@ -258,10 +258,13 @@ int Network::getInputRow()
 void Network::inputLayer()
 {
 	std::cout << "in Nodes " << inNodes << std::endl;
-	Neural neural(inNodes);
+	Neural neural(inNodes, (iopairs/2));
 	//std::cout << "in Nodes " << neural.inNodes << std::endl;
 	neural.setInput(inNodes, inputData, outputData);
 	neural.setWeights();
+	std::cout << "before \n";
+	neural.sumInputs();
+	std::cout << "after \n";
 	//neural.setWeights(randomWeights());
 }
 
