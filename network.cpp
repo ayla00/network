@@ -238,7 +238,10 @@ void Network::loadLayers()
 {
 	std::cout << "in Nodes " << inNodes << std::endl;
 	std::cout << "you are in loadLayers\n";
-	inputLayer();
+	std::cout << "in Nodes " << inNodes << std::endl;
+	Neural neural(inNodes, (iopairs / 2), ee);
+	//maybe delete the inNodes parameter form inputLayer as it is being sent in the constructor
+	neural.inputLayer(inputData, outputData);
 }
 
 void Network::setInputRow(int num)
@@ -252,21 +255,7 @@ int Network::getInputRow()
 }
 
 
-void Network::inputLayer()
-{
-	std::cout << "in Nodes " << inNodes << std::endl;
-	Neural neural(inNodes, (iopairs/2), ee);
-	//std::cout << "in Nodes " << neural.inNodes << std::endl;
-	neural.setInput(inNodes, inputData, outputData);
-	neural.setWeights();
-	std::cout << "before \n";
-	neural.sumInputs();
 
-	neural.activation();
-
-	std::cout << "after \n";
-	//neural.setWeights(randomWeights());
-}
 
 
 

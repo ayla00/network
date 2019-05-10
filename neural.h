@@ -34,17 +34,20 @@ class Neural : public Network
 public:
 	Neural(int nodes, int niopairs, float nee);// : Network() {};
 	~Neural();
-	void setInput(int inNodes, float **inputData, float **outputData);
+	
 	//void display(float *values);
 	////float geterror();
 	//void setWeights(std::vector<float> weights);
 	float randomWeights();
-	void setWeights();
-	//void setx();
-	float sumInputs();
+	//void setWeights();
+	void inputLayer(float **inputData, float **outputData);
 	float activation();
 	int y;
 protected:
+	//void setInput(float **inputData, float **outputData);
+	void setInput(float **inputData);
+	void setWeights();
+	float sumInputs();
 	//Neural * nptr;
 	float sigmoid;
 	Network * netptr;

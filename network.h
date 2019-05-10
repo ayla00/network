@@ -50,7 +50,7 @@ public:
 
 
 protected:
-	void inputLayer();
+	
 	//void outputLayer();
 	//void middleLayer();
 	//Network *neuronptr;

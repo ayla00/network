@@ -28,14 +28,34 @@ Neural::~Neural()
 	in->x = nullptr;
 	delete[] in;
 	in = nullptr;
-	delete nptr;
-	nptr = nullptr;
+	delete netptr;
+	netptr = nullptr;
 }
 
-void Neural::setInput(int inNodes, float **inputData, float**outputData)
+void Neural::inputLayer(float **inputData, float **outputData)
+{
+	std::cout << "you are in input layers " << std::endl;
+	std::cout << "in Nodes " << inNodes << std::endl;
+	//Neural neural(inNodes, (iopairs / 2), ee);
+	//std::cout << "in Nodes " << neural.inNodes << std::endl;
+	//setInput used to have inNodes as parameter in case you want to change it from place
+	//(back to network), it also used to have outputData
+	setInput(inputData);
+	setWeights();
+	std::cout << "before \n";
+	sumInputs();
+
+	activation();
+
+	std::cout << "after \n";
+	//neural.setWeights(randomWeights());
+}
+
+void Neural::setInput(float **inputData)
 {
 	//in = new inNeuron[2];
 	//inNeuron inn[2];
+	std::cout << "you are in setInput\n";
 
 		for (int k = 0; k < 2; k++) //make this dynamic
 		{
@@ -176,6 +196,8 @@ float Neural::activation()
 	std::cout << "sigmoid " << sigmoid << std::endl;
 	return sigmoid;
 }
+
+
 
 
 /*
