@@ -45,11 +45,7 @@ public:
 	float activation();
 	int y;
 protected:
-	//float *x;
-	//float *error;
-	//float *weights;
 	//Neural * nptr;
-	
 	float sigmoid;
 	Network * netptr;
 	//float Normalize(float *x); // or Neural *neuronptr?

@@ -37,10 +37,6 @@ void readConfigFile(std::ifstream &cfile, std::string configfile, Network * neta
 			std::cout << "the file is empty\n\n";
 		}
 
-
-		//info.printList();
-		//std::cout << "\n\ntotal entries:\t" << info.CountEntries() << std::endl;
-
 	}
 	else
 	{

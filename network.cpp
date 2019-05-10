@@ -4,10 +4,7 @@
 Network::Network()
 {
 	//iopairs = 0;
-	//Neural();
-	//nnptr = new Neural;
 	//on = setConfig(value);
-	//neuronptr = new Network;
 }
 
 Network::~Network()
@@ -262,7 +259,9 @@ void Network::inputLayer()
 	//std::cout << "in Nodes " << neural.inNodes << std::endl;
 	neural.setInput(inNodes, inputData, outputData);
 	neural.setWeights();
+	std::cout << "before \n";
 	neural.sumInputs();
+
 	neural.activation();
 
 	std::cout << "after \n";

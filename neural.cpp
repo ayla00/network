@@ -18,11 +18,18 @@ Neural::Neural(int nodes, int niopairs, float nee)
 
 Neural::~Neural()
 {
-	//delete netptr;
-	//netptr = nullptr;
+	/*for (int i = 0; i < 2; ++i)
+	{
+		delete[] in[i];
+	}
+	delete[] in;*/
 
-	//delete nptr;
-	//nptr = nullptr;
+	delete[] in->x;
+	in->x = nullptr;
+	delete[] in;
+	in = nullptr;
+	delete nptr;
+	nptr = nullptr;
 }
 
 void Neural::setInput(int inNodes, float **inputData, float**outputData)
@@ -98,6 +105,31 @@ void Neural::setWeights()
 	std::cout << "in Nodes " << inNodes << std::endl;
 	std::cout << "you are in getWeights\n";
 
+
+	for (int k = 0; k < 2; k++) //make this dynamic
+	{
+		(in + k)->weight = new float[4];
+		for (int j = 0; j < 4; j++)
+		{
+			(in + k)->weight[j] = randomWeights();
+			std::cout << "weights " << (in + k)->weight[j] << std::endl;
+		}
+
+	}
+
+	for (int k = 0; k < innodes; k++) //make this dynamic
+	{
+		//(in + k)->weight = new float[inNodes];
+		for (int j = 0; j < 4; j++)
+			std::cout << "weights " << (in + k)->weight[j] << std::endl;
+	}
+
+	std::cout << "about to get out of weights \n" << std::endl;
+	//display(in->weight); //erase this 
+	/*
+	std::cout << "in Nodes " << inNodes << std::endl;
+	std::cout << "you are in getWeights\n";
+
 		for (int k = 0; k < 2; k++) //make this dynamic
 		{
 			(in + k)->weight = new float[4];
@@ -117,7 +149,7 @@ void Neural::setWeights()
 		}
 
 		std::cout << "about to get out of weights \n" <<  std::endl;
-	//display(in->weight); //erase this 
+	//display(in->weight); //erase this */
 }
 
 float Neural::sumInputs()
