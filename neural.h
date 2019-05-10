@@ -41,13 +41,14 @@ public:
 	float randomWeights();
 	//void setWeights();
 	void inputLayer(float **inputData, float **outputData);
-	float activation();
+	float activation(float *nodeLayer);
 	int y;
 protected:
 	//void setInput(float **inputData, float **outputData);
+	//*nodeLayer will be in->x, mid->x, or out->x
 	void setInput(float **inputData);
-	void setWeights();
-	float sumInputs();
+	void setWeights(float* nodeLayer);
+	float sumInputs(float *nodeLayer);
 	//Neural * nptr;
 	float sigmoid;
 	Network * netptr;
