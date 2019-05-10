@@ -8,7 +8,8 @@ Neural::Neural(int nodes, int niopairs, float nee)
 	netptr = new Network;
 	std::cout << "test " << test << std::endl;
 	in = new inNeuron[2]; //make this dynamic
-	in->x = new float[4];//used to be in setInput
+	//in->weight = nullptr;
+	//in->x = new float[4];//used to be in setInput, if uncomment code still runs ok, i think
 	innodes = nodes;
 	iopairs = niopairs;
 	ee = nee;
@@ -42,10 +43,33 @@ void Neural::inputLayer(float **inputData, float **outputData)
 	//setInput used to have inNodes as parameter in case you want to change it from place
 	//(back to network), it also used to have outputData
 	setInput(inputData);
-	setWeights(in->x);
+	for (int k = 0; k < 2; k++) //make this dynamic
+	{
+
+		for (int j = 0; j < 4; j++)
+		{
+			//(in + k)->x[j] = *(*(inputData + j) + k);
+			std::cout << "values " << (in + k)->x[j] << std::endl;
+		}
+	}
+	for (int k = 0; k < 2; k++) //make this dynamic
+	{
+		(in + k)->weight = new float[4];
+		//for (int j = 0; j < 4; j++)
+		//{
+			//(in + k)->weight[j] = 2.3;
+			//std::cout << "values " << (in + k)->weight[j] << std::endl;
+		//}
+	}
+
+	//float *nodeLayer = nullptr;
+	//float *	nodeLayer = in->weight;
+	//std::cout << "n " << nodeLayer->weight[0] << std::endl;
+
+	setWeights(in->weight);
 	std::cout << "before \n";
-	sumInputs();
-	activation();
+	//sumInputs(in->x);
+	//activation();
 
 	std::cout << "after \n";
 	//neural.setWeights(randomWeights());
@@ -62,10 +86,12 @@ void Neural::setInput(float **inputData)
 			//this place is the only one that will let this definition work
 			//(nodeLayer + k)->x = new float[4];
 			(in + k)->x = new float[4];
+			//in->weight = new float[4];
 
 			for (int j = 0; j < 4; j++)
 			{
 				(in + k)->x[j] = *(*(inputData + j) + k);
+
 				std::cout << "values " << (in + k)->x[j] << std::endl;
 			}
 		}
@@ -121,19 +147,25 @@ float Neural::randomWeights()
 	//return randomweights;
 }
 
+
 void Neural::setWeights(float *nodeLayer)
 {
-	std::cout << "in Nodes " << inNodes << std::endl;
-	std::cout << "you are in getWeights\n";
+	// (nodeLayer + k)[j] is equivalent to (in + k)->weight[j] or (out + k)->weight[j]
+	
+	//(nodeLayer + k)[j] = *(*(inputData + j) + k);
+	//nodeLayer->weight[0] = 5;
 
+	///std::cout << "weight " << (nodeLayer + 1)->weight[0] << std::endl;
+	//std::cout << "you are in getWeights\n";
 
+	
 	for (int k = 0; k < 2; k++) //make this dynamic
 	{
-		(nodeLayer + k)->weight = new float[4];
+		//(nodeLayer + k)->weight = new float[4];
 		for (int j = 0; j < 4; j++)
 		{
-			(nodeLayer + k)->weight[j] = randomWeights();
-			std::cout << "weights " << (nodeLayer + k)->weight[j] << std::endl;
+			(nodeLayer + k)[j] = randomWeights();
+			std::cout << "weights " << (nodeLayer + k)[j] << std::endl;
 		}
 
 	}
@@ -142,7 +174,7 @@ void Neural::setWeights(float *nodeLayer)
 	{
 		//(in + k)->weight = new float[inNodes];
 		for (int j = 0; j < 4; j++)
-			std::cout << "weights " << (nodeLayer + k)->weight[j] << std::endl;
+			std::cout << "weights " << (nodeLayer + k)[j] << std::endl;
 	}
 
 	std::cout << "about to get out of weights \n" << std::endl;
@@ -173,22 +205,23 @@ void Neural::setWeights(float *nodeLayer)
 	//display(in->weight); //erase this */
 }
 
+
 float Neural::sumInputs(float *nodeLayer)
 {
-	std::cout << "you are in sumINputs\n";
-	float total = 0;
-	for (int s = 0; s < 2; s++)
-	{
-		for (int w = 0; w < 4; w++)
-		{
-			total += ((nodeLayer + s)->x[w])*((nodeLayer + s)->weight[w]);
-		}
-	}
+	//std::cout << "you are in sumINputs\n";
+	//float total = 0;
+	//for (int s = 0; s < 2; s++)
+	//{
+		//for (int w = 0; w < 4; w++)
+		//{
+		//	total += ((nodeLayer + s)->x[w])*((nodeLayer + s)->weight[w]);
+		//}
+	//}
 
-	std::cout << "total " << total << std::endl;
-	return total;
+	//std::cout << "total " << total << std::endl;
+	//return total;
 }
-
+/*
 float Neural::activation()
 {
 	//if(activfunction == 1 )  //MAYBE WORK ON THIS ON THE END TO HAVE A RANGE OF FUNCTIONS TO CHOOSE FROM
@@ -198,7 +231,7 @@ float Neural::activation()
 	return sigmoid;
 }
 
-
+*/
 
 
 /*
