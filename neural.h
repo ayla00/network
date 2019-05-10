@@ -12,7 +12,7 @@ struct inNeuron
 	//Neural * nptr;
 };
 
-struct midNeuron
+struct hidNeuron
 {
 	float* x;
 	float *error;
@@ -29,6 +29,7 @@ struct outNeuron
 	//Neural * nptr;
 };
 
+
 class Neural : public Network
 {
 public:
@@ -41,25 +42,35 @@ public:
 	float randomWeights();
 	//void setWeights();
 	void inputLayer(float **inputData, float **outputData);
-	float activation();
+	void hiddenLayer();
+	void activation();
 	int y;
 protected:
 	//void setInput(float **inputData, float **outputData);
 	//*nodeLayer will be in->x, mid->x, or out->x
 	void setInput(float **inputData);
-	void setWeights(float * nodeLayer);
-	float sumInputs(float *actnodeLayer, float * weightnodeLayer);
+	void setInWeights();
+	void setHidInput();
+	void setHidWeights();
+	void sumInputs(struct layer);
+	//void sumInputs(float *actnodeLayer, float * weightnodeLayer);
 	//Neural * nptr;
-	float sigmoid;
+	//float sigmoid;
 	Network * netptr;
 	//float Normalize(float *x); // or Neural *neuronptr?
 	//float findMin();
 	//float findMax();
 	inNeuron * in;
-	midNeuron * mid;
+	hidNeuron * hid;
 	outNeuron * out;
 	int innodes;
+	//template <struct> T;
+	float sumtotal[4][2];
+	float sigmoid[4][2];
 
 };
+
+
+
 
 #endif  //NEURAL_H

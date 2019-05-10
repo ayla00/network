@@ -164,7 +164,7 @@ bool Network::setConfig(std::string constname, float value)
 	else if (constname == "I_UNITS")
 		inNodes = value;
 	else if (constname == "H_UNITS")
-		midNodes = value;
+		hidNodes = value;
 	else if (constname == "O_UNITS")
 		outNodes = value;
 	else if (constname == "MAX_EPOCH")
@@ -186,7 +186,7 @@ void Network::displayVariables()
 	std::cout << "offsoft " << offSoft << std::endl;
 	std::cout << "onsoft " << onSoft << std::endl;
 	std::cout << "i units " << inNodes << std::endl;
-	std::cout << "h units " << midNodes << std::endl;
+	std::cout << "h units " << hidNodes << std::endl;
 	std::cout << "o units " << outNodes << std::endl;
 	std::cout << "max epoch " << maxEpoch << std::endl;
 	std::cout << "lr " << lr << std::endl;
@@ -242,6 +242,7 @@ void Network::loadLayers()
 	Neural neural(inNodes, (iopairs / 2), ee);
 	//maybe delete the inNodes parameter form inputLayer as it is being sent in the constructor
 	neural.inputLayer(inputData, outputData);
+	neural.hiddenLayer();
 }
 
 void Network::setInputRow(int num)

@@ -59,7 +59,7 @@ protected:
 	int row = iopairs / 2;
 	int column;
 	int inNodes;
-	int midNodes;
+	int hidNodes;
 	int outNodes;
 	int maxEpoch;
 	float on;
