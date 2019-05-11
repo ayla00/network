@@ -21,9 +21,13 @@ Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float
 	const int HIDCOLUMNS = hidNodes;
 	const int OUTCOLUMNS = outNodes;
 
-	in = new inNeuron[INCOLUMNS]; //make this dynamic
-	hid = new hidNeuron[HIDCOLUMNS];
-	out = new outNeuron[OUTCOLUMNS];
+	//in = new inNeuron[INCOLUMNS]; //make this dynamic
+	//hid = new hidNeuron[HIDCOLUMNS];
+	//out = new outNeuron[OUTCOLUMNS];
+
+	in = new Neuron[INCOLUMNS]; //make this dynamic
+	hid = new Neuron[HIDCOLUMNS];
+	out = new Neuron[OUTCOLUMNS];
 	//in->weight = nullptr;
 	//in->x = new float[4];//used to be in setInput, if uncomment code still runs ok, i think
 	//in[2].x = new float[4];
@@ -37,7 +41,7 @@ Neural::~Neural()
 		delete[] in[i];
 	}
 	delete[] in;*/
-
+	/*
 	delete[] in->x;
 	in->x = nullptr;
 	delete[] in->weight;
@@ -63,10 +67,10 @@ Neural::~Neural()
 	delete[] out;
 	out = nullptr;
 	delete netptr;
-	netptr = nullptr;
+	netptr = nullptr;*/
 }
 
-void Neural::inputLayer(float **inputData, float **outputData)
+void Neural::inputLayer(float** inputData, float** outputData)
 {
 	std::cout << "you are in input layers " << std::endl;
 	std::cout << "in Nodes " << inNodes << std::endl;
@@ -74,9 +78,9 @@ void Neural::inputLayer(float **inputData, float **outputData)
 	//(back to network), it also used to have outputData
 	allocatePointers();
 	setInput(inputData);
-	setInWeights();
+	//setInWeights();
 	std::cout << "before \n";
-	sumInInputs();//sumInputs(in->x, in->weight);
+	//sumInInputs();//sumInputs(in->x, in->weight);
 	//activation(in->x, in->weight);
 
 	std::cout << "after \n";
@@ -93,9 +97,9 @@ void Neural::hiddenLayer()
 	//(back to network), it also used to have outputData
 	std::cout << "values before activation \n";
 
-	hiddenActivation();
-	setHidInput();
-	setHidWeights();
+	//hiddenActivation();
+	//setHidInput();
+	//setHidWeights();
 	std::cout << "before \n";
 	//sumInputs(*hid);
 	//activation();
@@ -133,49 +137,55 @@ void Neural::allocatePointers()
 
 }
 
-void Neural::setInput(float **inputData)
+void Neural::setInput(float** inputData)
 {
 	//in = new inNeuron[2];
 	//inNeuron inn[2];
 	std::cout << "you are in setInput\n";
 
 
-		for (int k = 0; k < inNodes; k++) //make this dynamic
+	for (int k = 0; k < inNodes; k++) //make this dynamic
+	{
+		//this place is the only one that will let this definition work
+		//(nodeLayer + k)->x = new float[4];
+		//(in + k)->x = new float[4];
+		//in->weight = new float[4];
+
+		for (int j = 0; j < 4; j++)
 		{
-			//this place is the only one that will let this definition work
-			//(nodeLayer + k)->x = new float[4];
-			//(in + k)->x = new float[4];
-			//in->weight = new float[4];
+			(in + k)->x[j] = *(*(inputData + j) + k);
 
-			for (int j = 0; j < 4; j++)
-			{
-				(in + k)->x[j] = *(*(inputData + j) + k);
-
-				std::cout << "values " << (in + k)->x[j] << std::endl;
-			}
+			std::cout << "values " << (in + k)->x[j] << std::endl;
 		}
+	}
 
-		for (int k = 0; k < 2; k++) //DELETE, JUST DEMO PURPOSES
+	for (int k = 0; k < 2; k++) //DELETE, JUST DEMO PURPOSES
+	{
+		for (int j = 0; j < 4; j++)
 		{
-			for (int j = 0; j < 4; j++)
-			{
-				std::cout << "values " << (in + k)->x[j] << std::endl;
-			}
+			std::cout << "values " << (in + k)->x[j] << std::endl;
 		}
-	//display(in->x); //erase this 
+	}
+
+
+	//float *value;
+	//struct * stpr;
+	//value = (in + k)->x;
+
+	display(in); //erase this 
 }
-/*
-void Neural::display(float * values)
+
+void Neural::display(Neuron * nptr)
 {
 	std::cout << "you are in display\n";
 	std::cout << "in Nodes " << inNodes << std::endl;
 	for (int j = 0; j < 4; j++)
 	{
 		for (int k = 0; k < 2; k++) //make this dynamic
-			std::cout << "input " << values[j][k] << std::endl;
+			std::cout << "input " << (nptr + k)->x[j] << std::endl;
 	}
 }
-*/
+
 
 /*
 float Neural::randomWeights()
@@ -219,7 +229,7 @@ void Neural::setInWeights()
 
 	for (int k = 0; k < 2; k++) //make this dynamic
 	{
-			//(in + k)->weight = new float[4];
+		//(in + k)->weight = new float[4];
 
 		for (int j = 0; j < 4; j++)
 		{
@@ -253,7 +263,7 @@ void Neural::setInWeights()
 				(in + k)->weight[j] = randomWeights();
 				std::cout << "weights " << (in + k)->weight[j] << std::endl;
 			}
-				
+
 		}*/
 
 }
@@ -301,7 +311,7 @@ void Neural::setHidWeights()
 			std::cout << "weight assing function\n";
 			std::cout << "weights " << (hid + k)->weight[j] << std::endl;
 		}
-			
+
 	}
 
 	std::cout << "about to get out of weights \n" << std::endl;
@@ -324,11 +334,11 @@ void Neural::sumInInputs()
 
 	for (int w = 0; w < 4; w++)
 	{
-			for (int s = 0; s < 2; w++)
-			{
-				sumtotal[w][s] += (in + s)->x[w];
-				std::cout << "total " << sumtotal[w][s] << std::endl;
-			}
+		for (int s = 0; s < 2; w++)
+		{
+			sumtotal[w][s] += (in + s)->x[w];
+			std::cout << "total " << sumtotal[w][s] << std::endl;
+		}
 	}
 
 	//std::cout << "total " << total << std::endl;
