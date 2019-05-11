@@ -59,10 +59,9 @@ protected:
 	//*nodeLayer will be in->x, mid->x, or out->x
 	void allocatePointers();
 	void setInput(float** inputData);
-	void setInWeights();
-	void setHidInput();
-	void setHidWeights();
-	void sumInInputs();
+	void setWeights(Neuron* layer);
+	void setotherInput(Neuron* layer);
+	void sumInputs(Neuron* layer);
 	//void sumInputs(float *actnodeLayer, float * weightnodeLayer);
 	//Neural * nptr;
 	//float sigmoid;
