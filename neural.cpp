@@ -19,6 +19,7 @@ Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float
 
 	in = new inNeuron[2]; //make this dynamic
 	hid = new hidNeuron[2];
+	out = new outNeuron[2];
 	//in->weight = nullptr;
 	//in->x = new float[4];//used to be in setInput, if uncomment code still runs ok, i think
 	//in[2].x = new float[4];
@@ -49,6 +50,7 @@ void Neural::inputLayer(float **inputData, float **outputData)
 	//std::cout << "in Nodes " << neural.inNodes << std::endl;
 	//setInput used to have inNodes as parameter in case you want to change it from place
 	//(back to network), it also used to have outputData
+	allocatePointers();
 	setInput(inputData);
 	setInWeights();
 	std::cout << "before \n";
@@ -68,14 +70,43 @@ void Neural::hiddenLayer()
 	//setInput used to have inNodes as parameter in case you want to change it from place
 	//(back to network), it also used to have outputData
 	
-	activation();
-	setHidInput();
-	setHidWeights();
+	//activation();
+	//setHidInput();
+	//setHidWeights();
 	std::cout << "before \n";
 	//sumInputs(*hid);
 	//activation();
 
 	std::cout << "after \n";
+}
+
+void Neural::allocatePointers()
+{
+	const int ROWS = iopairs / 2;
+	std::cout << "pairs " << iopairs << std::endl;
+	std::cout << "allocate " << std::endl;
+	displayVariables();
+	for (int nodes = 0; nodes < inNodes; nodes++)
+	{
+		(in + nodes)->x = new float[ROWS];
+		(in + nodes)->weight = new float[ROWS];
+		(in + nodes)->error = new float[ROWS];
+	}
+
+	for (int nodes = 0; nodes < hidNodes; nodes++)
+	{
+		(hid + nodes)->x = new float[ROWS];
+		(hid + nodes)->weight = new float[ROWS];
+		(hid + nodes)->error = new float[ROWS];
+	}
+
+	for (int nodes = 0; nodes < outNodes; nodes++)
+	{
+		(out + nodes)->x = new float[ROWS];
+		(out + nodes)->weight = new float[ROWS];
+		(out + nodes)->error = new float[ROWS];
+	}
+
 }
 
 void Neural::setInput(float **inputData)
@@ -88,7 +119,7 @@ void Neural::setInput(float **inputData)
 		{
 			//this place is the only one that will let this definition work
 			//(nodeLayer + k)->x = new float[4];
-			(in + k)->x = new float[4];
+			//(in + k)->x = new float[4];
 			//in->weight = new float[4];
 
 			for (int j = 0; j < 4; j++)

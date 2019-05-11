@@ -48,6 +48,7 @@ public:
 protected:
 	//void setInput(float **inputData, float **outputData);
 	//*nodeLayer will be in->x, mid->x, or out->x
+	void allocatePointers();
 	void setInput(float **inputData);
 	void setInWeights();
 	void setHidInput();

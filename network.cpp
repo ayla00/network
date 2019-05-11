@@ -93,6 +93,7 @@ float Network::randomWeights()
 			} while (randomnum < -1.0); //((randomnum < -1.0) || (randomnum > 1.0))
 		} while (randomnum > 1.0);
 
+		//may be obsolete, test how values come out using old and new definitions of function
 		if ((randomnum <= 1.0) && (randomnum >= -1.0))
 			return randomnum;
 		else
