@@ -39,11 +39,12 @@ public:
 	//void display(float *values);
 	////float geterror();
 	//void setWeights(std::vector<float> weights);
-	float randomWeights();
+	//float randomWeights();
 	//void setWeights();
 	void inputLayer(float **inputData, float **outputData);
 	void hiddenLayer();
-	void activation();
+	//void activation();
+	void hiddenActivation();
 	int y;
 protected:
 	//void setInput(float **inputData, float **outputData);
@@ -53,7 +54,7 @@ protected:
 	void setInWeights();
 	void setHidInput();
 	void setHidWeights();
-	//void sumInputs(struct layer);
+	void sumInInputs();
 	//void sumInputs(float *actnodeLayer, float * weightnodeLayer);
 	//Neural * nptr;
 	//float sigmoid;
@@ -71,7 +72,11 @@ protected:
 
 };
 
+//template <struct * inNeuron> inNeuron setHidWeights(inNeuron * layer);
+//template <struct * hidNeuron> hidNeuron setHidWeights(hidNeuron * layer);
+
 
 
 
 #endif  //NEURAL_H
+

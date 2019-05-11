@@ -10,16 +10,20 @@ Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float
 
 	iopairs = pairs;
 	column = nodes;
+	std::cout << "nodes " << nodes << std::endl;
 	inNodes = innode;
 	hidNodes = hidnode;
 	outNodes = outnode;
 	ee = natexp;
 	lr = lrate;
 	displayVariables();
+	const int INCOLUMNS = inNodes;
+	const int HIDCOLUMNS = hidNodes;
+	const int OUTCOLUMNS = outNodes;
 
-	in = new inNeuron[2]; //make this dynamic
-	hid = new hidNeuron[2];
-	out = new outNeuron[2];
+	in = new inNeuron[INCOLUMNS]; //make this dynamic
+	hid = new hidNeuron[HIDCOLUMNS];
+	out = new outNeuron[OUTCOLUMNS];
 	//in->weight = nullptr;
 	//in->x = new float[4];//used to be in setInput, if uncomment code still runs ok, i think
 	//in[2].x = new float[4];
@@ -66,15 +70,13 @@ void Neural::inputLayer(float **inputData, float **outputData)
 {
 	std::cout << "you are in input layers " << std::endl;
 	std::cout << "in Nodes " << inNodes << std::endl;
-	//Neural neural(inNodes, (iopairs / 2), ee);
-	//std::cout << "in Nodes " << neural.inNodes << std::endl;
 	//setInput used to have inNodes as parameter in case you want to change it from place
 	//(back to network), it also used to have outputData
 	allocatePointers();
 	setInput(inputData);
 	setInWeights();
 	std::cout << "before \n";
-	//sumInputs(*in);//sumInputs(in->x, in->weight);
+	sumInInputs();//sumInputs(in->x, in->weight);
 	//activation(in->x, in->weight);
 
 	std::cout << "after \n";
@@ -89,10 +91,11 @@ void Neural::hiddenLayer()
 	//std::cout << "in Nodes " << neural.inNodes << std::endl;
 	//setInput used to have inNodes as parameter in case you want to change it from place
 	//(back to network), it also used to have outputData
-	
-	//activation();
-	//setHidInput();
-	//setHidWeights();
+	std::cout << "values before activation \n";
+
+	hiddenActivation();
+	setHidInput();
+	setHidWeights();
 	std::cout << "before \n";
 	//sumInputs(*hid);
 	//activation();
@@ -102,8 +105,9 @@ void Neural::hiddenLayer()
 
 void Neural::allocatePointers()
 {
+	//function allocates arrays for use in network
 	const int ROWS = iopairs / 2;
-	std::cout << "pairs " << iopairs << std::endl;
+	std::cout << "pairs " << ROWS << std::endl;
 	std::cout << "allocate " << std::endl;
 	displayVariables();
 	for (int nodes = 0; nodes < inNodes; nodes++)
@@ -135,7 +139,8 @@ void Neural::setInput(float **inputData)
 	//inNeuron inn[2];
 	std::cout << "you are in setInput\n";
 
-		for (int k = 0; k < 2; k++) //make this dynamic
+
+		for (int k = 0; k < inNodes; k++) //make this dynamic
 		{
 			//this place is the only one that will let this definition work
 			//(nodeLayer + k)->x = new float[4];
@@ -150,6 +155,13 @@ void Neural::setInput(float **inputData)
 			}
 		}
 
+		for (int k = 0; k < 2; k++) //DELETE, JUST DEMO PURPOSES
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				std::cout << "values " << (in + k)->x[j] << std::endl;
+			}
+		}
 	//display(in->x); //erase this 
 }
 /*
@@ -165,7 +177,7 @@ void Neural::display(float * values)
 }
 */
 
-
+/*
 float Neural::randomWeights()
 {
 	//netptr->iopairs;
@@ -199,7 +211,7 @@ float Neural::randomWeights()
 
 	//}
 	//return randomweights;
-}
+}*/
 
 
 void Neural::setInWeights()
@@ -207,7 +219,7 @@ void Neural::setInWeights()
 
 	for (int k = 0; k < 2; k++) //make this dynamic
 	{
-			(in + k)->weight = new float[4];
+			//(in + k)->weight = new float[4];
 
 		for (int j = 0; j < 4; j++)
 		{
@@ -221,7 +233,7 @@ void Neural::setInWeights()
 
 
 
-	for (int k = 0; k < innodes; k++) //make this dynamic
+	for (int k = 0; k < 2; k++) //make this dynamic
 	{
 		for (int j = 0; j < 4; j++)
 			std::cout << "weights " << (in + k)->weight[j] << std::endl;
@@ -253,9 +265,6 @@ void Neural::setHidInput()
 	for (int k = 0; k < 2; k++) //make this dynamic
 	{
 		//this place is the only one that will let this definition work
-		//(nodeLayer + k)->x = new float[4];
-		(hid + k)->x = new float[4];
-		//in->weight = new float[4];
 
 		for (int j = 0; j < 4; j++)
 		{
@@ -271,33 +280,40 @@ void Neural::setHidWeights()
 {
 	for (int k = 0; k < 2; k++) //make this dynamic
 	{
-		(hid + k)->weight = new float[4];
 
 		for (int j = 0; j < 4; j++)
 		{
 			std::cout << "k " << k << "\tj " << j << std::endl;
 			//std::cout << "pointer " << (nodeLayer + k) << std::endl;
 			(hid + k)->weight[j] = randomWeights();
+			//layer[j] = randomWeights();
+			//layer[k]weight[j] = 2.5;
 			std::cout << "weights " << (hid + k)->weight[j] << std::endl;
 		}
 
 	}
 
 
-	for (int k = 0; k < innodes; k++) //make this dynamic
+	for (int k = 0; k < 2; k++) //make this dynamic
 	{
 		for (int j = 0; j < 4; j++)
+		{
+			std::cout << "weight assing function\n";
 			std::cout << "weights " << (hid + k)->weight[j] << std::endl;
+		}
+			
 	}
 
 	std::cout << "about to get out of weights \n" << std::endl;
 }
 
-/*
-void Neural::sumInputs(struct layer)
+
+
+
+void Neural::sumInInputs()
 {
 	std::cout << "you are in sumINputs\n";
-	//float sumtotal[4][2];
+
 	for (int s = 0; s < 2; s++)
 	{
 		for (int w = 0; w < 4; w++)
@@ -306,14 +322,13 @@ void Neural::sumInputs(struct layer)
 		}
 	}
 
-	for (int s = 0; s < 2; s++)
+	for (int w = 0; w < 4; w++)
 	{
-		for (int w = 0; w < 4; w++)
-		{
-			sumtotal[w][s] += ((layer + s)->x[w])*((layer + s)->weight[w]);
-			//std::cout << "sumtotal " << ((actnodeLayer + s)[w])*((weightnodeLayer + s)[w]) << std::endl;
-			std::cout << "sumtotal " << sumtotal[w][s] << std::endl;
-		}
+			for (int s = 0; s < 2; w++)
+			{
+				sumtotal[w][s] += (in + s)->x[w];
+				std::cout << "total " << sumtotal[w][s] << std::endl;
+			}
 	}
 
 	//std::cout << "total " << total << std::endl;
@@ -347,10 +362,9 @@ void Neural::sumInputs(struct layer)
 }
 */
 
-void Neural::activation()
+void Neural::hiddenActivation()
 {
 	std::cout << "you are in activation\n";
-	//float sumtotal[4][2];
 	for (int s = 0; s < 2; s++)
 	{
 		for (int w = 0; w < 4; w++)
@@ -365,6 +379,7 @@ void Neural::activation()
 		{
 			std::cout << "sumtotal " << sumtotal[w][s] << std::endl;
 			sigmoid[w][s] += (1.0 / (1.0 + pow(ee, -sumtotal[w][s])));
+			std::cout << "sigmoid " << sigmoid[w][s] << std::endl;
 		}
 	}
 	//if(activfunction == 1 )  //MAYBE WORK ON THIS ON THE END TO HAVE A RANGE OF FUNCTIONS TO CHOOSE FROM
@@ -445,3 +460,4 @@ void Neural::setWeights(float weights)
 
 
 */
+

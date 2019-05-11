@@ -85,14 +85,15 @@ float Network::randomWeights()
 	//std::vector<float> randomweights;
 	//for (int i = 0; i < (iopairs / 2); i++)
 	//{
-		//this gives more variety of numbers
+		
 		do {
 			do
 			{
 				randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
-			} while (randomnum < -1.0); //((randomnum < -1.0) || (randomnum > 1.0))
-		} while (randomnum > 1.0);
+			} while (randomnum <= -1.0); //((randomnum < -1.0) || (randomnum > 1.0))
+		} while (randomnum >= 1.0);
 
+		//this may give more variety of numbers
 		//may be obsolete, test how values come out using old and new definitions of function
 		if ((randomnum <= 1.0) && (randomnum >= -1.0))
 			return randomnum;
