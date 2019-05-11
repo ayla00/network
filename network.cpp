@@ -3,8 +3,23 @@
 
 Network::Network()
 {
-	//iopairs = 0;
+	iopairs = 0;
 	//on = setConfig(value);
+	std::cout << "DEFAULT CONSTRUCTOR \n";
+	displayVariables();
+}
+
+Network::Network(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate)
+{
+	std::cout << "parametrized CONSTRUCTOR \n";
+	iopairs = pairs;
+	column = nodes;
+	inNodes = innode;
+	hidNodes = hidnode;
+	outNodes = outnode;
+	ee = natexp;
+	lr = lrate;
+	displayVariables();
 }
 
 Network::~Network()
@@ -68,31 +83,27 @@ float Network::randomWeights()
 	std::cout << "iopairs " << iopairs << std::endl;
 	float randomnum;
 	//std::vector<float> randomweights;
-	for (int i = 0; i < (iopairs / 2); i++)
-	{
+	//for (int i = 0; i < (iopairs / 2); i++)
+	//{
 		//this gives more variety of numbers
-		do
-		{
-			randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
-		} while ((randomnum < -1.0) || (randomnum > 1.0));
+		do {
+			do
+			{
+				randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
+			} while (randomnum < -1.0); //((randomnum < -1.0) || (randomnum > 1.0))
+		} while (randomnum > 1.0);
 
 		if ((randomnum <= 1.0) && (randomnum >= -1.0))
-		{
-			//randomweights.push_back(randomnum);
-			//std::cout << randomweights.at(i) << std::endl;
 			return randomnum;
-		}
 		else
 		{
 			//this makes sure every weight gets an assingment if something filtered through other loop,
 			//also makes sure it's a weight less than 1
 			randomnum = (static_cast<float> (-1 + rand() % 3)) / (static_cast<float> (1 + rand() % 5));
 			return randomnum;
-			//randomweights.push_back(randomnum);
-			//std::cout << randomweights.at(i) << std::endl;
 		}
 
-	}
+	//}
 	//return randomweights;
 }
 
@@ -236,10 +247,13 @@ void Network::setInputColumn(int num)
 
 void Network::loadLayers()
 {
-	std::cout << "in Nodes " << inNodes << std::endl;
 	std::cout << "you are in loadLayers\n";
 	std::cout << "in Nodes " << inNodes << std::endl;
-	Neural neural(inNodes, (iopairs / 2), ee);
+	displayVariables();
+	std::cout << "before derived\n";
+	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr);
+	std::cout << "after derived\n";
+	//Network &node = neural;
 	//maybe delete the inNodes parameter form inputLayer as it is being sent in the constructor
 	neural.inputLayer(inputData, outputData);
 	neural.hiddenLayer();

@@ -1,20 +1,26 @@
 #include "neural.h"
 
-Neural::Neural(int nodes, int niopairs, float nee)
+Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate)
 {
 	//innodes = nodes;
 	//Neural nnet;
-	Network();
-	netptr = new Network;
-	std::cout << "test " << test << std::endl;
+	std::cout << "derived constructor \n";
+	displayVariables();
+	Network(pairs, nodes, innode, hidnode, outnode, natexp, lrate);
+
+	iopairs = pairs;
+	column = nodes;
+	inNodes = innode;
+	hidNodes = hidnode;
+	outNodes = outnode;
+	ee = natexp;
+	lr = lrate;
+	displayVariables();
+
 	in = new inNeuron[2]; //make this dynamic
 	hid = new hidNeuron[2];
 	//in->weight = nullptr;
 	//in->x = new float[4];//used to be in setInput, if uncomment code still runs ok, i think
-	innodes = nodes;
-	iopairs = niopairs;
-	ee = nee;
-	std::cout << "test " << innodes << std::endl;
 	//in[2].x = new float[4];
 	//nptr = new Neural;
 }
@@ -46,7 +52,7 @@ void Neural::inputLayer(float **inputData, float **outputData)
 	setInput(inputData);
 	setInWeights();
 	std::cout << "before \n";
-	sumInputs(*in);//sumInputs(in->x, in->weight);
+	//sumInputs(*in);//sumInputs(in->x, in->weight);
 	//activation(in->x, in->weight);
 
 	std::cout << "after \n";
@@ -66,8 +72,8 @@ void Neural::hiddenLayer()
 	setHidInput();
 	setHidWeights();
 	std::cout << "before \n";
-	sumInputs(*hid);
-	activation();
+	//sumInputs(*hid);
+	//activation();
 
 	std::cout << "after \n";
 }
@@ -236,7 +242,7 @@ void Neural::setHidWeights()
 	std::cout << "about to get out of weights \n" << std::endl;
 }
 
-
+/*
 void Neural::sumInputs(struct layer)
 {
 	std::cout << "you are in sumINputs\n";

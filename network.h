@@ -24,6 +24,7 @@ class Network
 {
 public:
 	Network();
+	Network(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate);
 	~Network();
 	//void train();
 	//void test()

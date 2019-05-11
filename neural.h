@@ -33,7 +33,7 @@ struct outNeuron
 class Neural : public Network
 {
 public:
-	Neural(int nodes, int niopairs, float nee);// : Network() {};
+	Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate);// : Network() {};
 	~Neural();
 	
 	//void display(float *values);
@@ -52,7 +52,7 @@ protected:
 	void setInWeights();
 	void setHidInput();
 	void setHidWeights();
-	void sumInputs(struct layer);
+	//void sumInputs(struct layer);
 	//void sumInputs(float *actnodeLayer, float * weightnodeLayer);
 	//Neural * nptr;
 	//float sigmoid;

@@ -5,7 +5,9 @@
 int main()
 {
 	srand(time(NULL));
+	std::cout << "main before pointer\n";
 	Network * neta = new Network;
+	std::cout << "main after pointer\n";
 	//Neural * neural = new Neural;
 	//Neural * n = new Neural;
 	std::string file = "configuration.txt";
