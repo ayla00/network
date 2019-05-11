@@ -36,8 +36,28 @@ Neural::~Neural()
 
 	delete[] in->x;
 	in->x = nullptr;
+	delete[] in->weight;
+	in->weight = nullptr;
+	delete[] in->error;
+	in->error = nullptr;
 	delete[] in;
 	in = nullptr;
+	delete[] hid->x;
+	hid->x = nullptr;
+	delete[] hid->weight;
+	hid->weight = nullptr;
+	delete[] hid->error;
+	hid->error = nullptr;
+	delete[] hid;
+	hid = nullptr;
+	delete[] out->x;
+	out->x = nullptr;
+	delete[] out->weight;
+	out->weight = nullptr;
+	delete[] out->error;
+	out->error = nullptr;
+	delete[] out;
+	out = nullptr;
 	delete netptr;
 	netptr = nullptr;
 }
