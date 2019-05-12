@@ -26,13 +26,13 @@ public:
 	void hiddenLayer();
 	void outputLayer();
 	void saveWeights();
-	float y;
+
 protected:
 	//void setInput(float **inputData, float **outputData);
 	//*nodeLayer will be in->x, mid->x, or out->x
 	void allocatePointers();
 	void setInput(float** inputData);
-	void setWeights(int nodes, Neuron* layer);
+	void setWeights(int current, int next, Neuron* layer);
 	void setotherInput(int nodes, Neuron* layer);
 	void sumInputs(int current, int next, Neuron* layer);
 	void activation(int nodes, Neuron* layer);
@@ -41,6 +41,7 @@ protected:
 	void backWeights(int back, int next, Neuron* backlayer, Neuron* nextlayer);
 	//float sigmoid;
 	Network* netptr;
+	float* yresult;
 	//float Normalize(float *x); // or Neural *neuronptr?
 	//float findMin();
 	//float findMax();

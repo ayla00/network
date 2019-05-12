@@ -26,6 +26,8 @@ Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float
 	hid = new Neuron[HIDCOLUMNS];
 	out = new Neuron[OUTCOLUMNS];
 
+	//yresult = new Neuron[OUTCOLUMNS]
+
 	// this will build empty network
 	allocatePointers();
 	//nptr = new Neural;
@@ -74,9 +76,12 @@ void Neural::inputLayer(float** inputData, float** outputData)
 	//setInput used to have inNodes as parameter in case you want to change it from place
 	//(back to network), it also used to have outputData
 	setInput(inputData);
-	setWeights(inNodes, in);
+
+	//the weights are from current layer to next layer
+	//so the number of nodes for weigth array must correspond to the ones for next layer
+	setWeights(inNodes, hidNodes, in);
 	std::cout << "before \n";
-	sumInputs(inNodes, hidNodes, in);
+	//sumInputs(inNodes, hidNodes, in);
 
 	std::cout << "after \n";
 }
@@ -89,12 +94,14 @@ void Neural::hiddenLayer()
 	//setInput used to have inNodes as parameter in case you want to change it from place
 	//(back to network), it also used to have outputData
 	std::cout << "values before activation \n";
+	sumInputs(hidNodes, inNodes, in);
 	activation(hidNodes, in);
 	//hiddenActivation();
 	setotherInput(hidNodes, hid);
-	setWeights(hidNodes, hid);
+	setWeights(hidNodes, outNodes, hid);
 	std::cout << "before \n";
-	sumInputs(hidNodes, outNodes, hid);
+	//sums inputs with correct number of nodes for next layer
+	//sumInputs(hidNodes, outNodes, hid);
 	std::cout << "after \n";
 }
 
@@ -106,11 +113,15 @@ void Neural::outputLayer()
 	//setInput used to have inNodes as parameter in case you want to change it from place
 	//(back to network), it also used to have outputData
 	std::cout << "values before activation \n";
+	sumInputs(outNodes, hidNodes, hid);
 	activation(outNodes, hid);
 	setotherInput(outNodes, out);
-	setWeights(outNodes, out);
-	std::cout << "before \n";
-	sumInputs(outNodes, outNodes, out);
+
+
+	//no weights from output layer to output, wait to confirm
+	//the next two functions should not be needed
+	//setWeights(outNodes, outNodes, out);
+	//sumInputs(outNodes, outNodes, out);
 
 	std::cout << "after \n";
 }
@@ -124,27 +135,30 @@ void Neural::allocatePointers()
 {
 	//function allocates arrays for use in network
 	const int ROWS = iopairs / 2;
+	const int HIDRS = hidNodes;
+	const int OUTRS = outNodes;
 	std::cout << "pairs " << ROWS << std::endl;
 	std::cout << "allocate " << std::endl;
 	displayVariables();
 	for (int nodes = 0; nodes < inNodes; nodes++)
 	{
 		(in + nodes)->x = new float[ROWS];
-		(in + nodes)->weight = new float[ROWS];
+		(in + nodes)->weight = new float[HIDRS];
 		(in + nodes)->error = new float[ROWS];
 	}
 
 	for (int nodes = 0; nodes < hidNodes; nodes++)
 	{
 		(hid + nodes)->x = new float[ROWS];
-		(hid + nodes)->weight = new float[ROWS];
+		(hid + nodes)->weight = new float[OUTRS];
 		(hid + nodes)->error = new float[ROWS];
 	}
 
 	for (int nodes = 0; nodes < outNodes; nodes++)
 	{
 		(out + nodes)->x = new float[ROWS];
-		(out + nodes)->weight = new float[ROWS];
+		//not needed, do I have to allocate memory anyway?
+		//(out + nodes)->weight = new float[ROWS];
 		(out + nodes)->error = new float[ROWS];
 	}
 
@@ -229,10 +243,11 @@ void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlay
 			//will this work if nodes is zero?, will it ever be zero
 			for (int layerindex = 0; layerindex < next; layerindex++)
 			{
-				sum += ((nextlayer + layerindex)->error[r]) * ((backlayer + layerindex)->weight[r]);
+				//check if i need to do this PER row (r) or is just all  cummulative
+				sum += ((nextlayer + layerindex)->error[r]) * ((backlayer + n)->weight[layerindex]);
 			}
 
-			(backlayer + n)->error[r] = (((backlayer + n)->x[r]) * (1.0 - ((backlayer + n)->x[r]) * sum));
+			(backlayer + n)->error[r] = (((backlayer + n)->x[r]) * (1.0 - (((backlayer + n)->x[r]) * sum)));
 
 		}
 
@@ -249,7 +264,7 @@ void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlay
 void Neural::adjustWeights()
 {
 	//check this one, the formula must be different
-	backWeights(outNodes, outNodes, out, out);
+	//backWeights(outNodes, outNodes, out, out);
 	backWeights(hidNodes, outNodes, hid, out);
 	backWeights(inNodes, hidNodes, in, hid);
 
@@ -259,7 +274,6 @@ void Neural::adjustWeights()
 void Neural::backWeights(int back, int next, Neuron * backlayer, Neuron * nextlayer)
 {
 	//is the weight calculated for each entry or is the same for all entries w/in same node???
-	float sum = 0;
 	for (int n = 0; n < back; n++)
 	{
 
@@ -267,9 +281,10 @@ void Neural::backWeights(int back, int next, Neuron * backlayer, Neuron * nextla
 		{
 			//nodes of previous layer
 			//will this work if nodes is zero?, will it ever be zero
+			//CHECK THIS AGAIN
 			for (int layerindex = 0; layerindex < next; layerindex++)
 			{
-				(backlayer + n)->weight[r] = (((backlayer + n)->weight[r]) + (lr * ((nextlayer + n)->error[r]) * (backlayer + n)->x[r]));
+				(backlayer + n)->weight[layerindex] = (((backlayer + n)->weight[layerindex]) + (lr * ((nextlayer + layerindex)->error[r]) * (backlayer + n)->x[r]));
 			}
 		}
 	}
@@ -283,25 +298,32 @@ void Neural::backWeights(int back, int next, Neuron * backlayer, Neuron * nextla
 
 
 
-void Neural::setWeights(int current, Neuron * layer)
+void Neural::setWeights(int current, int next, Neuron * layer)
 {
-
-	for (int k = 0; k < current; k++) //make this dynamic
+	//this array needs a different set-up thant the input array(x[])
+	//it is assumed that there is only one weight value from one neuron to the next for all input entries
+	//(as opposed to a different weight for each entry, for example it's the same wegith w[j]=a for all j,
+	//instead of each j having a different one w[0]=d, w[1]=e, etc;
+	//here, the n is the #of nodes in current layer and r is not the entries as in input, but the number
+	//of nodes in next layer
+	for (int n = 0; n < current; n++) //make this dynamic
 	{
-		for (int j = 0; j < 4; j++)
+		for (int r = 0; r < next; r++)
 		{
-			std::cout << "k " << k << "\tj " << j << std::endl;
-			(layer + k)->weight[j] = randomWeights();
-			std::cout << "weights " << (layer + k)->weight[j] << std::endl;
+			std::cout << "n " << n << "\tr " << r << std::endl;
+			(layer + n)->weight[r] = randomWeights();
+			std::cout << "weights " << (layer + n)->weight[r] << std::endl;
 		}
 	}
 
 
-
-	for (int k = 0; k < current; k++) //make this dynamic
+	for (int n = 0; n < current; n++) //make this dynamic
 	{
-		for (int j = 0; j < 4; j++)
-			std::cout << "weights " << (layer + k)->weight[j] << std::endl;
+		for (int r = 0; r < next; r++)
+		{
+			std::cout << "n " << n << "\tr " << r << std::endl;
+			std::cout << "weights " << (layer + n)->weight[r] << std::endl;
+		}
 	}
 
 	std::cout << "about to get out of weights \n" << std::endl;
@@ -314,7 +336,7 @@ void Neural::setotherInput(int current, Neuron * layer)
 {
 	std::cout << "you are in setHidInput\n";
 
-	for (int k = 0; k < current; k++) //make this dynamic
+	for (int k = 0; k < current; k++)
 	{
 
 		for (int j = 0; j < 4; j++)
@@ -331,7 +353,7 @@ void Neural::setotherInput(int current, Neuron * layer)
 
 
 
-void Neural::sumInputs(int current, int previous, Neuron * layer)
+void Neural::sumInputs(int current, int previous, Neuron * backlayer)
 {
 	std::cout << "you are in sumINputs\n";
 
@@ -344,7 +366,29 @@ void Neural::sumInputs(int current, int previous, Neuron * layer)
 	}
 
 	//nodes of current layer
-	for (int s = 0; s < current; s++)
+
+
+	//was checking for correctness, it looks ok, just changed index names
+	for (int n = 0; n < current; n++)
+	{
+
+		for (int r = 0; r < 4; r++)
+		{
+			//nodes of previous layer
+			//will this work if nodes is zero?, will it ever be zero
+			for (int backindex = 0; backindex < previous; backindex++)
+			{
+				sumtotal[r][n] += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
+				std::cout << "total " << sumtotal[r][n] << std::endl;
+			}
+
+		}
+
+
+	}
+
+	//OLD LOOP
+	/*for (int s = 0; s < current; s++)
 	{
 
 		for (int w = 0; w < 4; w++)
@@ -360,12 +404,14 @@ void Neural::sumInputs(int current, int previous, Neuron * layer)
 		}
 
 
-	}
+	}*/
 
 	//std::cout << "total " << total << std::endl;
 	//return total;
 }
 
+
+//don't really need neuron * layer parameter now, might redefine sumtotal[][] so wait till then to erase
 void Neural::activation(int nodes, Neuron * layer)
 {
 	std::cout << "you are in act2ivation\n";
@@ -385,33 +431,6 @@ void Neural::activation(int nodes, Neuron * layer)
 		}
 	}
 }
-
-/*void Neural::sumInputs(float *actnodeLayer, float * weightnodeLayer)
-{
-	std::cout << "you are in sumINputs\n";
-	//float sumtotal[4][2];
-	for (int s = 0; s < 2; s++)
-	{
-		for (int w = 0; w < 4; w++)
-		{
-			sumtotal[w][s] += 0;
-		}
-	}
-
-	for (int s = 0; s < 2; s++)
-	{
-		for (int w = 0; w < 4; w++)
-		{
-			sumtotal[w][s] += ((actnodeLayer + s)[w])*((weightnodeLayer + s)[w]);
-			std::cout << "sumtotal " << ((actnodeLayer + s)[w])*((weightnodeLayer + s)[w]) << std::endl;
-			std::cout << "sumtotal " << sumtotal[w][s] << std::endl;
-		}
-	}
-
-	//std::cout << "total " << total << std::endl;
-	//return total;
-}
-*/
 
 
 
