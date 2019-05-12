@@ -425,30 +425,6 @@ float Neural::findMax()
 	return max;
 }
 
-void Neural::setWeights(float weights)
-{
-	std::cout << "in Nodes " << inNodes << std::endl;
-	std::cout << "you are in getWeights\n";
-
-		for (int k = 0; k < 2; k++) //make this dynamic
-		{
-			(in + k)->weight = new float[4];
-			for (int j = 0; j < 4; j++)
-			{
-				(in + k)->weight[j] = randomWeights();//weights.at(j);
-				std::cout << "weights " << (in + k)->weight[j] << std::endl;
-			}
-
-		}
-
-		for (int k = 0; k < inNodes; k++) //make this dynamic
-		{
-			//(in + k)->weight = new float[inNodes];
-			for (int j = 0; j < 4; j++)
-				std::cout << "weights " << (in + k)->weight[j] << std::endl;
-		}
-	//display(in->weight); //erase this
-}
 
 
 */
