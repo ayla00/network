@@ -20,6 +20,7 @@ Network::Network(int pairs, int nodes, int innode, int hidnode, int outnode, flo
 	ee = natexp;
 	lr = lrate;
 	displayVariables();
+
 }
 
 Network::~Network()
@@ -29,92 +30,54 @@ Network::~Network()
 	//neuronptr = nullptr;
 }
 
-/*
-void Network::middleLayer()
+void Network::train()
 {
-	/*
-	neuronptr = new inNeuron;
+	//load input
+	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr);
 
-	for (int j = 0; j < 3; j++)
-	{
-		(neuronptr + j)->y;
-		std::cout << "pointer " << (neuronptr + j) << std::endl;
-	}
-	*/
+	//propagate activations
+	neural.inputLayer(inputData, outputData);
+	neural.hiddenLayer();
+	neural.outputLayer();
 
-	/*
-	for (int j = 0; j < 3; j++)
-	{
-		(neuronptr + j)->y;
-		std::cout << "pointer " << (neuronptr + j) << std::endl;
-	}
-	*/
-
-	//neuronptr = new midNeuron*[6];
-/*
-	for (int j = 0; j < 3; j++)
-	{
-			std::cout << " * * * * * * * \n";
-			//(neuronptr + j)->y;
-			//*(neuronptr + j) = new midNeuron[3];
-			*(neuronptr + j) = new Neural[j];
-			//((neuronptr[) + k)->y = k + j;
-			for (int k = 0; k < 3; k++)
-			{
-				std::cout << "row " << j << "\tcolumn " << k << std::endl;
-				std::cout << "pointer " << &neuronptr[j][k] << std::endl;
-				std::cout << "pointer " << ((neuronptr + j) + k) << std::endl;
-				std::cout << "pointer " << *((neuronptr + j) + k) << std::endl;
-			}
-
-	}
-
-	Neural neural;
-	midNeuron mid;
-	mid.x;
-	neural.x;
-
-
+	//calculate errors
+	neural.calculateError(outputData);
 }
-*/
+
 
 float Network::randomWeights()
 {
 	std::cout << "iopairs " << iopairs << std::endl;
 	float randomnum;
-	//std::vector<float> randomweights;
-	//for (int i = 0; i < (iopairs / 2); i++)
-	//{
-		
-		do {
-			do
-			{
-				randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
-			} while (randomnum <= -1.0); //((randomnum < -1.0) || (randomnum > 1.0))
-		} while (randomnum >= 1.0);
 
-		//this may give more variety of numbers
-		//may be obsolete, test how values come out using old and new definitions of function
-		if ((randomnum <= 1.0) && (randomnum >= -1.0))
-			return randomnum;
-		else
+	do {
+		do
 		{
-			//this makes sure every weight gets an assingment if something filtered through other loop,
-			//also makes sure it's a weight less than 1
-			randomnum = (static_cast<float> (-1 + rand() % 3)) / (static_cast<float> (1 + rand() % 5));
-			return randomnum;
-		}
+			randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
+		} while (randomnum <= -1.0); //((randomnum < -1.0) || (randomnum > 1.0))
+	} while (randomnum >= 1.0);
 
-	//}
+	//this may give more variety of numbers
+	//may be obsolete, test how values come out using old and new definitions of function
+	if ((randomnum <= 1.0) && (randomnum >= -1.0))
+		return randomnum;
+	else
+	{
+		//this makes sure every weight gets an assingment if something filtered through other loop,
+		//also makes sure it's a weight less than 1
+		randomnum = (static_cast<float> (-1 + rand() % 3)) / (static_cast<float> (1 + rand() % 5));
+		return randomnum;
+	}
+
 	//return randomweights;
 }
 
 void Network::loadInput(int inrow, int incolumn, float value)
 {
-
+	std::cout << "you are in loadINput\n";
 	if ((inrow == 0) && (incolumn == 0))
 	{
-		inputData = new float*[(row / 2)];
+		inputData = new float* [(row / 2)];
 		inputData[inrow] = new float[2];//make this dynamic next
 		std::cout << "row 1 " << inrow << std::endl;
 		std::cout << "col " << incolumn << std::endl;
@@ -138,13 +101,13 @@ void Network::loadInput(int inrow, int incolumn, float value)
 void Network::loadOutput(int inrow, int incolumn, float value)
 {
 	std::cout << "you are in load output\n";
-	//std::cout << "row 1 " << inrow << std::endl;
-	//std::cout << "col " << incolumn << std::endl;
+	std::cout << "row 1 " << inrow << std::endl;
+	std::cout << "col " << incolumn << std::endl;
 	//std::cout << "value " << value << std::endl;
 	if ((inrow == 0) && (incolumn == 0))
 	{
 		//std::cout << "you are in if loadoutput\n";
-		outputData = new float*[(row / 2)];
+		outputData = new float* [(row / 2)];
 		outputData[inrow] = new float[1]; //make this dynamic next, size of array is determined here, must be set at very beginning, no update
 		//std::cout << "row 1 " << inrow << std::endl;
 		//std::cout << "col " << incolumn << std::endl;
@@ -158,6 +121,12 @@ void Network::loadOutput(int inrow, int incolumn, float value)
 	}
 
 	*(*(outputData + inrow) + incolumn) = value;
+	std::cout << "value " << value << std::endl;
+	std::cout << "value data " << *(*(outputData + inrow) + incolumn) << std::endl;
+
+
+
+
 
 }
 
@@ -225,7 +194,7 @@ void Network::displayInput()
 		{
 			for (int k = 0; k < 2; k++)
 			{
-			std::cout << "output " << *(*(outputData + j) + k) << std::endl;
+				std::cout << "output " << *(*(outputData + j) + k) << std::endl;
 			}
 		}
 		else
@@ -259,8 +228,21 @@ void Network::loadLayers()
 	//maybe delete the inNodes parameter form inputLayer as it is being sent in the constructor
 	neural.inputLayer(inputData, outputData);
 	neural.hiddenLayer();
+	neural.outputLayer();
 }
 
+/*
+void Network::feedForward()
+{
+	errors();
+	std::cout << "you are in feedForward()\n";
+}
+
+void Network::backPropagate()
+{
+	std::cout << "you are in backPropagate()\n";
+}
+*/
 void Network::setInputRow(int num)
 {
 	row = num;

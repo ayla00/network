@@ -2,13 +2,13 @@
 
 Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate)
 {
-	//innodes = nodes;
-	//Neural nnet;
+
 	std::cout << "derived constructor \n";
 	displayVariables();
 	Network(pairs, nodes, innode, hidnode, outnode, natexp, lrate);
 
 	iopairs = pairs;
+	row = iopairs / 2;
 	column = nodes;
 	std::cout << "nodes " << nodes << std::endl;
 	inNodes = innode;
@@ -22,7 +22,7 @@ Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float
 	const int OUTCOLUMNS = outNodes;
 
 
-	in = new Neuron[INCOLUMNS]; //make this dynamic
+	in = new Neuron[INCOLUMNS];
 	hid = new Neuron[HIDCOLUMNS];
 	out = new Neuron[OUTCOLUMNS];
 
@@ -38,7 +38,7 @@ Neural::~Neural()
 		delete[] in[i];
 	}
 	delete[] in;*/
-	/*
+
 	delete[] in->x;
 	in->x = nullptr;
 	delete[] in->weight;
@@ -64,7 +64,7 @@ Neural::~Neural()
 	delete[] out;
 	out = nullptr;
 	delete netptr;
-	netptr = nullptr;*/
+	netptr = nullptr;
 }
 
 void Neural::inputLayer(float** inputData, float** outputData)
@@ -73,7 +73,6 @@ void Neural::inputLayer(float** inputData, float** outputData)
 	std::cout << "in Nodes " << inNodes << std::endl;
 	//setInput used to have inNodes as parameter in case you want to change it from place
 	//(back to network), it also used to have outputData
-	//allocatePointers();
 	setInput(inputData);
 	setWeights(inNodes, in);
 	std::cout << "before \n";
@@ -182,6 +181,61 @@ void Neural::display(Neuron * nptr)
 	{
 		for (int k = 0; k < 2; k++) //make this dynamic
 			std::cout << "input " << (nptr + k)->x[j] << std::endl;
+	}
+}
+
+void Neural::calculateError(float** outputData)
+{
+	error(outNodes, out, outputData); //errors at ouput layer
+	backErrors(hidNodes, outNodes, hid, out); //errors at hidden layer
+	backErrors(inNodes, hidNodes, in, hid); //errors at input layer
+}
+
+void Neural::error(int nodes, Neuron * layer, float** outputData)
+{
+	for (int n = 0; n < nodes; n++)
+	{
+		for (int r = 0; r < 4; r++) //make this dynamic
+		{
+			(layer + n)->error[r] = sigmoid[r][n] * (1.0 - (sigmoid[r][n])) * ((*(*(outputData + r) + n)));
+		}
+
+
+	}
+
+	for (int n = 0; n < nodes; n++)
+	{
+		for (int r = 0; r < 4; r++) //make this dynamic
+			std::cout << "input " << (layer + n)->error[r] << std::endl;
+	}
+	//return 0.0f;
+}
+
+void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlayer)
+{
+
+	for (int n = 0; n < back; n++)
+	{
+
+		for (int r = 0; r < 4; r++)
+		{
+			//nodes of previous layer
+			//will this work if nodes is zero?, will it ever be zero
+			for (int layerindex = 0; layerindex < next; layerindex++)
+			{
+				(backlayer + n)->error[r] += ((nextlayer + layerindex)->error[r]) * ((backlayer + layerindex)->weight[r]);
+				std::cout << "total " << sumtotal[r][n] << std::endl;
+			}
+
+		}
+
+
+	}
+
+	for (int n = 0; n < back; n++)
+	{
+		for (int r = 0; r < 4; r++) //make this dynamic
+			std::cout << "errors " << (backlayer + n)->error[r] << std::endl;
 	}
 }
 
