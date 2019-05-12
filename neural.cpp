@@ -115,6 +115,11 @@ void Neural::outputLayer()
 	std::cout << "after \n";
 }
 
+void Neural::saveWeights()
+{
+	std::cout << "you are in saveWeights()\n";
+}
+
 void Neural::allocatePointers()
 {
 	//function allocates arrays for use in network
@@ -240,6 +245,16 @@ void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlay
 			std::cout << "errors " << (backlayer + n)->error[r] << std::endl;
 	}
 }
+
+void Neural::adjustWeights()
+{
+	//check this one, the formula must be different
+	backWeights(outNodes, outNodes, out, out);
+	backWeights(hidNodes, outNodes, hid, out);
+	backWeights(inNodes, hidNodes, in, hid);
+
+}
+
 
 void Neural::backWeights(int back, int next, Neuron * backlayer, Neuron * nextlayer)
 {

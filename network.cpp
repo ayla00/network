@@ -42,6 +42,9 @@ void Network::train()
 
 	//calculate errors
 	neural.calculateError(outputData);
+
+	//backpropagate
+	//neural.adjustWeights();
 }
 
 

@@ -25,6 +25,7 @@ public:
 	void inputLayer(float** inputData, float** outputData);
 	void hiddenLayer();
 	void outputLayer();
+	void saveWeights();
 	float y;
 protected:
 	//void setInput(float **inputData, float **outputData);
