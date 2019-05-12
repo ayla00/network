@@ -24,7 +24,6 @@ public:
 	void inputLayer(float** inputData, float** outputData);
 	void hiddenLayer();
 	void outputLayer();
-	void outputLayer();
 	int y;
 protected:
 	//void setInput(float **inputData, float **outputData);
@@ -33,7 +32,7 @@ protected:
 	void setInput(float** inputData);
 	void setWeights(int nodes, Neuron* layer);
 	void setotherInput(int nodes, Neuron* layer);
-	void sumInputs(int nodes, int previousnodes, Neuron* layer);
+	void sumInputs(int current, int next, Neuron* layer);
 	void activation(int nodes, Neuron* layer);
 	//float sigmoid;
 	Network* netptr;
