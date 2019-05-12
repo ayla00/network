@@ -21,6 +21,7 @@ public:
 
 	void display(Neuron* nptr);
 	void calculateError(float** outputData);
+	void adjustWeights();
 	void inputLayer(float** inputData, float** outputData);
 	void hiddenLayer();
 	void outputLayer();
@@ -36,6 +37,7 @@ protected:
 	void activation(int nodes, Neuron* layer);
 	void error(int nodes, Neuron* layer, float** outputData);
 	void backErrors(int back, int next, Neuron* backlayer, Neuron* nextlayer);
+	void backWeights(int back, int next, Neuron* backlayer, Neuron* nextlayer);
 	//float sigmoid;
 	Network* netptr;
 	//float Normalize(float *x); // or Neural *neuronptr?

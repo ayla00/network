@@ -213,7 +213,7 @@ void Neural::error(int nodes, Neuron * layer, float** outputData)
 
 void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlayer)
 {
-	//is the weight calculated for each entry or is the same for all entries???
+	//is the weight calculated for each entry or is the same for all entries w/in same node???
 	float sum = 0;
 	for (int n = 0; n < back; n++)
 	{
@@ -241,42 +241,31 @@ void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlay
 	}
 }
 
-
-/*
-float Neural::randomWeights()
+void Neural::backWeights(int back, int next, Neuron * backlayer, Neuron * nextlayer)
 {
-	//netptr->iopairs;
-	std::cout << "iopairs " << iopairs << std::endl;//netptr->iopairs << std::endl;
-	std::cout << "innodes " << innodes << std::endl;
-	float randomnum;
-	//std::vector<float> randomweights;
-	//for (int i = 0; i < iopairs; i++)
-	//{
-		//this gives more variety of numbers
-		do
-		{
-			randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
-		} while ((randomnum < -1.0) || (randomnum > 1.0));
+	//is the weight calculated for each entry or is the same for all entries w/in same node???
+	float sum = 0;
+	for (int n = 0; n < back; n++)
+	{
 
-		if ((randomnum <= 1.0) && (randomnum >= -1.0))
+		for (int r = 0; r < 4; r++)
 		{
-			//randomweights.push_back(randomnum);
-			//std::cout << randomweights.at(i) << std::endl;
-			return randomnum;
+			//nodes of previous layer
+			//will this work if nodes is zero?, will it ever be zero
+			for (int layerindex = 0; layerindex < next; layerindex++)
+			{
+				(backlayer + n)->weight[r] = (((backlayer + n)->weight[r]) + (lr * ((nextlayer + n)->error[r]) * (backlayer + n)->x[r]));
+			}
 		}
-		else
-		{
-			//this makes sure every weight gets an assingment if something filtered through other loop,
-			//also makes sure it's a weight less than 1
-			randomnum = (static_cast<float> (-1 + rand() % 3)) / (static_cast<float> (1 + rand() % 5));
-			return randomnum;
-			//randomweights.push_back(randomnum);
-			//std::cout << randomweights.at(i) << std::endl;
-		}
+	}
 
-	//}
-	//return randomweights;
-}*/
+	for (int n = 0; n < back; n++)
+	{
+		for (int r = 0; r < 4; r++) //make this dynamic
+			std::cout << "weights " << (backlayer + n)->weight[r] << std::endl;
+	}
+}
+
 
 
 void Neural::setWeights(int current, Neuron * layer)
