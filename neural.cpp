@@ -197,7 +197,7 @@ void Neural::error(int nodes, Neuron * layer, float** outputData)
 	{
 		for (int r = 0; r < 4; r++) //make this dynamic
 		{
-			(layer + n)->error[r] = sigmoid[r][n] * (1.0 - (sigmoid[r][n])) * ((*(*(outputData + r) + n)));
+			(layer + n)->error[r] = sigmoid[r][n] * (1.0 - (sigmoid[r][n])) * ((*(*(outputData + r) + n)) - sigmoid[r][n]);
 		}
 
 
@@ -213,7 +213,8 @@ void Neural::error(int nodes, Neuron * layer, float** outputData)
 
 void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlayer)
 {
-
+	//is the weight calculated for each entry or is the same for all entries???
+	float sum = 0;
 	for (int n = 0; n < back; n++)
 	{
 
@@ -223,9 +224,10 @@ void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlay
 			//will this work if nodes is zero?, will it ever be zero
 			for (int layerindex = 0; layerindex < next; layerindex++)
 			{
-				(backlayer + n)->error[r] += ((nextlayer + layerindex)->error[r]) * ((backlayer + layerindex)->weight[r]);
-				std::cout << "total " << sumtotal[r][n] << std::endl;
+				sum += ((nextlayer + layerindex)->error[r]) * ((backlayer + layerindex)->weight[r]);
 			}
+
+			(backlayer + n)->error[r] = (((backlayer + n)->x[r]) * (1.0 - ((backlayer + n)->x[r]) * sum));
 
 		}
 
