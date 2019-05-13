@@ -37,10 +37,13 @@ void Network::train()
 
 	//sends input
 	neural.inputLayer(inputData, outputData);
+	std::cout << "before setting weights\n";
 	neural.setWeights();
+	std::cout << "after setting weights\n";
 
 	for (int epoch = 0; epoch < 10; epoch++)
 	{
+		std::cout << "inside training loop\n";
 		//feed forward
 		neural.hiddenLayer();
 		neural.outputLayer();
@@ -51,6 +54,9 @@ void Network::train()
 		//backpropagate
 		neural.adjustWeights();
 	}
+
+	neural.saveWeights();
+	neural.saveOuput();
 
 }
 
@@ -85,9 +91,10 @@ float Network::randomWeights()
 void Network::loadInput(int inrow, int incolumn, float value)
 {
 	std::cout << "you are in loadINput\n";
+	std::cout << "column " << column << std::endl;
 	if ((inrow == 0) && (incolumn == 0))
 	{
-		inputData = new float* [(row / 2)];
+		inputData = new float*[(row / 2)];
 		inputData[inrow] = new float[2];//make this dynamic next
 		std::cout << "row 1 " << inrow << std::endl;
 		std::cout << "col " << incolumn << std::endl;
@@ -117,7 +124,7 @@ void Network::loadOutput(int inrow, int incolumn, float value)
 	if ((inrow == 0) && (incolumn == 0))
 	{
 		//std::cout << "you are in if loadoutput\n";
-		outputData = new float* [(row / 2)];
+		outputData = new float*[(row / 2)];
 		outputData[inrow] = new float[1]; //make this dynamic next, size of array is determined here, must be set at very beginning, no update
 		//std::cout << "row 1 " << inrow << std::endl;
 		//std::cout << "col " << incolumn << std::endl;
@@ -241,6 +248,62 @@ void Network::loadLayers()
 	neural.outputLayer();
 }
 
+void Network::writeWeight(std::vector<float> neuralWeights)
+{
+	std::string character;
+	float value;
+	std::ofstream outputFile("neuralweight.txt");
+	int vectSize = neuralWeights.size();
+	if (outputFile.is_open())
+	{
+		for (int index = 0; index < vectSize; index++)
+		{
+			value = neuralWeights.at(index);
+			std::string character = "WEIGHT" + ' ' + std::to_string(value);
+			//improve this output
+			outputFile << character << std::endl;
+		}
+	}
+	else
+		throw OUTPUTFILE;
+
+	outputFile.close();
+}
+
+void Network::writeOutput(float ** neuralOutput)
+{
+	std::string character = "";
+	float value;
+	std::ofstream outputFile("neuraloutput.txt");
+
+	//might need to pass parameters for row and column limits
+	//improve this output
+	if (outputFile.is_open())
+	{
+		for (int row = 0; row < (iopairs / 2); row++)
+		{
+			for (int column = 0; column < outNodes; column++)
+			{
+
+				value = (*(*(neuralOutput + row) + column));
+				if (column != outNodes - 1)
+					character += std::to_string(value) + ' ';
+				else
+					character += std::to_string(value);
+			}
+
+			//improve this output
+			outputFile << character << std::endl;
+		}
+	}
+	else
+		throw OUTPUTFILE;
+
+	outputFile.close();
+}
+
+
+
 /*
 void Network::feedForward()
 {
@@ -262,9 +325,6 @@ int Network::getInputRow()
 {
 	return row;
 }
-
-
-
 
 
 

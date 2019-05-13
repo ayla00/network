@@ -49,9 +49,7 @@ public:
 	void loadLayers();
 	int test;
 
-
 protected:
-
 	//void outputLayer();
 	//void middleLayer();
 	//Network *neuronptr;
@@ -73,6 +71,9 @@ protected:
 	float ee;
 	float** inputData;
 	float** outputData;
+	void writeWeight(std::vector<float> neuralWeights);
+	void writeOutput(float ** neuralOutput);
+	const int OUTPUTFILE = -1111111;
 
 };
 
