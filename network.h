@@ -76,4 +76,4 @@ protected:
 
 };
 
-#endif  //NEURAL_H
+#endif  //NETWORK_H

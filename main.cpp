@@ -6,7 +6,7 @@ int main()
 {
 	srand(time(NULL));
 	std::cout << "main before pointer\n";
-	Network * neta = new Network;
+	Network* neta = new Network;
 	std::cout << "main after pointer\n";
 	//Neural * neural = new Neural;
 	//Neural * n = new Neural;
@@ -25,7 +25,10 @@ int main()
 	std::cout << "you are out of displayInput\n";
 	//Neural n;
 	//std::cout << "test " << n.test << std::endl;
-	neta->loadLayers();
+
+	neta->train();
+
+	//neta->loadLayers();
 	//n->display();
 	//n->getInput();
 
