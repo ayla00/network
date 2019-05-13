@@ -1,3 +1,10 @@
+/*
+
+NOTES:
+//reading any file assumes the format is the same for all incoming files (including variable names)
+*/
+
+
 #include "network.h"
 #include "neural.h"
 
@@ -55,8 +62,8 @@ void Network::train()
 		neural.adjustWeights();
 	}
 
-	neural.saveWeights();
-	neural.saveOuput();
+	writeWeight(neural.saveWeights());
+	writeOutput(neural.saveOuput());
 
 }
 
@@ -250,7 +257,7 @@ void Network::loadLayers()
 
 void Network::writeWeight(std::vector<float> neuralWeights)
 {
-	std::string character;
+	std::string character = "";
 	float value;
 	std::ofstream outputFile("neuralweight.txt");
 	int vectSize = neuralWeights.size();
@@ -259,7 +266,7 @@ void Network::writeWeight(std::vector<float> neuralWeights)
 		for (int index = 0; index < vectSize; index++)
 		{
 			value = neuralWeights.at(index);
-			std::string character = "WEIGHT" + ' ' + std::to_string(value);
+			character = "WEIGHT" + ' ' + std::to_string(value);
 			//improve this output
 			outputFile << character << std::endl;
 		}
@@ -292,8 +299,10 @@ void Network::writeOutput(float ** neuralOutput)
 					character += std::to_string(value);
 			}
 
+
 			//improve this output
 			outputFile << character << std::endl;
+			character = "";
 		}
 	}
 	else
@@ -325,6 +334,9 @@ int Network::getInputRow()
 {
 	return row;
 }
+
+
+
 
 
 
