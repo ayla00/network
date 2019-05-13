@@ -13,7 +13,7 @@ Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float
 	column = nodes;
 	std::cout << "nodes " << nodes << std::endl;
 	inNodes = innode + BIAS;
-	hidNodes = hidnode;
+	hidNodes = hidnode + BIAS;
 	outNodes = outnode;
 	ee = natexp;
 	lr = lrate;
@@ -271,7 +271,7 @@ void Neural::error(int nodes, Neuron * layer, float** outputData)
 void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlayer)
 {
 	//is the weight calculated for each entry or is the same for all entries w/in same node???
-	float sum = 0;
+	float sum[4][3] = 0;
 	for (int n = 0; n < back; n++)
 	{
 
@@ -282,10 +282,10 @@ void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlay
 			for (int layerindex = 0; layerindex < next; layerindex++)
 			{
 				//check if i need to do this PER row (r) or is just all  cummulative
-				sum += ((nextlayer + layerindex)->error[r]) * ((backlayer + n)->weight[layerindex]);
+				sum[r][n] += ((nextlayer + layerindex)->error[r]) * ((backlayer + n)->weight[layerindex]);
 			}
 
-			(backlayer + n)->error[r] = (((backlayer + n)->x[r]) * (1.0 - (((backlayer + n)->x[r]) * sum)));
+			(backlayer + n)->error[r] = (((backlayer + n)->x[r]) * (1.0 - (((backlayer + n)->x[r]) * sum[r][n])));
 
 		}
 
