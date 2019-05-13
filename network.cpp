@@ -266,9 +266,8 @@ void Network::writeWeight(std::vector<float> neuralWeights)
 		for (int index = 0; index < vectSize; index++)
 		{
 			value = neuralWeights.at(index);
-			character = "WEIGHT" + ' ' + std::to_string(value);
 			//improve this output
-			outputFile << character << std::endl;
+			outputFile << "WEIGHT" << ' ' << value << std::endl;
 		}
 	}
 	else
