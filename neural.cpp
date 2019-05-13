@@ -27,6 +27,7 @@ Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float
 	in = new Neuron[INCOLUMNS];
 	hid = new Neuron[HIDCOLUMNS];
 	out = new Neuron[OUTCOLUMNS];
+	y[OUTCOLUMNS] = new float[ROWS];
 
 	//assumes hidden layer HAS the same or more layers than input layer
 	//sumtotal = new float*[HIDCOLUMNS];
@@ -46,11 +47,12 @@ Neural::~Neural()
 	}
 	delete[] in;*/
 
+
+	delete[] y;
+	y = nullptr;
+
 	delete[] out->error;
 	out->error = nullptr;
-	//DON'T NEED THIS BECAUSE THERE IS NO WEIGHTS FROM OUTPUT LAYER TO OUTPUT
-	//delete[] out->weight;
-	//out->weight = nullptr;
 	delete[] out->x;
 	out->x = nullptr;
 	delete[] out;
@@ -146,6 +148,14 @@ void Neural::outputLayer()
 void Neural::saveWeights()
 {
 	std::cout << "you are in saveWeights()\n";
+	//if there are more than one outNode would I have to produce just one y or as many as output nodes?
+	//in that case the y would be a summation of the columns
+	for (int column = 0; column < outNodes; column++)
+	{
+		for (int row = 0; row < 4; row++)
+			(*(*(y + row) + column)) = sigmoid[row][column];
+	}
+		
 }
 
 void Neural::allocatePointers()
@@ -170,15 +180,13 @@ void Neural::allocatePointers()
 		(hid + nodes)->x = new float[ROWS];
 		(hid + nodes)->weight = new float[OUTRS];
 		(hid + nodes)->error = new float[ROWS];
-		//*(sumtotal + nodes) = new float[ROWS];
 	}
 
 	for (int nodes = 0; nodes < outNodes; nodes++)
 	{
 		(out + nodes)->x = new float[ROWS];
-		//not needed, do I have to allocate memory anyway?
-		//(out + nodes)->weight = new float[ROWS];
 		(out + nodes)->error = new float[ROWS];
+		//no memory allocated for weight as not needed
 	}
 
 }
@@ -265,7 +273,7 @@ void Neural::error(int nodes, Neuron * layer, float** outputData)
 		for (int r = 0; r < 4; r++) //make this dynamic
 			std::cout << "input " << (layer + n)->error[r] << std::endl;
 	}
-	//return 0.0f;
+
 }
 
 void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlayer)
@@ -337,7 +345,7 @@ void Neural::backWeights(int back, int next, Neuron * backlayer, Neuron * nextla
 
 	for (int n = 0; n < back; n++)
 	{
-		for (int r = 0; r < 4; r++) //make this dynamic
+		for (int r = 0; r < next; r++) //remember the rows of the weigth array depend on next layer's nodes
 			std::cout << "weights " << (backlayer + n)->weight[r] << std::endl;
 	}
 }

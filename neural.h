@@ -41,7 +41,7 @@ protected:
 	void backWeights(int back, int next, Neuron* backlayer, Neuron* nextlayer);
 	//float sigmoid;
 	Network* netptr;
-	float* yresult;
+	float** y;
 	const int BIAS = 1;
 	const float BIASVALUE = 1.0;
 	//float Normalize(float *x); // or Neural *neuronptr?
