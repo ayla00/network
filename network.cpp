@@ -35,16 +35,23 @@ void Network::train()
 	//load input
 	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr);
 
-	//propagate activations
+	//sends input
 	neural.inputLayer(inputData, outputData);
-	neural.hiddenLayer();
-	neural.outputLayer();
+	neural.setWeights();
 
-	//calculate errors
-	neural.calculateError(outputData);
+	for (int epoch = 0; epoch < 10; epoch++)
+	{
+		//feed forward
+		neural.hiddenLayer();
+		neural.outputLayer();
 
-	//backpropagate
-	//neural.adjustWeights();
+		//calculate errors
+		neural.calculateError(outputData);
+
+		//backpropagate
+		neural.adjustWeights();
+	}
+
 }
 
 

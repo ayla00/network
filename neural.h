@@ -19,12 +19,13 @@ public:
 	Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate);
 	~Neural();
 
-	void display(int nodes, Neuron* nptr);
-	void calculateError(float** outputData);
-	void adjustWeights();
+	void setWeights();
 	void inputLayer(float** inputData, float** outputData);
 	void hiddenLayer();
 	void outputLayer();
+	void display(int nodes, Neuron* nptr);
+	void calculateError(float** outputData);
+	void adjustWeights();
 	void saveWeights();
 
 protected:
@@ -53,8 +54,9 @@ protected:
 	Neuron* out;
 	int innodes;
 	//these will have to be adapted for different input
-	float sumtotal[4][2];
-	float sigmoid[4][2];
+	float sumtotal[4][3];
+	//float ** sumtotal;
+	float sigmoid[4][3];
 
 
 };
