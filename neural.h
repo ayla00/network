@@ -19,22 +19,22 @@ public:
 	Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate);
 	~Neural();
 
+
 	void setWeights();
-	void saveWeights(Neuron * layer);
-	void saveOuput();
 	void inputLayer(float** inputData, float** outputData);
 	void hiddenLayer();
 	void outputLayer();
 	void display(int nodes, Neuron* nptr);
 	void calculateError(float** outputData);
 	void adjustWeights();
-	void saveWeights();
+	std::vector<float> saveWeights();
+	void saveOuput();
 
 protected:
 	//void setInput(float **inputData, float **outputData);
 	void allocatePointers();
 	void setInput(float** inputData);
-	void settingWeigths(int current, int next, Neuron* layer);
+	void rWeights(int current, int next, Neuron * layer);
 	void setotherInput(int nodes, Neuron* layer);
 	void sumInputs(int current, int next, Neuron* layer);
 	void activation(int nodes, Neuron* layer);
@@ -45,7 +45,8 @@ protected:
 	//float sigmoid;
 	Network* netptr;
 	float** y;
-	std::vector<float[4]> runweights;
+	//std::vector<float[4]> runweights;
+	std::vector<float> runweights;
 	const int BIAS = 1;
 	const float BIASVALUE = 1.0;
 	//float Normalize(float *x); // or Neural *neuronptr?
