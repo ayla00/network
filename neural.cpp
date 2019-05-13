@@ -28,6 +28,7 @@ Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float
 	hid = new Neuron[HIDCOLUMNS];
 	out = new Neuron[OUTCOLUMNS];
 	y[OUTCOLUMNS] = new float[ROWS];
+	
 
 	//assumes hidden layer HAS the same or more layers than input layer
 	//sumtotal = new float*[HIDCOLUMNS];
@@ -82,8 +83,8 @@ Neural::~Neural()
 
 void Neural::setWeights()
 {
-	setWeights(inNodes, hidNodes, in);
-	setWeights(hidNodes, outNodes, hid);
+	settingWeights(inNodes, hidNodes, in);
+	settingWeights(hidNodes, outNodes, hid);
 }
 
 void Neural::inputLayer(float** inputData, float** outputData)
@@ -147,6 +148,15 @@ void Neural::outputLayer()
 
 void Neural::saveWeights()
 {
+	//how to make this dynamic?
+	pushWeights(in, hid);
+	pushWeights(hid, out);
+
+		
+}
+
+void Neural::saveOuput()
+{
 	std::cout << "you are in saveWeights()\n";
 	//if there are more than one outNode would I have to produce just one y or as many as output nodes?
 	//in that case the y would be a summation of the columns
@@ -155,7 +165,6 @@ void Neural::saveWeights()
 		for (int row = 0; row < 4; row++)
 			(*(*(y + row) + column)) = sigmoid[row][column];
 	}
-		
 }
 
 void Neural::allocatePointers()
@@ -236,6 +245,38 @@ void Neural::setInput(float** inputData)
 
 
 	display(inNodes, in); //erase this 
+}
+
+void Neural::settingWeigths(int current, int next, Neuron * layer)
+{
+	//this array needs a different set-up thant the input array(x[])
+//it is assumed that there is only one weight value from one neuron to the next for all input entries
+//(as opposed to a different weight for each entry, for example it's the same wegith w[j]=a for all j,
+//instead of each j having a different one w[0]=d, w[1]=e, etc;
+//here, the n is the #of nodes in current layer and r is not the entries as in input, but the number
+//of nodes in next layer
+	for (int n = 0; n < current; n++) //make this dynamic
+	{
+		for (int r = 0; r < next; r++)
+		{
+			std::cout << "n " << n << "\tr " << r << std::endl;
+			(layer + n)->weight[r] = randomWeights();
+			std::cout << "weights " << (layer + n)->weight[r] << std::endl;
+		}
+	}
+
+
+	for (int n = 0; n < current; n++) //make this dynamic
+	{
+		for (int r = 0; r < next; r++)
+		{
+			std::cout << "n " << n << "\tr " << r << std::endl;
+			std::cout << "weights " << (layer + n)->weight[r] << std::endl;
+		}
+	}
+
+	std::cout << "about to get out of weights \n" << std::endl;
+	//display(in->weight); //erase this 
 }
 
 void Neural::display(int nodes, Neuron * nptr)
@@ -350,41 +391,46 @@ void Neural::backWeights(int back, int next, Neuron * backlayer, Neuron * nextla
 	}
 }
 
-
-
-void Neural::setWeights(int current, int next, Neuron * layer)
+void Neural::pushWeights(Neuron * from, Neuron * to)
 {
-	//this array needs a different set-up thant the input array(x[])
-	//it is assumed that there is only one weight value from one neuron to the next for all input entries
-	//(as opposed to a different weight for each entry, for example it's the same wegith w[j]=a for all j,
-	//instead of each j having a different one w[0]=d, w[1]=e, etc;
-	//here, the n is the #of nodes in current layer and r is not the entries as in input, but the number
-	//of nodes in next layer
-	for (int n = 0; n < current; n++) //make this dynamic
+	float value{ 0,0,0 };
+	float fromlayer;
+	int fromNode, toNode;
+
+	if (from == in)
 	{
-		for (int r = 0; r < next; r++)
-		{
-			std::cout << "n " << n << "\tr " << r << std::endl;
-			(layer + n)->weight[r] = randomWeights();
-			std::cout << "weights " << (layer + n)->weight[r] << std::endl;
-		}
+		//maybe modify if you make hidden layers dynamic
+		fromlayer = 1;
+		fromNode = inNode;
+		toNode = hidNode;
 	}
-
-
-	for (int n = 0; n < current; n++) //make this dynamic
+	else
 	{
-		for (int r = 0; r < next; r++)
-		{
-			std::cout << "n " << n << "\tr " << r << std::endl;
-			std::cout << "weights " << (layer + n)->weight[r] << std::endl;
-		}
+		fromlayer = 2;
+		fromnode = hidNode;
+		nextnode = outNode;
 	}
+		
 
-	std::cout << "about to get out of weights \n" << std::endl;
-	//display(in->weight); //erase this 
+	for (float node = 0; node < fromNode; node++)
+	{
+		for (float nextnode = 0; nextnode < toNode; nextnode++)
+		{
+			//first is from layer #, then to layer #, then weight
+			//do we have to save the weights to the bias?????
+			value[0] = fromlayer;
+			value[1] = fromlayer + 1;
+			value[2] = node;
+			value[3] = (layer + node)->weight[nextnode];
 
+			runweights.push_back(value);
+		}
+			
+	}
 
 }
+
+
 
 void Neural::setotherInput(int current, Neuron * layer)
 {
