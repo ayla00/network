@@ -19,7 +19,7 @@ public:
 	Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate);
 	~Neural();
 
-	void display(Neuron* nptr);
+	void display(int nodes, Neuron* nptr);
 	void calculateError(float** outputData);
 	void adjustWeights();
 	void inputLayer(float** inputData, float** outputData);
@@ -42,6 +42,8 @@ protected:
 	//float sigmoid;
 	Network* netptr;
 	float* yresult;
+	const int BIAS = 1;
+	const float BIASVALUE = 1.0;
 	//float Normalize(float *x); // or Neural *neuronptr?
 	//float findMin();
 	//float findMax();

@@ -5,14 +5,15 @@ Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float
 
 	std::cout << "derived constructor \n";
 	displayVariables();
-	Network(pairs, nodes, innode, hidnode, outnode, natexp, lrate);
+	Network(pairs, nodes, innode + BIAS, hidnode + BIAS, outnode, natexp, lrate);
+
 
 	iopairs = pairs;
 	row = iopairs / 2;
 	column = nodes;
 	std::cout << "nodes " << nodes << std::endl;
-	inNodes = innode;
-	hidNodes = hidnode;
+	inNodes = innode + BIAS;
+	hidNodes = hidnode + BIAS;
 	outNodes = outnode;
 	ee = natexp;
 	lr = lrate;
@@ -41,30 +42,34 @@ Neural::~Neural()
 	}
 	delete[] in;*/
 
-	delete[] in->x;
-	in->x = nullptr;
-	delete[] in->weight;
-	in->weight = nullptr;
-	delete[] in->error;
-	in->error = nullptr;
-	delete[] in;
-	in = nullptr;
-	delete[] hid->x;
-	hid->x = nullptr;
-	delete[] hid->weight;
-	hid->weight = nullptr;
-	delete[] hid->error;
-	hid->error = nullptr;
-	delete[] hid;
-	hid = nullptr;
-	delete[] out->x;
-	out->x = nullptr;
-	delete[] out->weight;
-	out->weight = nullptr;
 	delete[] out->error;
 	out->error = nullptr;
+	//DON'T NEED THIS BECAUSE THERE IS NO WEIGHTS FROM OUTPUT LAYER TO OUTPUT
+	//delete[] out->weight;
+	//out->weight = nullptr;
+	delete[] out->x;
+	out->x = nullptr;
 	delete[] out;
 	out = nullptr;
+
+	delete[] hid->error;
+	hid->error = nullptr;
+	delete[] hid->weight;
+	hid->weight = nullptr;
+	delete[] hid->x;
+	hid->x = nullptr;
+	delete[] hid;
+	hid = nullptr;
+
+	delete[] in->error;
+	in->error = nullptr;
+	delete[] in->weight;
+	in->weight = nullptr;
+	delete[] in->x;
+	in->x = nullptr;
+	delete[] in;
+	in = nullptr;
+
 	delete netptr;
 	netptr = nullptr;
 }
@@ -171,16 +176,25 @@ void Neural::setInput(float** inputData)
 
 	for (int k = 0; k < inNodes; k++)
 	{
-
-		for (int j = 0; j < 4; j++)
+		if (k != (inNodes - BIAS))
 		{
-			(in + k)->x[j] = *(*(inputData + j) + k);
+			for (int j = 0; j < 4; j++)
+			{
+				(in + k)->x[j] = *(*(inputData + j) + k);
 
-			std::cout << "values " << (in + k)->x[j] << std::endl;
+			}
 		}
+		else
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				(in + k)->x[j] = BIASVALUE;
+			}
+		}
+
 	}
 
-	for (int k = 0; k < 2; k++) //DELETE, JUST DEMO PURPOSES
+	for (int k = 0; k < inNodes; k++) //DELETE, JUST DEMO PURPOSES
 	{
 		for (int j = 0; j < 4; j++)
 		{
@@ -189,16 +203,16 @@ void Neural::setInput(float** inputData)
 	}
 
 
-	display(in); //erase this 
+	display(inNodes, in); //erase this 
 }
 
-void Neural::display(Neuron * nptr)
+void Neural::display(int nodes, Neuron * nptr)
 {
 	std::cout << "you are in display\n";
 	std::cout << "in Nodes " << inNodes << std::endl;
 	for (int j = 0; j < 4; j++)
 	{
-		for (int k = 0; k < 2; k++) //make this dynamic
+		for (int k = 0; k < nodes; k++) //make this dynamic
 			std::cout << "input " << (nptr + k)->x[j] << std::endl;
 	}
 }
@@ -335,6 +349,37 @@ void Neural::setWeights(int current, int next, Neuron * layer)
 void Neural::setotherInput(int current, Neuron * layer)
 {
 	std::cout << "you are in setHidInput\n";
+	if (layer == hid)
+	{
+		for (int k = 0; k < current; k++)
+		{
+			if (k != (current - BIAS))
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					(layer + k)->x[j] = sigmoid[j][k];
+				}
+			}
+			else
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					(layer + k)->x[j] = BIASVALUE;
+				}
+			}
+
+		}
+	}
+	else
+	{
+		for (int k = 0; k < current; k++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				(layer + k)->x[j] = sigmoid[j][k];
+			}
+		}
+	}
 
 	for (int k = 0; k < current; k++)
 	{
@@ -344,7 +389,7 @@ void Neural::setotherInput(int current, Neuron * layer)
 
 			(layer + k)->x[j] = sigmoid[j][k];
 
-			std::cout << "values " << (layer + k)->x[j] << std::endl;
+			std::cout << "sigmoid " << sigmoid[j][k] << std::endl;
 
 		}
 	}
@@ -371,7 +416,6 @@ void Neural::sumInputs(int current, int previous, Neuron * backlayer)
 	//was checking for correctness, it looks ok, just changed index names
 	for (int n = 0; n < current; n++)
 	{
-
 		for (int r = 0; r < 4; r++)
 		{
 			//nodes of previous layer
@@ -383,7 +427,6 @@ void Neural::sumInputs(int current, int previous, Neuron * backlayer)
 			}
 
 		}
-
 
 	}
 
@@ -436,9 +479,9 @@ void Neural::activation(int nodes, Neuron * layer)
 
 
 /*
-float Neural::Normalize(float *x)
+float Neural::Normalize(float *value)
 {
-	return ((*x - findMin()) / (findMax() - findMin()));
+	return ((*value - findMin()) / (findMax() - findMin()));
 }
 
 float Neural::findMin()
