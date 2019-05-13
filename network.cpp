@@ -27,6 +27,7 @@ Network::Network(int pairs, int nodes, int innode, int hidnode, int outnode, flo
 	ee = natexp;
 	lr = lrate;
 	displayVariables();
+	//storedWeights = new float*[;
 
 }
 
@@ -185,6 +186,126 @@ bool Network::setConfig(std::string constname, float value)
 	return returnvalue; //maybe just return true here instead of using variable
 }
 
+bool Network::getWeights(std::ifstream &wFile, std::string weightData)
+{
+	//readConfigFile(std::ifstream &cfile, std::string configfile, Network * neta)
+	//int linenumber;
+	std::string inputdata = "";
+	std::string datachunk = "";
+	int columncount = 0;
+	int rowcount = 0;
+	int row = 0;
+	int column;
+
+	wFile.open(weightData);
+
+	if ((wFile.is_open()))
+	{
+		//linenumber = countLines(inputfile);
+		//puts file at the beginning again so it can be re-read
+		//inputfile.clear();
+		while (getline(wFile, inputdata) && !wFile.eof())
+		{
+			if (!inputdata.empty())
+				rowcount = rowcount + 1; //so it counts before next function is called
+			else
+				rowcount = rowcount;
+		}
+		wFile.clear(); //needed so file can be read again
+		wFile.seekg(0); //returns file position to 0 to be read again
+		inputdata = "";
+		const int PARAMETERS = 4;//the # of parameters in input file is set
+		storedWeights = new float*[rowcount];
+
+
+		for (int p = 0; p < rowcount; p++)
+		{
+			storedWeights[rowcount] = new float[PARAMETERS];
+		}
+
+
+		while (getline(wFile, inputdata) && !wFile.eof())
+		{
+			std::cout << "line " << inputdata << std::endl;
+			int i = 0;
+			const int LINESIZE = inputdata.size();
+			//reads number of lines & takes care of emtpy lines as well, except eof
+			if (!weightData.empty())
+			{
+				while (i < LINESIZE)
+				{
+					if ((inputdata[i] != ' ') && ((i + 1) < LINESIZE))
+					{
+						datachunk += inputdata[i];
+						i++;
+					}
+					else if ((i + 1) == LINESIZE)
+					{
+						//std::cout << extracto[i] << std::endl;
+						datachunk += inputdata[i];
+						//std::cout << " input " << inputdata << std::endl;
+						std::string dummystring = " 2.5";
+						std::string trickextract = inputdata + dummystring;
+						std::string::size_type sz;     // alias of size_t
+						//std::cout << "inputdata " << inputdata << std::endl;
+
+						float firstinput = std::stof(trickextract, &sz);
+						float dummyfloat = std::stof(trickextract.substr(sz));
+
+						(*(*(storedWeights + row) + column)) = firstinput;
+						row++;
+						column = 0;
+						i++;
+					}
+					else
+					{
+
+						i++; //moves past one white space
+						//something to make sure there is no more white space should go here, but
+						//is ommitted for now
+						columncount++;
+						if (columncount > 0) //first column names parameter type, not needed
+						{
+							std::string dummystring = " 2.5";
+							std::string trickextract = datachunk + dummystring;
+							std::string::size_type sz;     // alias of size_t
+							std::cout << "inputdata " << datachunk << std::endl;
+
+							float firstinput = std::stof(trickextract, &sz);
+							float dummyfloat = std::stof(trickextract.substr(sz));
+
+							datachunk = "";
+							(*(*(storedWeights + row) + column)) = firstinput;
+							column++;
+							//i = LINESIZE;
+							//extraccion(i, row, col, extracto, extractdata);
+						}
+						else
+							datachunk = "";
+					}
+				}
+
+			}
+			else
+				row = row;
+		}
+
+
+		if (rowcount == 0)
+		{
+			throw EMPTYFILE;
+		}
+
+	}
+	else
+	{
+		throw FILENOTOPEN;
+	}
+
+	wFile.close();
+	return false;
+}
+
 void Network::displayVariables()
 {
 	std::cout << "on " << on << std::endl;
@@ -255,19 +376,32 @@ void Network::loadLayers()
 	neural.outputLayer();
 }
 
-void Network::writeWeight(std::vector<float> neuralWeights)
+void Network::writeWeight(std::vector<float*> neuralWeights)
 {
+	const int ROWS = row;
 	std::string character = "";
-	float value;
+
+	float * value = new float[ROWS];
+	int count = 0; //this will tell the row number
 	std::ofstream outputFile("neuralweight.txt");
+	std::cout << "innodes " << inNodes << std::endl;
+	std::cout << "hidnodes " << hidNodes << std::endl;
+	std::cout << "outnodes " << outNodes << std::endl;
+
 	int vectSize = neuralWeights.size();
 	if (outputFile.is_open())
 	{
 		for (int index = 0; index < vectSize; index++)
 		{
 			value = neuralWeights.at(index);
-			//improve this output
-			outputFile << "WEIGHT" << ' ' << value << std::endl;
+			std::cout << "v0 " << std::to_string(value[0]) << std::endl;
+			std::cout << "next node " << std::to_string(value[1]) << std::endl;
+			std::cout << "next node " << *(value + 2) << std::endl;
+			std::cout << "next node " << value[3] << std::endl;
+			std::cout << "WEIGHT" << ' ' << value[0] << ' ' << value[1] << ' ' << value[2] << ' ' << value[3] << std::endl;
+			outputFile << "WEIGHT" << ' ' << value[0] << ' ' << value[1] << ' ' << value[2] << ' ' << value[3] << std::endl;
+
+
 		}
 	}
 	else
@@ -292,6 +426,7 @@ void Network::writeOutput(float ** neuralOutput)
 			{
 
 				value = (*(*(neuralOutput + row) + column));
+				std::cout << "vallue " << value << std::endl;
 				if (column != outNodes - 1)
 					character += std::to_string(value) + ' ';
 				else

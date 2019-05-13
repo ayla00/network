@@ -40,6 +40,7 @@ public:
 	void loadInput(int inrow, int incoloumn, float value);
 	void loadOutput(int inrow, int incolumn, float value);
 	bool setConfig(std::string constname, float value);
+	bool getWeights(std::ifstream &wFile, std::string weightData);
 	void displayVariables();
 	void displayInput();
 	//bool setInArrayNumbers(int inrow, int incolumn);
@@ -71,9 +72,12 @@ protected:
 	float ee;
 	float** inputData;
 	float** outputData;
-	void writeWeight(std::vector<float> neuralWeights);
+	void writeWeight(std::vector<float*> neuralWeights);
 	void writeOutput(float ** neuralOutput);
 	const int OUTPUTFILE = -1111111;
+	const int FILENOTOPEN = -2222222;
+	const int EMPTYFILE = -3333333;
+	float **storedWeights;
 
 };
 
