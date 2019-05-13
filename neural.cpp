@@ -271,7 +271,18 @@ void Neural::error(int nodes, Neuron * layer, float** outputData)
 void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlayer)
 {
 	//is the weight calculated for each entry or is the same for all entries w/in same node???
-	float sum[4][3] = 0;
+	float sum[4][3];
+
+	for (int s = 0; s < back; s++)
+	{
+		for (int w = 0; w < 4; w++)
+		{
+			//std::cout << "sigmoid array " << sigmoid[j][k] << std::endl;
+			//std::cout << "sigmoid pointer " << (*(*(sumtotal + j) + k)) << std::endl;
+			sum[w][s] = 0;
+
+		}
+	}
 	for (int n = 0; n < back; n++)
 	{
 
@@ -370,7 +381,9 @@ void Neural::setWeights(int current, int next, Neuron * layer)
 void Neural::setotherInput(int current, Neuron * layer)
 {
 	std::cout << "you are in setHidInput\n";
-	/*if (layer == hid)
+	std::cout << "hidden " << hid << std::endl;
+	std::cout << "layer " << layer << std::endl;
+	if (layer == hid)
 	{
 		for (int k = 0; k < current; k++)
 		{
@@ -392,15 +405,16 @@ void Neural::setotherInput(int current, Neuron * layer)
 		}
 	}
 	else
-	{*/
-	for (int k = 0; k < current; k++)
 	{
-		for (int j = 0; j < 4; j++)
+		std::cout << "just making sure you are in output ptr\n";
+		for (int k = 0; k < current; k++)
 		{
-			(layer + k)->x[j] = sigmoid[j][k];
+			for (int j = 0; j < 4; j++)
+			{
+				(layer + k)->x[j] = sigmoid[j][k];
+			}
 		}
 	}
-	//}
 
 	for (int k = 0; k < current; k++)
 	{
@@ -435,9 +449,15 @@ void Neural::sumInputs(int current, int previous, Neuron * backlayer)
 	}
 
 	//nodes of current layer
+	
+	//delivers appropriate index limit to each layer (accounts for bias node)
+	if (backlayer != out)
+		current = current - BIAS;
+	else
+		current = current;
 
 	//was checking for correctness, it looks ok, just changed index names
-	for (int n = 0; n < current; n++)
+	for (int n = 0; n < current ; n++)
 	{
 		for (int r = 0; r < 4; r++)
 		{
