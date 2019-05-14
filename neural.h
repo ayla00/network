@@ -55,7 +55,6 @@ protected:
 	void pushWeights(Neuron * from, Neuron * to);
 	Network* netptr;
 	float** y;
-	//std::vector<float[4]> runweights;
 	std::vector<float*> runweights;
 	const int BIAS = 1;
 	const float BIASVALUE = 1.0;

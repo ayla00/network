@@ -14,8 +14,8 @@ NOTES:
 
 int main()
 {
-	try
-	{
+	//try
+	//{
 		srand(time(NULL));
 
 		Network* neta = new Network;
@@ -39,11 +39,11 @@ int main()
 
 		delete neta;
 		neta = nullptr;
-	}
-	catch (...)
-	{
-		std::cout << "an error has occurred\n";
-	}
+	//}
+	//catch (...)
+	//{
+		//std::cout << "an error has occurred\n";
+	//}
 
 
 

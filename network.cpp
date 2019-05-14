@@ -14,8 +14,6 @@ NOTES:
 Network::Network()
 {
 	iopairs = 0;
-	//on = setConfig(value);
-	std::cout << "DEFAULT CONSTRUCTOR \n";
 	displayVariables();
 }
 
@@ -50,7 +48,7 @@ void Network::train()
 	neural.setWeights();
 
 
-	for (int epoch = 0; epoch < 10; epoch++)
+	for (int epoch = 0; epoch < 100; epoch++)
 	{
 
 		//feed forward
@@ -288,7 +286,6 @@ float **Network::getWeights(std::ifstream &wFile, std::string weightData)
 							std::string dummystring = " 2.5";
 							std::string trickextract = datachunk + dummystring;
 							std::string::size_type sz;     // alias of size_t
-							std::cout << "inputdata " << datachunk << std::endl;
 
 							float firstinput = std::stof(trickextract, &sz);
 							float dummyfloat = std::stof(trickextract.substr(sz));
@@ -296,8 +293,7 @@ float **Network::getWeights(std::ifstream &wFile, std::string weightData)
 							datachunk = "";
 							(*(*(storedWeights + row) + column)) = firstinput;
 							column++;
-							//i = LINESIZE;
-							//extraccion(i, row, col, extracto, extractdata);
+
 						}
 						else
 							datachunk = "";
@@ -397,7 +393,9 @@ void Network::writeWeight(std::vector<float*> neuralWeights)
 	{
 		for (int index = 0; index < vectSize; index++)
 		{
+
 			value = neuralWeights.at(index);
+			outputFile << value[0] << ' ' << value[1] << ' ' << value[2] << ' ' << value[3] << std::endl;
 		}
 	}
 	else

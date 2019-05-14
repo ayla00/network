@@ -99,7 +99,6 @@ void readDataFile(std::ifstream & dfile, std::string datafile, Network * neta)
 		//this round gets data
 		while (getline(dfile, textline))
 		{
-			std::cout << "line " << textline << std::endl;
 
 			//reads number of lines & takes care of emtpy lines as well, except eof
 			if (!textline.empty())
@@ -130,8 +129,6 @@ bool getData(std::string extract, int row, Network *  neta)
 		return true;
 	else
 		return false;
-
-
 
 
 }
@@ -193,16 +190,12 @@ bool extraccion(int index, int row, int col, std::string extracto, Network * net
 
 bool getConfig(std::string extract, Network * neta)
 {
-	//int alphacheck; //used to check for alphabet characther and to convert string to int;
+	int alphacheck; //used to check for alphabet characther and to convert string to int;
 	bool returnvalue = false;
 	const int LINESIZE = extract.size();
-	//float configdata;
-
 	std::string inputconstant = "";
 	std::string cfgdata = "";
 
-	//Network getconfig;
-	std::cout << "extract string " << extract << std::endl;
 	for (int i = 0; i < LINESIZE; i++)
 	{
 		//takes care of constant name
@@ -217,18 +210,19 @@ bool getConfig(std::string extract, Network * neta)
 				i = LINESIZE; //to prevent code going through loop again
 			//checks for alphabet characters in number input
 			//assigns number value to constant
-			//if ((extract[i] >= -1) && (extract[i] <= 255))
-			//{
-			//	alphacheck = extract[i];
-			//	if (!isalpha(alphacheck))
-			//		cfgdata += extract[i];
-			//	else
-			//		throw NOTANUMBER;
-		//	}
-			//else
-			//{
-				cfgdata += extract[j];
+				/*if ((extract[i] >= -1) && (extract[i] <= 255))
+				{
+					alphacheck = extract[i];
+					if (!isalpha(alphacheck))
+						cfgdata += extract[i];
+					else
+						throw NOTANUMBER;
+				}
+				else
+				{*/
+					cfgdata += extract[j];
 
+				//}
 			}
 
 		}
