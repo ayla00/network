@@ -1,7 +1,10 @@
 /*
+Name: Astrid Lozano
+Assignment: fINAL project
 
 NOTES:
 //reading any file assumes the format is the same for all incoming files (including variable names)
+//for some reason there is one more space in the file that this code cannot deal with
 */
 
 
@@ -16,9 +19,8 @@ Network::Network()
 	displayVariables();
 }
 
-Network::Network(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate)
+Network::Network(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate, int wfile)
 {
-	std::cout << "parametrized CONSTRUCTOR \n";
 	iopairs = pairs;
 	column = nodes;
 	inNodes = innode;
@@ -27,9 +29,8 @@ Network::Network(int pairs, int nodes, int innode, int hidnode, int outnode, flo
 	ee = natexp;
 	lr = lrate;
 	displayVariables();
-	//storedWeights = new float*[;
-
 }
+
 
 Network::~Network()
 {
@@ -41,17 +42,17 @@ Network::~Network()
 void Network::train()
 {
 	//load input
-	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr);
+	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, weightfile);
 
 	//sends input
 	neural.inputLayer(inputData, outputData);
-	std::cout << "before setting weights\n";
+
 	neural.setWeights();
-	std::cout << "after setting weights\n";
+
 
 	for (int epoch = 0; epoch < 10; epoch++)
 	{
-		std::cout << "inside training loop\n";
+
 		//feed forward
 		neural.hiddenLayer();
 		neural.outputLayer();
@@ -68,89 +69,108 @@ void Network::train()
 
 }
 
+void Network::testnetwork()
+{
+	//load empty network
+	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, weightfile);
+	std::ifstream wfile;
+	std::string file = "neuralweight.txt";
+
+	//gets weight file or sets up random weights
+	if (weightfile == 1)
+		getWeights(wfile, file);
+	else
+		neural.setWeights();
+
+	//feed forward
+	neural.inputLayer(inputData, outputData);
+	neural.hiddenLayer();
+	neural.outputLayer();
+
+	//get out put
+	neural.calculateError(outputData);
+	writeWeight(neural.saveWeights());
+	writeOutput(neural.saveOuput());
+
+}
+
+void Network::run()
+{
+	//load empty network
+	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, weightfile);
+	std::ifstream wfile;
+	std::string file = "neuralweight.txt";
+
+	//gets weight file or sets up random weights
+	if (weightfile == 1)
+		getWeights(wfile, file);
+	else
+		neural.setWeights();
+
+	//feed forward
+	neural.inputLayer(inputData, outputData);
+	neural.hiddenLayer();
+	neural.outputLayer();
+
+	//get out put
+	writeWeight(neural.saveWeights());
+	writeOutput(neural.saveOuput());
+}
+
+
 
 float Network::randomWeights()
 {
-	std::cout << "iopairs " << iopairs << std::endl;
+
 	float randomnum;
 
 	do {
 		do
 		{
 			randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
-		} while (randomnum <= -1.0); //((randomnum < -1.0) || (randomnum > 1.0))
+		} while (randomnum <= -1.0);
 	} while (randomnum >= 1.0);
 
-	//this may give more variety of numbers
-	//may be obsolete, test how values come out using old and new definitions of function
-	if ((randomnum <= 1.0) && (randomnum >= -1.0))
-		return randomnum;
-	else
-	{
-		//this makes sure every weight gets an assingment if something filtered through other loop,
-		//also makes sure it's a weight less than 1
-		randomnum = (static_cast<float> (-1 + rand() % 3)) / (static_cast<float> (1 + rand() % 5));
-		return randomnum;
-	}
 
-	//return randomweights;
+	return randomnum;
 }
 
 void Network::loadInput(int inrow, int incolumn, float value)
 {
-	std::cout << "you are in loadINput\n";
-	std::cout << "column " << column << std::endl;
+
 	if ((inrow == 0) && (incolumn == 0))
 	{
 		inputData = new float*[(row / 2)];
 		inputData[inrow] = new float[2];//make this dynamic next
-		std::cout << "row 1 " << inrow << std::endl;
-		std::cout << "col " << incolumn << std::endl;
-		std::cout << "value " << value << std::endl;
 	}
 	else if ((inrow != 0) && (incolumn == 0))
 	{
-		std::cout << "you are else if assing\n";
 		inputData[inrow] = new float[2];
 	}
 
 	iopairs = iopairs + 1;
-	//std::cout << "row 1 " << inrow << std::endl;
-	//std::cout << "col " << incolumn << std::endl;
-	//std::cout << "pointer value " << *((inputData + inrow) + incolumn) << std::endl;
+
 	*(*(inputData + inrow) + incolumn) = value;
-	//std::cout << "value " << value << *(*(inputData + inrow) + incolumn) << std::endl;
+
 
 }
 
 void Network::loadOutput(int inrow, int incolumn, float value)
 {
-	std::cout << "you are in load output\n";
-	std::cout << "row 1 " << inrow << std::endl;
-	std::cout << "col " << incolumn << std::endl;
-	//std::cout << "value " << value << std::endl;
+
+
 	if ((inrow == 0) && (incolumn == 0))
 	{
-		//std::cout << "you are in if loadoutput\n";
 		outputData = new float*[(row / 2)];
 		outputData[inrow] = new float[1]; //make this dynamic next, size of array is determined here, must be set at very beginning, no update
-		//std::cout << "row 1 " << inrow << std::endl;
-		//std::cout << "col " << incolumn << std::endl;
-		//std::cout << "value " << value << std::endl;
 	}
 	else if ((inrow != 0) && (incolumn == 0))
 	{
-		//std::cout << "you are else if assing\n";
-		outputData[inrow] = new float[1]; //make this dynamic next,
-		//inputData[inrow] = new float[incolumn];
+		outputData[inrow] = new float[1];
+
 	}
 
 	*(*(outputData + inrow) + incolumn) = value;
-	std::cout << "value " << value << std::endl;
-	std::cout << "value data " << *(*(outputData + inrow) + incolumn) << std::endl;
-
-
-
 
 
 }
@@ -180,16 +200,17 @@ bool Network::setConfig(std::string constname, float value)
 		lr = value;
 	else if (constname == "EE")
 		ee = value;
+	else if (constname == "WEIGHTFILE")
+		weightfile = value;
 	else
 		return false;
 
 	return returnvalue; //maybe just return true here instead of using variable
 }
 
-bool Network::getWeights(std::ifstream &wFile, std::string weightData)
+float **Network::getWeights(std::ifstream &wFile, std::string weightData)
 {
-	//readConfigFile(std::ifstream &cfile, std::string configfile, Network * neta)
-	//int linenumber;
+
 	std::string inputdata = "";
 	std::string datachunk = "";
 	int columncount = 0;
@@ -201,9 +222,7 @@ bool Network::getWeights(std::ifstream &wFile, std::string weightData)
 
 	if ((wFile.is_open()))
 	{
-		//linenumber = countLines(inputfile);
-		//puts file at the beginning again so it can be re-read
-		//inputfile.clear();
+
 		while (getline(wFile, inputdata) && !wFile.eof())
 		{
 			if (!inputdata.empty())
@@ -211,12 +230,12 @@ bool Network::getWeights(std::ifstream &wFile, std::string weightData)
 			else
 				rowcount = rowcount;
 		}
+
 		wFile.clear(); //needed so file can be read again
 		wFile.seekg(0); //returns file position to 0 to be read again
 		inputdata = "";
 		const int PARAMETERS = 4;//the # of parameters in input file is set
 		storedWeights = new float*[rowcount];
-
 
 		for (int p = 0; p < rowcount; p++)
 		{
@@ -303,7 +322,7 @@ bool Network::getWeights(std::ifstream &wFile, std::string weightData)
 	}
 
 	wFile.close();
-	return false;
+	return storedWeights;
 }
 
 void Network::displayVariables()
@@ -321,7 +340,7 @@ void Network::displayVariables()
 
 }
 
-void Network::displayInput()
+/*void Network::displayInput()
 {
 	float value;
 	for (int j = 0; j < 4; j++)
@@ -346,16 +365,9 @@ void Network::displayInput()
 			std::cout << "output " << *(*(outputData + j)) << std::endl;
 
 	}
-}
+}*/
 
-/*
-bool Network::setInArrayNumbers(int inrow, int incolumn)
-{
-	row = inrow;
-	column = incolumn;
-	return false;
-}
-*/
+
 void Network::setInputColumn(int num)
 {
 	column = num;
@@ -363,14 +375,8 @@ void Network::setInputColumn(int num)
 
 void Network::loadLayers()
 {
-	std::cout << "you are in loadLayers\n";
-	std::cout << "in Nodes " << inNodes << std::endl;
-	displayVariables();
-	std::cout << "before derived\n";
-	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr);
-	std::cout << "after derived\n";
-	//Network &node = neural;
-	//maybe delete the inNodes parameter form inputLayer as it is being sent in the constructor
+	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, weightfile);
+
 	neural.inputLayer(inputData, outputData);
 	neural.hiddenLayer();
 	neural.outputLayer();
@@ -384,9 +390,7 @@ void Network::writeWeight(std::vector<float*> neuralWeights)
 	float * value = new float[ROWS];
 	int count = 0; //this will tell the row number
 	std::ofstream outputFile("neuralweight.txt");
-	std::cout << "innodes " << inNodes << std::endl;
-	std::cout << "hidnodes " << hidNodes << std::endl;
-	std::cout << "outnodes " << outNodes << std::endl;
+
 
 	int vectSize = neuralWeights.size();
 	if (outputFile.is_open())
@@ -394,14 +398,6 @@ void Network::writeWeight(std::vector<float*> neuralWeights)
 		for (int index = 0; index < vectSize; index++)
 		{
 			value = neuralWeights.at(index);
-			std::cout << "v0 " << std::to_string(value[0]) << std::endl;
-			std::cout << "next node " << std::to_string(value[1]) << std::endl;
-			std::cout << "next node " << *(value + 2) << std::endl;
-			std::cout << "next node " << value[3] << std::endl;
-			std::cout << "WEIGHT" << ' ' << value[0] << ' ' << value[1] << ' ' << value[2] << ' ' << value[3] << std::endl;
-			outputFile << "WEIGHT" << ' ' << value[0] << ' ' << value[1] << ' ' << value[2] << ' ' << value[3] << std::endl;
-
-
 		}
 	}
 	else
@@ -416,8 +412,6 @@ void Network::writeOutput(float ** neuralOutput)
 	float value;
 	std::ofstream outputFile("neuraloutput.txt");
 
-	//might need to pass parameters for row and column limits
-	//improve this output
 	if (outputFile.is_open())
 	{
 		for (int row = 0; row < (iopairs / 2); row++)
@@ -426,7 +420,7 @@ void Network::writeOutput(float ** neuralOutput)
 			{
 
 				value = (*(*(neuralOutput + row) + column));
-				std::cout << "vallue " << value << std::endl;
+
 				if (column != outNodes - 1)
 					character += std::to_string(value) + ' ';
 				else
@@ -472,38 +466,3 @@ int Network::getInputRow()
 
 
 
-
-
-/*
-std::vector<float> Network::randomWeights()
-{
-	std::cout << "iopairs " << iopairs << std::endl;
-
-	float randomnum;
-	std::vector<float> randomweights;
-	for (int i = 0; i < (iopairs / 2); i++)
-	{
-		//this gives more variety of numbers
-		do
-		{
-			randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
-		} while ((randomnum < -1.0) || (randomnum > 1.0));
-
-		if ((randomnum <= 1.0) && (randomnum >= -1.0))
-		{
-			randomweights.push_back(randomnum);
-			std::cout << randomweights.at(i) << std::endl;
-		}
-		else
-		{
-			//this makes sure every weight gets an assingment if something filtered through other loop,
-			//also makes sure it's a weight less than 1
-			randomnum = (static_cast<float> (-1 + rand() % 3)) / (static_cast<float> (1 + rand() % 5));
-			randomweights.push_back(randomnum);
-			std::cout << randomweights.at(i) << std::endl;
-		}
-
-	}
-	return randomweights;
-}
-*/

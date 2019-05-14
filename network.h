@@ -1,4 +1,12 @@
+
 /*
+Name: Astrid Lozano
+Assignment: fINAL project
+
+NOTES:
+//reading any file assumes the format is the same for all incoming files (including variable names)
+//for some reason there is one more space in the file that this code cannot deal with
+
 Notes: cannot create a pointer to derived class here, compiler gives memory
 access violation when it tries to run; if a pointer is created in cpp file, and the
 pointer is declared as derived class, it won't grab the function from derived class
@@ -24,37 +32,28 @@ class Network
 {
 public:
 	Network();
-	Network(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate);
+	Network(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate, int wfile);
 	~Network();
 	void train();
-	//void test()
+	void testnetwork();
+	void run();
 	//void weights();
 	//void loadweights();
-	//training data set
-	//float *input;
-	//float *output;
-	//void layer();
-	//void middleLayer();
-	//std::vector<float> randomWeights();
 	float randomWeights();
 	void loadInput(int inrow, int incoloumn, float value);
 	void loadOutput(int inrow, int incolumn, float value);
 	bool setConfig(std::string constname, float value);
-	bool getWeights(std::ifstream &wFile, std::string weightData);
+	float** getWeights(std::ifstream &wFile, std::string weightData);
 	void displayVariables();
-	void displayInput();
+	//void displayInput();
 	//bool setInArrayNumbers(int inrow, int incolumn);
 	void setInputRow(int num);
 	int getInputRow();
 	void setInputColumn(int num);
 	void loadLayers();
-	int test;
+
 
 protected:
-	//void outputLayer();
-	//void middleLayer();
-	//Network *neuronptr;
-	//Neural * nnptr; //has same name as a pointer in Neural, change it
 	//void feedForward();
 	//void backPropagate();
 	int iopairs;
@@ -64,6 +63,7 @@ protected:
 	int hidNodes;
 	int outNodes;
 	int maxEpoch;
+	int weightfile;
 	float on;
 	float off;
 	float offSoft;

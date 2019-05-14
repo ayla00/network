@@ -1,3 +1,13 @@
+/*
+Name: Astrid Lozano
+Assignment: fINAL project
+
+NOTES:
+//reading any file assumes the format is the same for all incoming files (including variable names)
+//for some reason there is one more space in the file that this code cannot deal with
+*/
+
+
 #ifndef NEURAL_H
 #define NEURAL_H
 
@@ -16,7 +26,7 @@ struct Neuron
 class Neural : public Network
 {
 public:
-	Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate);
+	Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate, int wfile);
 	~Neural();
 
 
@@ -27,8 +37,9 @@ public:
 	void display(int nodes, Neuron* nptr);
 	void calculateError(float** outputData);
 	void adjustWeights();
-	std::vector<float> saveWeights();
-	void saveOuput();
+	std::vector<float*> saveWeights();
+	float** saveOuput();
+	//void getsetWeights(float ** weights);
 
 protected:
 	//void setInput(float **inputData, float **outputData);
@@ -42,11 +53,10 @@ protected:
 	void backErrors(int back, int next, Neuron* backlayer, Neuron* nextlayer);
 	void backWeights(int back, int next, Neuron* backlayer, Neuron* nextlayer);
 	void pushWeights(Neuron * from, Neuron * to);
-	//float sigmoid;
 	Network* netptr;
 	float** y;
 	//std::vector<float[4]> runweights;
-	std::vector<float> runweights;
+	std::vector<float*> runweights;
 	const int BIAS = 1;
 	const float BIASVALUE = 1.0;
 	//float Normalize(float *x); // or Neural *neuronptr?
@@ -61,6 +71,7 @@ protected:
 	float sumtotal[4][3];
 	//float ** sumtotal;
 	float sigmoid[4][3];
+	float * value;//array to put saved weights w/ layer and node info
 
 
 };
@@ -68,4 +79,5 @@ protected:
 
 
 #endif  //NEURAL_H
+
 

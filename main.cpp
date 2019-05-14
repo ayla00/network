@@ -1,41 +1,51 @@
+/*
+Name: Astrid Lozano
+Assignment: fINAL project
+
+NOTES:
+//reading any file assumes the format is the same for all incoming files (including variable names)
+//for some reason there is one more space in the file that this code cannot deal with
+*/
+
+
 #include "main.h"
 #include "neural.h"
 
 
 int main()
 {
-	srand(time(NULL));
-	std::cout << "main before pointer\n";
-	Network* neta = new Network;
-	std::cout << "main after pointer\n";
-	//Neural * neural = new Neural;
-	//Neural * n = new Neural;
-	std::string file = "configuration.txt";
-	std::ifstream cfgfile;
-	readConfigFile(cfgfile, file, neta);
-	neta->test = 9;
-	std::string datafile = "datatest2.txt";
-	std::ifstream dfile;
+	try
+	{
+		srand(time(NULL));
 
-	//you can create class after you got i/o pairs
-	readDataFile(dfile, datafile, neta);
+		Network* neta = new Network;
 
-	neta->displayVariables();
-	neta->displayInput();
-	std::cout << "you are out of displayInput\n";
-	//Neural n;
-	//std::cout << "test " << n.test << std::endl;
+		std::string file = "configuration.txt";
+		std::ifstream cfgfile;
+		readConfigFile(cfgfile, file, neta);
 
-	neta->train();
+		std::string datafile = "and.dat";
+		std::ifstream dfile;
 
-	//neta->loadLayers();
-	//n->display();
-	//n->getInput();
+		//you can create class after you got i/o pairs
+		readDataFile(dfile, datafile, neta);
 
-	delete neta;
-	neta = nullptr;
-	//delete neural;
-	//neural = nullptr;
+
+		neta->train();
+		//neta->testnetwork();
+		//neta->run();
+		std::string weightfile = "neuralweight.txt";
+
+
+		delete neta;
+		neta = nullptr;
+	}
+	catch (...)
+	{
+		std::cout << "an error has occurred\n";
+	}
+
+
 
 	return 0;
 }
