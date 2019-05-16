@@ -66,7 +66,7 @@ void Network::train()
 	else
 		neural.setWeights();
 
-	for (int epoch = 0; epoch < maxEpoch ; epoch++)
+	for (int epoch = 0; epoch < maxEpoch; epoch++)
 	{
 		//feed forward
 		neural.hiddenLayer();
@@ -80,7 +80,7 @@ void Network::train()
 
 	writeWeight(neural.saveWeights());
 	writeOutput(neural.saveOuput());
-	
+
 }
 
 void Network::testnetwork()

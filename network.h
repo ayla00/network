@@ -57,7 +57,7 @@ public:
 	int getInputRow();
 	void setInputColumn(int num);
 	void loadLayers();
-	Network * net;
+	Network* net;
 
 
 protected:
