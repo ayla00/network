@@ -49,29 +49,27 @@ Network::~Network()
 
 void Network::train()
 {
+	//std::cout << "train\n";
 	//load input
 	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, weightfile);
+
 	std::ifstream wfile;
 	std::string file = "neuralweight.txt";
 	//sends input
 	neural.inputLayer(inputData, outputData);
 
-	neural.setWeights();
+
 	//gets weight file or sets up random weights
 	if (weightfile == 1)
 		neural.getWeights(wfile, file);
 	else
 		neural.setWeights();
 
-
-
-	for (int epoch = 0; epoch < maxEpoch; epoch++)
+	for (int epoch = 0; epoch < maxEpoch ; epoch++)
 	{
-
 		//feed forward
 		neural.hiddenLayer();
 		neural.outputLayer();
-
 		//calculate errors
 		neural.calculateError(outputData);
 
@@ -81,7 +79,7 @@ void Network::train()
 
 	writeWeight(neural.saveWeights());
 	writeOutput(neural.saveOuput());
-
+	
 }
 
 void Network::testnetwork()
@@ -92,10 +90,10 @@ void Network::testnetwork()
 	std::string file = "neuralweight.txt";
 
 	//gets weight file or sets up random weights
+	//setWeights should not be here since it's the random weights
+	//NEED TO ADD A VECTOR WITH THE FINAL WEIGHTS TO BE USED, NOT JUST PRINT THEM
 	if (weightfile == 1)
 		getWeights(wfile, file);
-	else
-		neural.setWeights();
 
 	//feed forward
 	neural.inputLayer(inputData, outputData);

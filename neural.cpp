@@ -50,8 +50,9 @@ Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float
 	out = new Neuron[OUTCOLUMNS];
 
 	y = new float* [ROWS];
-	//sumtotal = new float*[ROWS];
-	//sigmoid = new float*[ROWS];
+	sumtotal = new float*[ROWS];
+	sigmoid = new float*[ROWS];
+	sum = new float*[ROWS];
 	//value = new float[4];//constant number of parameters
 
 	// this will build empty network
@@ -207,10 +208,13 @@ void Neural::allocatePointers()
 	}
 	for (int nodes = 0; nodes < ROWS; nodes++)
 	{
-		//has a dif structure than above containers
-		y[nodes] = new float[COLUMN];
-		//sumtotal[nodes] = new float[COLUMN];
-		//sigmoid[nodes] = new float[COLUMN];
+		//pointers/arrays have dif structure than above containers
+		//y should have same structure as outputData
+		//for other ones the # of nodes for hiddenLayer was chosen (assumes it's greater than or equal to inputLayer)
+		y[nodes] = new float[OUTRS];
+		sumtotal[nodes] = new float[HIDRS];
+		sigmoid[nodes] = new float[HIDRS];
+		sum[nodes] = new float[HIDRS];
 	}
 
 
@@ -259,6 +263,7 @@ void Neural::calculateError(float** outputData)
 	backErrors(hidNodes, outNodes, hid, out); //errors at hidden layer
 	backErrors(inNodes, hidNodes, in, hid); //errors at input layer
 
+
 }
 
 void Neural::error(int nodes, Neuron * layer, float** outputData)
@@ -277,25 +282,40 @@ void Neural::error(int nodes, Neuron * layer, float** outputData)
 	{
 		for (int r = 0; r < row; r++)
 		{
-			(layer + n)->error[r] = sigmoid[r][n] * (1.0 - (sigmoid[r][n])) * ((*(*(outputData + r) + n)) - (sigmoid[r][n]));
+
+			(layer + n)->error[r] = (*(*(sigmoid + r) + n)) * (1.0 - (*(*(sigmoid + r) + n))) * ((*(*(outputData + r) + n)) - (*(*(sigmoid + r) + n)));
+			//(layer + n)->error[r] = sigmoid[r][n] * (1.0 - (sigmoid[r][n])) * ((*(*(outputData + r) + n)) - (sigmoid[r][n]));
 			//(layer + n)->error[r] = (*(*sigmoid + r) + n) * (1.0 - (sigmoi[w][s])) * ((*(*(outputData + r) + n)) - ((*(*sigmoid + r) + n)));
 		}
 
 	}
 
 
+	//display loop
+	/*for (int n = 0; n < nodes; n++)
+	{
+		for (int r = 0; r < row; r++)
+		{
+			std::cout << "error " << (layer + n)->error[r] << std::endl;
+			std::cout << sigmoid[r][n] << std::endl;
+			std::cout << ((*(*(outputData + r) + n)) - (sigmoid[r][n])) << std::endl;
+
+		}
+
+	}*/
+
 }
 
 void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlayer)
 {
 
-	float sum[4][3];
 
 	for (int s = 0; s < back; s++)
 	{
 		for (int w = 0; w < row; w++)
 		{
-			sum[w][s] = 0;
+			*(*(sum + w) + s) = 0;
+			//sum[w][s] = 0;
 		}
 	}
 
@@ -320,12 +340,34 @@ void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlay
 
 	}
 
+	//display loop
+	/*for (int n = 0; n < back; n++)
+	{
+		int layerindex;//necessary as index is used out of for loop
+		for (int r = 0; r < row; r++)
+		{
+
+			for (layerindex = 0; layerindex < next; layerindex++)
+			{
+				int l = layerindex;
+			}
+
+			std::cout << "back error " << (backlayer + n)->error[r] << std::endl;
+			std::cout << "sum " << sum[r][layerindex] << std::endl;
+
+
+		}
+
+	}*/
+
+
 }
 
 void Neural::adjustWeights()
 {
 	backWeights(hidNodes, outNodes, hid, out);
 	backWeights(inNodes, hidNodes, in, hid);
+
 }
 
 
@@ -345,7 +387,24 @@ void Neural::backWeights(int back, int next, Neuron * backlayer, Neuron * nextla
 			{
 				//here (backlayer + n)->weight[layerindex] = (((backlayer + n)->weight[layerindex]) + (lr * ((nextlayer + layerindex)->error[r]) * (backlayer + n)->x[r]));
 				//error from previous layer is used
-				(backlayer + n)->weight[layerindex] = (((backlayer + n)->weight[layerindex]) + (lr * ((nextlayer + layerindex)->error[r]) * (backlayer + n)->x[r]));
+				(backlayer + n)->weight[layerindex] = (((backlayer + n)->weight[layerindex]) + (lr * ((nextlayer + layerindex)->error[r]) * ((backlayer + n)->x[r])));
+			}
+		}
+	}
+
+
+	//display function
+	for (int n = 0; n < back; n++)
+	{
+
+		for (int r = 0; r < row; r++)
+		{
+
+			for (int layerindex = 0; layerindex < next; layerindex++)
+			{
+
+				std::cout << "weight " << (backlayer + n)->weight[layerindex] << std::endl;
+				std::cout << "2nd part of expression " << (lr * ((nextlayer + layerindex)->error[r]) * ((backlayer + n)->x[r])) << std::endl;
 			}
 		}
 	}
@@ -431,7 +490,8 @@ void Neural::setotherInput(int current, Neuron * layer)
 			{
 				for (int j = 0; j < row; j++)
 				{
-					(layer + k)->x[j] = sumtotal[j][k];
+					//I HAD SUMTOTAL HERE, but it should be SIGMOID, double check
+					(layer + k)->x[j] = (*(*(sigmoid + j) + k));
 				}
 			}
 			else
@@ -450,7 +510,7 @@ void Neural::setotherInput(int current, Neuron * layer)
 		{
 			for (int j = 0; j < row; j++)
 			{
-				(layer + k)->x[j] = sumtotal[j][k];
+				(layer + k)->x[j] = (*(*(sigmoid + j) + k));
 			}
 		}
 	}
@@ -473,11 +533,11 @@ void Neural::sumInputs(int current, int previous, Neuron * backlayer)
 {
 
 
-	for (int s = 0; s < current; s++)
+	for (int n = 0; n < current; n++)
 	{
-		for (int w = 0; w < row; w++)
+		for (int r = 0; r < row; r++)
 		{
-			sumtotal[w][s] = 0;
+			*(*(sumtotal + r) + n) = 0;
 		}
 	}
 
@@ -498,7 +558,8 @@ void Neural::sumInputs(int current, int previous, Neuron * backlayer)
 			//will this work if nodes is zero?, will it ever be zero
 			for (int backindex = 0; backindex < previous; backindex++)
 			{
-				sumtotal[r][n] += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
+				*(*(sumtotal + r) + n) += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
+				//sumtotal[r][n] += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
 				//(*(*(sumtotal + r) + n)) = ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
 
 			}
@@ -514,19 +575,20 @@ void Neural::sumInputs(int current, int previous, Neuron * backlayer)
 //don't really need neuron * layer parameter now, might redefine sumtotal[][] so wait till then to erase
 void Neural::activation(int nodes, Neuron * layer)
 {
-	for (int s = 0; s < nodes; s++)
+	//THIS EXPRESSION  is setting it to zero, counter productive, ERASE
+	/*for (int s = 0; s < nodes; s++)
 	{
 		for (int w = 0; w < row; w++)
 		{
-			sumtotal[w][s] = 0;
+			*(*(sumtotal + j) + k) = 0;
 		}
-	}
+	}*/
 
-	for (int s = 0; s < nodes; s++)
+	for (int n = 0; n < nodes; n++)
 	{
-		for (int w = 0; w < row; w++)
+		for (int r = 0; r < row; r++)
 		{
-			sigmoid[w][s] = (1.0 / (1.0 + pow(ee, -(sumtotal[w][s]))));
+			*(*(sigmoid + r) + n) = (1.0 / (1.0 + pow(ee, -(*(*(sumtotal + r) + n)))));
 		}
 	}
 }

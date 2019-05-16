@@ -76,12 +76,14 @@ protected:
 	Neuron* out;
 	int innodes;
 	//these will have to be adapted for different input
-	float sumtotal[4][3];
-	//float ** sumtotal;
-	float sigmoid[4][3];
-	//float ** sigmoid;
+	//float sumtotal[4][3];
+	float ** sumtotal;
+	//float sigmoid[4][3];
+	float ** sigmoid;
 	float* value;//array to put saved weights w/ layer and node info
 	const int WPARAMETER = 4;
+	//different purpose than sumtotal, so want to keep them separate
+	float **sum;
 
 
 };

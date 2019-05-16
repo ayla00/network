@@ -34,7 +34,6 @@ pointer is declared as derived class, it won't grab the function from derived cl
 #include <stdio.h>
 #include <time.h>
 
-
 class Network
 {
 public:
@@ -58,6 +57,7 @@ public:
 	int getInputRow();
 	void setInputColumn(int num);
 	void loadLayers();
+	Network * net;
 
 
 protected:
@@ -86,6 +86,7 @@ protected:
 	const int EMPTYFILE = -3333333;
 	float** storedWeights;
 	const int WPARAMETER = 4;
+
 
 };
 
