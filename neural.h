@@ -67,6 +67,7 @@ protected:
 	std::vector<float*> runweights;
 	const int BIAS = 1;
 	const float BIASVALUE = 1.0;
+	//std::vector<float> finalWeights;
 	//float Normalize(float *x); // or Neural *neuronptr?
 	//float findMin();
 	//float findMax();

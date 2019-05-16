@@ -60,8 +60,9 @@ void Network::train()
 
 
 	//gets weight file or sets up random weights
+	//getWeights in Network opens a file and puts weights in a vector, which is sent to getsetWeights in Neural to assign them
 	if (weightfile == 1)
-		neural.getWeights(wfile, file);
+		neural.getsetWeights(getWeights(wfile, file));
 	else
 		neural.setWeights();
 
@@ -89,11 +90,11 @@ void Network::testnetwork()
 	std::ifstream wfile;
 	std::string file = "neuralweight.txt";
 
-	//gets weight file or sets up random weights
-	//setWeights should not be here since it's the random weights
-	//NEED TO ADD A VECTOR WITH THE FINAL WEIGHTS TO BE USED, NOT JUST PRINT THEM
-	if (weightfile == 1)
-		getWeights(wfile, file);
+	//gets weight file 
+	//if the network can have different nodes and # of layers, hardcoding them in neural class
+	//would not be efficient, so it is assumed that once the neural network is ready, it will
+	//always upload weights
+	neural.getsetWeights(getWeights(wfile, file));
 
 	//feed forward
 	neural.inputLayer(inputData, outputData);

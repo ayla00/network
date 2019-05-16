@@ -172,11 +172,15 @@ void Neural::getsetWeights(float** weights)
 
 		for (int r = 0; r < row; r++)
 		{
+			//when this function is called, it means a weights file has been opened in Network and storedWeights is already full
+			//does it get the values automatically or have to send them through parameter? check this
 			(layer + n)->weight[r] = (*(*(storedWeights + r) + (WPARAMETER - 1)));//this gives column were weight is located
 		}
 
 	}
 }
+
+
 
 void Neural::allocatePointers()
 {
@@ -385,7 +389,6 @@ void Neural::backWeights(int back, int next, Neuron * backlayer, Neuron * nextla
 			//CHECK THIS AGAIN
 			for (int layerindex = 0; layerindex < next; layerindex++)
 			{
-				//here (backlayer + n)->weight[layerindex] = (((backlayer + n)->weight[layerindex]) + (lr * ((nextlayer + layerindex)->error[r]) * (backlayer + n)->x[r]));
 				//error from previous layer is used
 				(backlayer + n)->weight[layerindex] = (((backlayer + n)->weight[layerindex]) + (lr * ((nextlayer + layerindex)->error[r]) * ((backlayer + n)->x[r])));
 			}
@@ -490,7 +493,6 @@ void Neural::setotherInput(int current, Neuron * layer)
 			{
 				for (int j = 0; j < row; j++)
 				{
-					//I HAD SUMTOTAL HERE, but it should be SIGMOID, double check
 					(layer + k)->x[j] = (*(*(sigmoid + j) + k));
 				}
 			}
@@ -506,6 +508,7 @@ void Neural::setotherInput(int current, Neuron * layer)
 	}
 	else
 	{
+		//check this, as weights between hidden and output are too big, (it seems they are just accummulating)
 		for (int k = 0; k < current; k++)
 		{
 			for (int j = 0; j < row; j++)
@@ -558,9 +561,8 @@ void Neural::sumInputs(int current, int previous, Neuron * backlayer)
 			//will this work if nodes is zero?, will it ever be zero
 			for (int backindex = 0; backindex < previous; backindex++)
 			{
-				*(*(sumtotal + r) + n) += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
+				(*(*(sumtotal + r) + n)) += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
 				//sumtotal[r][n] += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
-				//(*(*(sumtotal + r) + n)) = ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
 
 			}
 
