@@ -256,7 +256,170 @@ void Neural::setInput(float** inputData)
 
 }
 
+void Neural::setotherInput(int current, Neuron * layer)
+{
 
+	if (layer == hid)
+	{
+		for (int k = 0; k < current; k++)
+		{
+			if (k != (current - BIAS))
+			{
+				for (int j = 0; j < row; j++)
+				{
+					(layer + k)->x[j] = (*(*(sigmoid + j) + k));
+				}
+			}
+			else
+			{
+				for (int j = 0; j < row; j++)
+				{
+					(layer + k)->x[j] = BIASVALUE;
+				}
+			}
+
+		}
+	}
+	else
+	{
+		//check this, as weights between hidden and output are too big, (it seems they are just accummulating)
+		for (int k = 0; k < current; k++)
+		{
+			for (int j = 0; j < row; j++)
+			{
+				(layer + k)->x[j] = (*(*(sigmoid + j) + k));
+				//std::cout << "\nnode\t" << k << "\trow\t" << j  <<"\t outsigmoid\t" << sigmoid[j][k] << std::endl;
+			}
+		}
+	}
+
+	//for (int k = 0; k < current; k++)
+	//{
+
+		//for (int j = 0; j < 4; j++)
+		//{
+			//(layer + k)->x[j] = sigmoid[j][k];
+
+		//}
+	//}
+
+}
+
+
+
+void Neural::sumInputs(int current, int previous, Neuron * backlayer)
+{
+
+
+	for (int n = 0; n < current; n++)
+	{
+		for (int r = 0; r < row; r++)
+		{
+			*(*(sumtotal + r) + n) = 0;
+		}
+	}
+
+	//nodes of current layer
+
+	//delivers appropriate index limit to each layer (accounts for bias node)
+	if (backlayer != out)
+	{
+		std::cout << "you are in adjust index limit to BIas\n";
+		current = current - BIAS;
+	}
+	else
+		current = current;
+
+	//was checking for correctness, it looks ok, just changed index names
+	for (int n = 0; n < current; n++)
+	{
+		for (int r = 0; r < row; r++)
+		{
+			//nodes of previous layer
+			//will this work if nodes is zero?, will it ever be zero
+			for (int backindex = 0; backindex < previous; backindex++)
+			{
+				std::cout << "\nsum before " << sumtotal[r][n] << std::endl;
+
+				//NEED TO SAVE SUBSEQUENT ACTIVAATIONS FOR LATER RETRIEVAL IN activation()
+				//activation() is only getting sumtotal of LAST NODE, NOT the sumtotal for each node
+				(*(*(sumtotal + r) + n)) += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
+
+
+				std::cout << "node\t" << n << "\trow\t" << r << "\t psumtotal\t" << sumtotal[r][n];// << std::endl;
+				std::cout << "\tbacklayernode\t" << backindex << "\t weight\t" << (backlayer + backindex)->weight[n];// << std::endl;
+				std::cout << "\t activation\t" << (backlayer + backindex)->x[r];// << std::endl;
+
+			}
+			std::cout << "\nnode\t" << n << "\trow\t" << r << "\t SUMTOTAL\t" << sumtotal[r][n] << std::endl;
+		}
+
+	}
+
+	//was checking for correctness, it looks ok, just changed index names
+	/*for (int n = 0; n < outNodes; n++)
+	{
+		for (int r = 0; r < row; r++)
+		{
+			int backindex;
+			//nodes of previous layer
+			//will this work if nodes is zero?, will it ever be zero
+			for (backindex = 0; backindex < previous; backindex++)
+			{
+				std::cout << "\nsum before " << sumtotal[r][n] << std::endl;
+				(*(*(sumtotal + r) + n)) += (((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]));
+				//sumtotal[r][n] += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
+				std::cout << "node\t" << n << "\trow\t" << r << "\t psumtotal\t" << sumtotal[r][n];// << std::endl;
+				std::cout << "\tbacklayernode\t" << backindex << "\t weight\t" << (backlayer + backindex)->weight[n];// << std::endl;
+				std::cout <<  "\t activation\t" << (backlayer + backindex)->x[r];// << std::endl;
+			}
+			std::cout << "\nnode\t" << n << "\trow\t" << r << "\t SUMTOTAL\t" << sumtotal[r][n] << std::endl;
+		}
+
+	}*/
+}
+
+
+//don't really need neuron * layer parameter now, might redefine sumtotal[][] so wait till then to erase
+void Neural::activation(int nodes, Neuron * layer)
+{
+	//this used to have sumtotal, that's not what it should have, should clear up sigmoid for next calculation
+	/*for (int s = 0; s < nodes; s++)
+	{
+		for (int w = 0; w < row; w++)
+		{
+			*(*(sigmoid + w) + s) = 0;
+		}
+	}*/
+	if (layer != out)
+	{
+		std::cout << "you are in activation adjust index limit to BIas\n";
+		nodes = nodes - BIAS;
+	}
+	else
+		nodes = nodes;
+
+	for (int n = 0; n < nodes; n++)
+	{
+		for (int r = 0; r < row; r++)
+		{
+			*(*(sigmoid + r) + n) = (1.0 / (1.0 + pow(ee, -(*(*(sumtotal + r) + n)))));
+		}
+	}
+
+	//display loop
+	for (int n = 0; n < nodes; n++)
+	{
+		for (int r = 0; r < row; r++)
+		{
+			std::cout << "\nnode\t" << n << "\trow\t" << r;// << std::endl;
+			std::cout << "\tsigmoid\t" << *(*(sigmoid + r) + n);// << std::endl;
+			std::cout << "\tsumtotal\t" << *(*(sumtotal + r) + n) << std::endl;
+		}
+	}
+
+
+}
 
 void Neural::display(int nodes, Neuron * nptr)
 {
@@ -494,161 +657,7 @@ void Neural::rWeights(int current, int next, Neuron * layer)
 
 }
 
-void Neural::setotherInput(int current, Neuron * layer)
-{
 
-	if (layer == hid)
-	{
-		for (int k = 0; k < current; k++)
-		{
-			if (k != (current - BIAS))
-			{
-				for (int j = 0; j < row; j++)
-				{
-					(layer + k)->x[j] = (*(*(sigmoid + j) + k));
-				}
-			}
-			else
-			{
-				for (int j = 0; j < row; j++)
-				{
-					(layer + k)->x[j] = BIASVALUE;
-				}
-			}
-
-		}
-	}
-	else
-	{
-		//check this, as weights between hidden and output are too big, (it seems they are just accummulating)
-		for (int k = 0; k < current; k++)
-		{
-			for (int j = 0; j < row; j++)
-			{
-				(layer + k)->x[j] = (*(*(sigmoid + j) + k));
-				//std::cout << "\nnode\t" << k << "\trow\t" << j  <<"\t outsigmoid\t" << sigmoid[j][k] << std::endl;
-			}
-		}
-	}
-
-	//for (int k = 0; k < current; k++)
-	//{
-
-		//for (int j = 0; j < 4; j++)
-		//{
-			//(layer + k)->x[j] = sigmoid[j][k];
-
-		//}
-	//}
-
-}
-
-
-
-void Neural::sumInputs(int current, int previous, Neuron * backlayer)
-{
-
-
-	for (int n = 0; n < current; n++)
-	{
-		for (int r = 0; r < row; r++)
-		{
-			*(*(sumtotal + r) + n) = 0;
-		}
-	}
-
-	//nodes of current layer
-
-	//delivers appropriate index limit to each layer (accounts for bias node)
-	if (backlayer != out)
-		current = current - BIAS;
-	else
-		current = current;
-
-	//was checking for correctness, it looks ok, just changed index names
-	for (int n = 0; n < current; n++)
-	{
-		for (int r = 0; r < row; r++)
-		{
-			//nodes of previous layer
-			//will this work if nodes is zero?, will it ever be zero
-			for (int backindex = 0; backindex < previous; backindex++)
-			{
-				std::cout << "\nsum before " << sumtotal[r][n] << std::endl;
-
-				//NEED TO SAVE SUBSEQUENT ACTIVAATIONS FOR LATER RETRIEVAL IN activation()
-				//activation() is only getting sumtotal of LAST NODE, NOT the sumtotal for each node
-				(*(*(sumtotal + r) + n)) += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
-
-
-				std::cout << "node\t" << n << "\trow\t" << r << "\t psumtotal\t" << sumtotal[r][n];// << std::endl;
-				std::cout << "\tbacklayernode\t" << backindex << "\t weight\t" << (backlayer + backindex)->weight[n];// << std::endl;
-				std::cout << "\t activation\t" << (backlayer + backindex)->x[r];// << std::endl;
-
-			}
-			std::cout << "\nnode\t" << n << "\trow\t" << r << "\t SUMTOTAL\t" << sumtotal[r][n] << std::endl;
-		}
-
-	}
-
-	//was checking for correctness, it looks ok, just changed index names
-	/*for (int n = 0; n < outNodes; n++)
-	{
-		for (int r = 0; r < row; r++)
-		{
-			int backindex;
-			//nodes of previous layer
-			//will this work if nodes is zero?, will it ever be zero
-			for (backindex = 0; backindex < previous; backindex++)
-			{
-				std::cout << "\nsum before " << sumtotal[r][n] << std::endl;
-				(*(*(sumtotal + r) + n)) += (((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]));
-				//sumtotal[r][n] += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
-				std::cout << "node\t" << n << "\trow\t" << r << "\t psumtotal\t" << sumtotal[r][n];// << std::endl;
-				std::cout << "\tbacklayernode\t" << backindex << "\t weight\t" << (backlayer + backindex)->weight[n];// << std::endl;
-				std::cout <<  "\t activation\t" << (backlayer + backindex)->x[r];// << std::endl;
-			}
-			std::cout << "\nnode\t" << n << "\trow\t" << r << "\t SUMTOTAL\t" << sumtotal[r][n] << std::endl;
-		}
-
-	}*/
-}
-
-
-//don't really need neuron * layer parameter now, might redefine sumtotal[][] so wait till then to erase
-void Neural::activation(int nodes, Neuron * layer)
-{
-	//this used to have sumtotal, that's not what it should have, should clear up sigmoid for next calculation
-	/*for (int s = 0; s < nodes; s++)
-	{
-		for (int w = 0; w < row; w++)
-		{
-			*(*(sigmoid + w) + s) = 0;
-		}
-	}*/
-
-	for (int n = 0; n < nodes; n++)
-	{
-		for (int r = 0; r < row; r++)
-		{
-			//activation() is only getting sumtotal of LAST NODE, NOT the sumtotal for each node
-			*(*(sigmoid + r) + n) = (1.0 / (1.0 + pow(ee, -(*(*(sumtotal + r) + n)))));
-		}
-	}
-
-	//display loop
-	for (int n = 0; n < nodes; n++)
-	{
-		for (int r = 0; r < row; r++)
-		{
-			std::cout << "\nnode\t" << n << "\trow\t" << r;// << std::endl;
-			std::cout << "\tsigmoid\t" << *(*(sigmoid + r) + n);// << std::endl;
-			std::cout << "\tsumtotal\t" << *(*(sumtotal + r) + n) << std::endl;
-		}
-	}
-
-
-}
 
 
 /*
