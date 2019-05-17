@@ -63,6 +63,15 @@ Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float
 Neural::~Neural()
 {
 
+	delete[] sum;
+	sum = nullptr;
+
+	delete[] sigmoid;
+	sigmoid = nullptr;
+
+	delete[] sumtotal;
+	sumtotal = nullptr;
+
 	delete[] y;
 	y = nullptr;
 
@@ -93,98 +102,6 @@ Neural::~Neural()
 
 	delete netptr;
 	netptr = nullptr;
-}
-
-
-
-
-void Neural::inputLayer(float** inputData, float** outputData)
-{
-
-	setInput(inputData);
-
-}
-
-void Neural::hiddenLayer()
-{
-
-	//sums inputs with correct number of nodes for next layer
-	std::cout << "SUMINPUTS hidden\n";
-	sumInputs(hidNodes, inNodes, in);
-	std::cout << "calculate sigmoid hidden\n";
-	activation(hidNodes, in);
-	std::cout << "set activation hidden\n";
-	setotherInput(hidNodes, hid);
-
-}
-
-void Neural::outputLayer()
-{
-	//sums inputs with correct number of nodes for next layer
-	std::cout << "SUMINPUTS output\n";
-	sumInputs(outNodes, hidNodes, hid);
-	std::cout << "calculate sigmoid output\n";
-	activation(outNodes, hid);
-	std::cout << "calculate sigmoid output\n";
-	setotherInput(outNodes, out);
-}
-
-
-void Neural::setWeights()
-{
-	rWeights(inNodes, hidNodes, in);
-	rWeights(hidNodes, outNodes, hid);
-}
-
-
-std::vector<float*> Neural::saveWeights()
-{
-	//how to make this dynamic?
-	pushWeights(in, hid);
-	pushWeights(hid, out);
-	return runweights;
-}
-
-
-float** Neural::saveOuput()
-{
-
-	//if there are more than one outNode would I have to produce just one y or as many as output nodes?
-	//in that case the y would be a summation of the columns
-	for (int column = 0; column < outNodes; column++)
-	{
-		for (int r = 0; r < row; r++)
-		{
-
-			(*(*(y + r) + column)) = sigmoid[r][column];
-		}
-
-	}
-
-	return y;
-}
-
-void Neural::getsetWeights(float** weights)
-{
-	Neuron* layer;
-	//the storeddWeights pointer has the from layer, node at from layer, node at to layer, and weight
-	//however, it will be assumed that correct info for number of nodes is given and matches the info
-	//in the file, so this simplifies its extraction, it was written w/ same loop so order is same
-	for (int n = 0; n < (inNodes + hidNodes); n++)
-	{
-		if (n < inNodes)
-			layer = in;
-		else
-			layer = hid;
-
-		for (int r = 0; r < row; r++)
-		{
-			//when this function is called, it means a weights file has been opened in Network and storedWeights is already full
-			//does it get the values automatically or have to send them through parameter? check this
-			(layer + n)->weight[r] = (*(*(storedWeights + r) + (WPARAMETER - 1)));//this gives column were weight is located
-		}
-
-	}
 }
 
 
@@ -230,6 +147,92 @@ void Neural::allocatePointers()
 
 
 }
+
+
+void Neural::setWeights()
+{
+	rWeights(inNodes, hidNodes, in);
+	rWeights(hidNodes, outNodes, hid);
+}
+
+
+void Neural::rWeights(int current, int next, Neuron * layer)
+{
+	//this array needs a different set-up thant the input array(x[])
+//it is assumed that there is only one weight value from one neuron to the next for all input entries
+//(as opposed to a different weight for each entry, for example it's the same wegith w[j]=a for all j,
+//instead of each j having a different one w[0]=d, w[1]=e, etc;
+//here, the n is the #of nodes in current layer and r is not the entries as in input, but the number
+//of nodes in next layer
+	for (int n = 0; n < current; n++) //make this dynamic
+	{
+		for (int r = 0; r < next; r++)
+		{
+			(layer + n)->weight[r] = randomWeights();
+		}
+	}
+
+
+}
+
+void Neural::getsetWeights(float** weights)
+{
+	Neuron* layer;
+	//the storeddWeights pointer has the from layer, node at from layer, node at to layer, and weight
+	//however, it will be assumed that correct info for number of nodes is given and matches the info
+	//in the file, so this simplifies its extraction, it was written w/ same loop so order is same
+	for (int n = 0; n < (inNodes + hidNodes); n++)
+	{
+		if (n < inNodes)
+			layer = in;
+		else
+			layer = hid;
+
+		for (int r = 0; r < row; r++)
+		{
+			//when this function is called, it means a weights file has been opened in Network and storedWeights is already full
+			//does it get the values automatically or have to send them through parameter? check this
+			(layer + n)->weight[r] = (*(*(storedWeights + r) + (WPARAMETER - 1)));//this gives column were weight is located
+		}
+
+	}
+}
+
+
+
+void Neural::inputLayer(float** inputData, float** outputData)
+{
+
+	setInput(inputData);
+
+}
+
+void Neural::hiddenLayer()
+{
+
+	//sums inputs with correct number of nodes for next layer
+	std::cout << "SUMINPUTS hidden\n";
+	sumInputs(hidNodes, inNodes, in);
+	std::cout << "calculate sigmoid hidden\n";
+	activation(hidNodes, in);
+	std::cout << "set activation hidden\n";
+	setotherInput(hidNodes, hid);
+
+}
+
+void Neural::outputLayer()
+{
+	//sums inputs with correct number of nodes for next layer
+	std::cout << "SUMINPUTS output\n";
+	sumInputs(outNodes, hidNodes, hid);
+	std::cout << "calculate sigmoid output\n";
+	activation(outNodes, hid);
+	std::cout << "calculate sigmoid output\n";
+	setotherInput(outNodes, out);
+}
+
+
+
 
 void Neural::setInput(float** inputData)
 {
@@ -636,26 +639,34 @@ void Neural::pushWeights(Neuron * from, Neuron * to)
 
 }
 
-
-
-void Neural::rWeights(int current, int next, Neuron * layer)
+std::vector<float*> Neural::saveWeights()
 {
-	//this array needs a different set-up thant the input array(x[])
-//it is assumed that there is only one weight value from one neuron to the next for all input entries
-//(as opposed to a different weight for each entry, for example it's the same wegith w[j]=a for all j,
-//instead of each j having a different one w[0]=d, w[1]=e, etc;
-//here, the n is the #of nodes in current layer and r is not the entries as in input, but the number
-//of nodes in next layer
-	for (int n = 0; n < current; n++) //make this dynamic
+	//how to make this dynamic?
+	pushWeights(in, hid);
+	pushWeights(hid, out);
+	return runweights;
+}
+
+
+float** Neural::saveOuput()
+{
+
+	//if there are more than one outNode would I have to produce just one y or as many as output nodes?
+	//in that case the y would be a summation of the columns
+	for (int column = 0; column < outNodes; column++)
 	{
-		for (int r = 0; r < next; r++)
+		for (int r = 0; r < row; r++)
 		{
-			(layer + n)->weight[r] = randomWeights();
+
+			(*(*(y + r) + column)) = sigmoid[r][column];
 		}
+
 	}
 
-
+	return y;
 }
+
+
 
 
 
