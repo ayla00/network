@@ -296,15 +296,7 @@ void Neural::setotherInput(int current, Neuron * layer)
 		}
 	}
 
-	for (int k = 0; k < current; k++)
-	{
 
-		for (int j = 0; j < 4; j++)
-		{
-			(layer + k)->x[j] = sigmoid[j][k];
-
-		}
-	}
 
 }
 
@@ -341,19 +333,20 @@ void Neural::sumInputs(int current, int previous, Neuron * backlayer)
 			//will this work if nodes is zero?, will it ever be zero
 			for (int backindex = 0; backindex < previous; backindex++)
 			{
-				std::cout << "\nsum before " << sumtotal[r][n] << std::endl;
+				//std::cout << "\nsum before " << sumtotal[r][n] << std::endl;
 
 				//NEED TO SAVE SUBSEQUENT ACTIVAATIONS FOR LATER RETRIEVAL IN activation()
 				//activation() is only getting sumtotal of LAST NODE, NOT the sumtotal for each node
 				(*(*(sumtotal + r) + n)) += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
-				sumStack.push_back(sigmoid[r][n]);
 
-				std::cout << "node\t" << n << "\trow\t" << r << "\t psumtotal\t" << sumtotal[r][n];// << std::endl;
-				std::cout << "\tbacklayernode\t" << backindex << "\t weight\t" << (backlayer + backindex)->weight[n];// << std::endl;
-				std::cout << "\t activation\t" << (backlayer + backindex)->x[r];// << std::endl;
+
+				//std::cout << "node\t" << n << "\trow\t" << r << "\t psumtotal\t" << sumtotal[r][n];// << std::endl;
+				//std::cout << "\tbacklayernode\t" << backindex << "\t weight\t" << (backlayer + backindex)->weight[n];// << std::endl;
+				//std::cout << "\t activation\t" << (backlayer + backindex)->x[r];// << std::endl;
 
 			}
-			std::cout << "\nnode\t" << n << "\trow\t" << r << "\t SUMTOTAL\t" << sumtotal[r][n] << std::endl;
+			sumStack.push_back(sumtotal[r][n]);
+			//std::cout << "\nnode\t" << n << "\trow\t" << r << "\t SUMTOTAL\t" << sumtotal[r][n] << std::endl;
 		}
 
 	}
@@ -439,13 +432,16 @@ void Neural::error(int nodes, Neuron * layer, float** outputData)
 	{
 		for (int r = 0; r < row; r++)
 		{
+			std::cout << "\terror\t" << (layer + n)->error[r];// << std::endl;
 
+			(layer + n)->error[r] = ((layer + n)->x[r]) * (1.0 - ((layer + n)->x[r])) * (((layer + n)->x[r]) - (*(*(sigmoid + r) + n)));
 			//(layer + n)->error[r] = (*(*(sigmoid + r) + n)) * (1.0 - (*(*(sigmoid + r) + n))) * ((*(*(outputData + r) + n)) - (*(*(sigmoid + r) + n)));
-			(layer + n)->error[r] = (sigmoidStack.back()) * (1.0 - (sigmoidStack.back()) * ((*(*(outputData + r) + n)) - (sigmoidStack.back())));
+			//(layer + n)->error[r] = (sigmoidStack.back()) * (1.0 - (sigmoidStack.back()) * ((*(*(outputData + r) + n)) - (sigmoidStack.back())));
 
 
 			std::cout << "\nnode\t" << n << "\trow\t" << r; //<< std::endl;
 			std::cout << "\terror\t" << (layer + n)->error[r];// << std::endl;
+			std::cout << " output " << (layer + n)->x[r];
 			std::cout << "\tsigmoid\t" << sigmoid[r][n] << "\tsigstack " << sigmoidStack.back() << std::endl;
 			std::cout << (*(*(outputData + r) + n)) << std::endl;
 
