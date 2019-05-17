@@ -62,6 +62,11 @@ protected:
 	void backErrors(int back, int next, Neuron* backlayer, Neuron* nextlayer);
 	void backWeights(int back, int next, Neuron* backlayer, Neuron* nextlayer);
 	void pushWeights(Neuron* from, Neuron* to);
+	//add a functionto empty these vectors before start of next train epoch
+	std::vector<float> sumStack;
+	std::vector<float> sigmoidStack;
+	//float pop();
+	int stackindex = -1;
 	Network* netptr;
 	float** y;
 	std::vector<float*> runweights;

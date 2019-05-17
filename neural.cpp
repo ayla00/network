@@ -223,7 +223,7 @@ void Neural::hiddenLayer()
 void Neural::outputLayer()
 {
 	//sums inputs with correct number of nodes for next layer
-	std::cout << "SUMINPUTS output\n";
+	std::cout << "suminputs output\n";
 	sumInputs(outNodes, hidNodes, hid);
 	std::cout << "calculate sigmoid output\n";
 	activation(outNodes, hid);
@@ -296,18 +296,17 @@ void Neural::setotherInput(int current, Neuron * layer)
 		}
 	}
 
-	//for (int k = 0; k < current; k++)
-	//{
+	for (int k = 0; k < current; k++)
+	{
 
-		//for (int j = 0; j < 4; j++)
-		//{
-			//(layer + k)->x[j] = sigmoid[j][k];
+		for (int j = 0; j < 4; j++)
+		{
+			(layer + k)->x[j] = sigmoid[j][k];
 
-		//}
-	//}
+		}
+	}
 
 }
-
 
 
 void Neural::sumInputs(int current, int previous, Neuron * backlayer)
@@ -327,7 +326,7 @@ void Neural::sumInputs(int current, int previous, Neuron * backlayer)
 	//delivers appropriate index limit to each layer (accounts for bias node)
 	if (backlayer != out)
 	{
-		std::cout << "you are in adjust index limit to BIas\n";
+		//std::cout << "you are in adjust index limit to BIas\n";
 		current = current - BIAS;
 	}
 	else
@@ -347,7 +346,7 @@ void Neural::sumInputs(int current, int previous, Neuron * backlayer)
 				//NEED TO SAVE SUBSEQUENT ACTIVAATIONS FOR LATER RETRIEVAL IN activation()
 				//activation() is only getting sumtotal of LAST NODE, NOT the sumtotal for each node
 				(*(*(sumtotal + r) + n)) += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
-
+				sumStack.push_back(sigmoid[r][n]);
 
 				std::cout << "node\t" << n << "\trow\t" << r << "\t psumtotal\t" << sumtotal[r][n];// << std::endl;
 				std::cout << "\tbacklayernode\t" << backindex << "\t weight\t" << (backlayer + backindex)->weight[n];// << std::endl;
@@ -359,27 +358,7 @@ void Neural::sumInputs(int current, int previous, Neuron * backlayer)
 
 	}
 
-	//was checking for correctness, it looks ok, just changed index names
-	/*for (int n = 0; n < outNodes; n++)
-	{
-		for (int r = 0; r < row; r++)
-		{
-			int backindex;
-			//nodes of previous layer
-			//will this work if nodes is zero?, will it ever be zero
-			for (backindex = 0; backindex < previous; backindex++)
-			{
-				std::cout << "\nsum before " << sumtotal[r][n] << std::endl;
-				(*(*(sumtotal + r) + n)) += (((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]));
-				//sumtotal[r][n] += ((backlayer + backindex)->x[r]) * ((backlayer + backindex)->weight[n]);
-				std::cout << "node\t" << n << "\trow\t" << r << "\t psumtotal\t" << sumtotal[r][n];// << std::endl;
-				std::cout << "\tbacklayernode\t" << backindex << "\t weight\t" << (backlayer + backindex)->weight[n];// << std::endl;
-				std::cout <<  "\t activation\t" << (backlayer + backindex)->x[r];// << std::endl;
-			}
-			std::cout << "\nnode\t" << n << "\trow\t" << r << "\t SUMTOTAL\t" << sumtotal[r][n] << std::endl;
-		}
 
-	}*/
 }
 
 
@@ -395,10 +374,7 @@ void Neural::activation(int nodes, Neuron * layer)
 		}
 	}*/
 	if (layer != out)
-	{
-		std::cout << "you are in activation adjust index limit to BIas\n";
 		nodes = nodes - BIAS;
-	}
 	else
 		nodes = nodes;
 
@@ -407,6 +383,7 @@ void Neural::activation(int nodes, Neuron * layer)
 		for (int r = 0; r < row; r++)
 		{
 			*(*(sigmoid + r) + n) = (1.0 / (1.0 + pow(ee, -(*(*(sumtotal + r) + n)))));
+			sigmoidStack.push_back(sigmoid[r][n]);
 		}
 	}
 
@@ -415,8 +392,8 @@ void Neural::activation(int nodes, Neuron * layer)
 	{
 		for (int r = 0; r < row; r++)
 		{
-			std::cout << "\nnode\t" << n << "\trow\t" << r;// << std::endl;
-			std::cout << "\tsigmoid\t" << *(*(sigmoid + r) + n);// << std::endl;
+			std::cout << "\nnode\t" << n << "\trow\t" << r;
+			std::cout << "\tsigmoid\t" << *(*(sigmoid + r) + n);
 			std::cout << "\tsumtotal\t" << *(*(sumtotal + r) + n) << std::endl;
 		}
 	}
@@ -436,8 +413,11 @@ void Neural::display(int nodes, Neuron * nptr)
 
 void Neural::calculateError(float** outputData)
 {
+	std::cout << "output error\n";
 	error(outNodes, out, outputData); //errors at ouput layer
+	std::cout << "hidden error\n";
 	backErrors(hidNodes, outNodes, hid, out); //errors at hidden layer
+	std::cout << "input error\n";
 	backErrors(inNodes, hidNodes, in, hid); //errors at input layer
 
 
@@ -460,27 +440,21 @@ void Neural::error(int nodes, Neuron * layer, float** outputData)
 		for (int r = 0; r < row; r++)
 		{
 
-			(layer + n)->error[r] = (*(*(sigmoid + r) + n)) * (1.0 - (*(*(sigmoid + r) + n))) * ((*(*(outputData + r) + n)) - (*(*(sigmoid + r) + n)));
-			//(layer + n)->error[r] = sigmoid[r][n] * (1.0 - (sigmoid[r][n])) * ((*(*(outputData + r) + n)) - (sigmoid[r][n]));
-			//(layer + n)->error[r] = (*(*sigmoid + r) + n) * (1.0 - (sigmoi[w][s])) * ((*(*(outputData + r) + n)) - ((*(*sigmoid + r) + n)));
-		}
-
-	}
+			//(layer + n)->error[r] = (*(*(sigmoid + r) + n)) * (1.0 - (*(*(sigmoid + r) + n))) * ((*(*(outputData + r) + n)) - (*(*(sigmoid + r) + n)));
+			(layer + n)->error[r] = (sigmoidStack.back()) * (1.0 - (sigmoidStack.back()) * ((*(*(outputData + r) + n)) - (sigmoidStack.back())));
 
 
-	//display loop
-	for (int n = 0; n < nodes; n++)
-	{
-		for (int r = 0; r < row; r++)
-		{
 			std::cout << "\nnode\t" << n << "\trow\t" << r; //<< std::endl;
 			std::cout << "\terror\t" << (layer + n)->error[r];// << std::endl;
-			std::cout << "\tsigmoid\t" << sigmoid[r][n] << std::endl;
-			std::cout << ((*(*(outputData + r) + n)) - (sigmoid[r][n])) << std::endl;
+			std::cout << "\tsigmoid\t" << sigmoid[r][n] << "\tsigstack " << sigmoidStack.back() << std::endl;
+			std::cout << (*(*(outputData + r) + n)) << std::endl;
 
+
+			sigmoidStack.pop_back();
 		}
 
 	}
+
 
 }
 
@@ -508,9 +482,17 @@ void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlay
 			{
 				//check if i need to do this PER row (r) or is just all  cummulative
 				sum[r][layerindex] += ((nextlayer + layerindex)->error[r]) * ((backlayer + n)->weight[layerindex]);
+
+				std::cout << "\nnode " << n << "\trow " << r << "\tnext layer node " << layerindex;// << std::endl;
+				std::cout << "\tback error    " << sum[r][layerindex];// << std::endl;
+				std::cout << "\tnext error " << ((nextlayer + layerindex)->error[r]) << "this w " << (backlayer + n)->weight[layerindex];
 			}
 
 			(backlayer + n)->error[r] = (((backlayer + n)->x[r]) * (1.0 - ((backlayer + n)->x[r])) * sum[r][layerindex]);
+
+			std::cout << "\nnode " << n << "\trow " << r;
+			std::cout << "\tback error    " << (backlayer + n)->error[r];// << std::endl;
+			std::cout << "\tsum " << sum[r][layerindex] << std::endl;
 
 
 		}
@@ -527,9 +509,9 @@ void Neural::backErrors(int back, int next, Neuron * backlayer, Neuron * nextlay
 
 			for (layerindex = 0; layerindex < next; layerindex++)
 			{
-				std::cout << "\nnode " << n << "\trow " << r << "\tnext layer node " << layerindex << std::endl;
-				std::cout << "back error " << (backlayer + n)->error[r] << std::endl;
-				std::cout << "sum " << sum[r][layerindex] << std::endl;
+				std::cout << "\nnode " << n << "\trow " << r << "\tnext layer node " << layerindex;// << std::endl;
+				std::cout << "\tback error    " << (backlayer + n)->error[r];// << std::endl;
+				std::cout << "\tsum " << sum[r][layerindex] << std::endl;
 			}
 
 			//std::cout << "\nnode " << n << "\trow " << r << "\tnext layer node " << layerindex << std::endl;
@@ -555,7 +537,6 @@ void Neural::adjustWeights()
 void Neural::backWeights(int back, int next, Neuron * backlayer, Neuron * nextlayer)
 {
 
-	//is the weight calculated for each entry or is the same for all entries w/in same node???
 	for (int n = 0; n < back; n++)
 	{
 
