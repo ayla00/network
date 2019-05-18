@@ -23,7 +23,7 @@ getWeight(), storedWeights, and getsetWeights():
 Network::Network()
 {
 	iopairs = 0;
-	displayVariables();
+
 }
 
 Network::Network(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate, int wfile)
@@ -36,22 +36,20 @@ Network::Network(int pairs, int nodes, int innode, int hidnode, int outnode, flo
 	outNodes = outnode;
 	ee = natexp;
 	lr = lrate;
-	displayVariables();
+
 }
 
 
 Network::~Network()
 {
 	//std::cout << "you are out of network\n";
-	//delete neuronptr;
-	//neuronptr = nullptr;
 }
 
 void Network::train()
 {
-	//std::cout << "train\n";
+
 	//load input
-	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, weightfile);
+	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, .45, weightfile);
 
 	std::ifstream wfile;
 	std::string file = "neuralweight.txt";
@@ -80,6 +78,7 @@ void Network::train()
 
 	writeWeight(neural.saveWeights());
 	writeOutput(neural.saveOuput());
+
 
 }
 
@@ -238,7 +237,7 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 	if ((wFile.is_open()))
 	{
 
-		while (getline(wFile, inputdata))// && !wFile.eof())
+		while (getline(wFile, inputdata))
 		{
 			if (!inputdata.empty())
 				rowcount = rowcount + 1; //so it counts before next function is called
@@ -287,6 +286,7 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 						float dummyfloat = std::stof(trickextract.substr(sz));
 						std::cout << "r " << row << "col " << column << std::endl;
 						(*(*(storedWeights + row) + column)) = firstinput;
+						std::cout << "weight value " << firstinput << " stored value " << (*(*(storedWeights + row) + column)) << std::endl;
 						row++;
 						column = 0;
 						i++;
@@ -298,8 +298,7 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 						//something to make sure there is no more white space should go here, but
 						//is ommitted for now, comma delimited conditions also should go somewhere
 
-						//if (columncount > 0) //first column names parameter type, will leave loop here, but not needed for this file
-						//{
+
 						std::string dummystring = " 2.5";
 						std::string trickextract = datachunk + dummystring;
 						std::string::size_type sz;     // alias of size_t
@@ -309,11 +308,9 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 
 						//it arranges the info for one weight in a row (each row is the info for one weight, each colum is a parameter)
 						(*(*(storedWeights + row) + column)) = firstinput;
+						std::cout << "weight value " << firstinput << " stored value " << (*(*(storedWeights + row) + column)) << std::endl;
 						column++;
 
-						//}
-						//else
-							//datachunk = "";
 					}
 				}
 

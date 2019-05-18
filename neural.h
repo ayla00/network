@@ -64,9 +64,6 @@ protected:
 	void backWeights(int back, int next, Neuron* backlayer, Neuron* nextlayer);
 	void pushWeights(Neuron* from, Neuron* to);
 	//add a functionto empty these vectors before start of next train epoch
-	std::vector<float> sumStack;
-	std::vector<float> sigmoidStack;
-	std::vector<float> errorStack;
 	std::vector<float> adjweightStack;
 
 	//float pop();

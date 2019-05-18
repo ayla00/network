@@ -32,7 +32,7 @@ int main()
 		std::ifstream cfgfile;
 		readConfigFile(cfgfile, file, neta);
 
-		std::string datafile = "datatest2.txt";
+		std::string datafile = "and.dat";
 		std::ifstream dfile;
 
 		//you can create class after you got i/o pairs
