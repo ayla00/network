@@ -49,7 +49,7 @@ void Network::train()
 {
 
 	//load input
-	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, .45, weightfile);
+	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, weightfile);
 
 	std::ifstream wfile;
 	std::string file = "neuralweight.txt";
