@@ -426,6 +426,7 @@ void Neural::calculateError(float** outputData)
 void Neural::error(int nodes, Neuron * layer, float** outputData)
 {
 
+
 	float sumError = 0;
 
 	for (int n = 0; n < nodes; n++)
@@ -442,13 +443,12 @@ void Neural::error(int nodes, Neuron * layer, float** outputData)
 		for (int r = 0; r < row; r++)
 		{
 			(layer + n)->error[r] = ((layer + n)->x[r]) * (1.0 - ((layer + n)->x[r])) * (((*(*(outputData + r) + n))) - ((layer + n)->x[r]));
-			sumError = sumError + ((layer + n)->error[r] - (*(*(outputData + r) + n)));
+			sumError = sumError + pow((((layer + n)->error[r]) - (*(*(outputData + r) + n))), 2.0);
 
 		}
 
 	}
-
-	sqError = pow(sumError, 2.0);
+	sqError = sumError / (nodes + 1); //one is added for proper division, since if there's one, node = 0
 	std::cout << "square error\t" << sqError << std::endl;
 
 }

@@ -111,7 +111,6 @@ void Network::testnetwork()
 	//writeWeight(neural.saveWeights());
 	writeOutput(neural.saveOuput());
 
-	std::cout << "see you later alligator\n";
 
 }
 
@@ -224,6 +223,8 @@ bool Network::setConfig(std::string constname, float value)
 		ee = value;
 	else if (constname == "WEIGHTFILE")
 		weightfile = value;
+	else if (constname == "MEANSQERROR")
+		netsqError = value;
 	else
 		return false;
 
