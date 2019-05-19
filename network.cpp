@@ -20,12 +20,12 @@ other stuff butthe #s in it AND has the name "neuralweigth.txt"
 */
 
 #include "network.h"
-#include "neural.h"
 
 Network::Network()
 {
 	iopairs = 0;
-
+	//for on & off : values will be on, onSoft, off, offSoft
+	//Neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, maxEpoch, on, off);
 
 }
 
@@ -53,7 +53,7 @@ void Network::train()
 {
 
 	//load input
-	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, weightfile);
+	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, maxEpoch, on, off);
 
 	std::ifstream wfile;
 	std::string file = "neuralweight.txt";
@@ -89,7 +89,7 @@ void Network::train()
 void Network::testnetwork()
 {
 	//load empty network
-	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, weightfile);
+	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, maxEpoch, on, off);
 	std::ifstream wfile;
 	std::string file = "neuralweight.txt";
 
@@ -111,19 +111,20 @@ void Network::testnetwork()
 	//writeWeight(neural.saveWeights());
 	writeOutput(neural.saveOuput());
 
+	std::cout << "see you later alligator\n";
 
 }
 
 void Network::run()
 {
 	//load empty network
-	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, weightfile);
+	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, maxEpoch, on, off);
 	std::ifstream wfile;
 	std::string file = "neuralweight.txt";
 
 	//gets weight file or sets up random weights
 	if (weightfile == 1)
-		neural.getWeights(wfile, file);
+		getWeights(wfile, file);
 	else
 		neural.setWeights();
 
@@ -140,21 +141,6 @@ void Network::run()
 
 
 
-float Network::randomWeights()
-{
-
-	float randomnum;
-
-	do {
-		do
-		{
-			randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
-		} while (randomnum <= -1.0);
-	} while (randomnum >= 1.0);
-
-
-	return randomnum;
-}
 
 void Network::loadInput(int inrow, int incolumn, float value)
 {
@@ -398,7 +384,7 @@ void Network::setInputColumn(int num)
 
 void Network::loadLayers()
 {
-	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, weightfile);
+	Neural neural(iopairs, column, inNodes, hidNodes, outNodes, ee, lr, maxEpoch, on, off);
 
 	neural.inputLayer(inputData, outputData);
 	neural.hiddenLayer();

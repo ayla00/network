@@ -34,6 +34,7 @@ the #s in it AND has the name "neuralweigth.txt"
 #include <stdio.h>
 #include <time.h>
 #include <cstring>
+#include "neural.h"
 
 class Network
 {
@@ -88,7 +89,6 @@ protected:
 	const int EMPTYFILE = -3333333;
 	float** storedWeights;
 	const int WPARAMETER = 4;
-
 
 };
 

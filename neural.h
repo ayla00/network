@@ -26,7 +26,14 @@ the #s in it AND has the name "neuralweigth.txt"
 #ifndef NEURAL_H
 #define NEURAL_H
 
-#include "network.h"
+//#include "network.h"
+#include <math.h>
+#include <vector>
+#include <stdlib.h> //library where rand is located
+#include <stdio.h>
+#include <time.h>
+#include <iostream>
+#include <string>
 
 
 struct Neuron
@@ -34,14 +41,13 @@ struct Neuron
 	float* x;
 	float* error;
 	float* weight;
-	//Neural * nptr;
 };
 
 
-class Neural : public Network
+class Neural
 {
 public:
-	Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate, int wfile);
+	Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate, int mepoch, float onvar, float offvar);
 	~Neural();
 
 
@@ -60,6 +66,7 @@ public:
 protected:
 	void allocatePointers();
 	void setInput(float** inputData);
+	float randomWeights();
 	void rWeights(int current, int next, Neuron* layer);
 	void setotherInput(int nodes, Neuron* layer);
 	void sumInputs(int current, int next, Neuron* layer);
@@ -73,9 +80,20 @@ protected:
 	//to be used in getsetWeights
 	const int INLAYER = 1;
 	const int HIDLAYER = 2;
-
-	int stackindex = -1;
-	Network* netptr;
+	int iopairs;
+	int row = iopairs / 2;
+	int column;
+	int inNodes;
+	int hidNodes;
+	int outNodes;
+	int maxEpoch;
+	int weightfile;
+	float on;
+	float off;
+	float offSoft;
+	float onSoft;
+	float lr;
+	float ee;
 	float** y;
 	std::vector<float*> runweights;
 	const int BIAS = 1;

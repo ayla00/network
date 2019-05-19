@@ -25,11 +25,11 @@ the #s in it AND has the name "neuralweigth.txt"
 
 #include "neural.h"
 
-Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate, int wfile)
+Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float natexp, float lrate, int mepoch, float onvar, float offvar)
 {
 
 
-	Network(pairs, nodes, innode + BIAS, hidnode + BIAS, outnode, natexp, lrate, wfile);
+	//Network(pairs, nodes, innode + BIAS, hidnode + BIAS, outnode, natexp, lrate, wfile);
 
 
 	iopairs = pairs;
@@ -103,8 +103,8 @@ Neural::~Neural()
 	delete[] in;
 	in = nullptr;
 
-	delete netptr;
-	netptr = nullptr;
+	//delete netptr;
+	//netptr = nullptr;
 }
 
 
@@ -155,6 +155,23 @@ void Neural::setWeights()
 {
 	rWeights(inNodes, hidNodes, in);
 	rWeights(hidNodes, outNodes, hid);
+}
+
+
+float Neural::randomWeights()
+{
+
+	float randomnum;
+
+	do {
+		do
+		{
+			randomnum = (static_cast<float> (-10 + rand() % 30)) / (static_cast<float> (1 + rand() % 15));
+		} while (randomnum <= -1.0);
+	} while (randomnum >= 1.0);
+
+
+	return randomnum;
 }
 
 
@@ -425,7 +442,6 @@ void Neural::calculateError(float** outputData)
 
 void Neural::error(int nodes, Neuron * layer, float** outputData)
 {
-
 
 	float sumError = 0;
 
