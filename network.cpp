@@ -4,12 +4,11 @@ Assignment: fINAL pROJECT
 
 NOTES:
 //reading any file assumes the format is the same for all incoming files (including variable names)
-//for some reason there is one more space in the file that this code cannot deal with
-//the weights are from current layer to next layer
+// the weights are from current layer to next layer
 // it is assumed that the hidden layer has the same or more layers than input layer
 // it is assummed a bias will always be included
-// the output is provided  for view in output file, the function returns a vector so it can be used/displayed differently if necessary
-getWeight(), storedWeights, and getsetWeights():
+// the output and weights are provided  for view in separate output files, the function returns a vector
+// so it can be used/displayed differently if necessary getWeight(), storedWeights, and getsetWeights():
 	//weight file has the following info (only data, no strings)
 	//arranged in the following order:
 	//the savedWeights pointer has the from layer, node at from layer, node at to layer, and weight
@@ -227,6 +226,8 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 
 	std::string inputdata = "";
 	std::string datachunk = "";
+
+	float value;
 	int columncount = 0;
 	int rowcount = 0;
 	int row = 0;
@@ -244,7 +245,7 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 			else
 				rowcount = rowcount;
 		}
-
+		std::cout << "rowcount " << rowcount << std::endl;
 		wFile.clear(); //needed so file can be read again
 		wFile.seekg(0); //returns file position to 0 to be read again
 		inputdata = "";
@@ -252,7 +253,7 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 
 		for (int p = 0; p < rowcount; p++)
 		{
-			*(storedWeights + p) = new float[WPARAMETER];
+			storedWeights[p] = new float[WPARAMETER];
 
 		}
 
@@ -271,6 +272,7 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 					{
 
 						datachunk += inputdata[i];
+						std::cout << "datachunk " << datachunk << std::endl;
 						i++;
 					}
 					else if ((i + 1) == LINESIZE)
@@ -278,17 +280,18 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 
 						datachunk += inputdata[i];
 
-						std::string dummystring = " 2.5";
-						std::string trickextract = inputdata + dummystring;
-						std::string::size_type sz;     // alias of size_t
 
-						float firstinput = std::stof(trickextract, &sz);
-						float dummyfloat = std::stof(trickextract.substr(sz));
+						//converts string to char[], which needs to be done first befor using atof
+						value = std::atof(datachunk.c_str());
 						std::cout << "r " << row << "col " << column << std::endl;
-						(*(*(storedWeights + row) + column)) = firstinput;
-						std::cout << "weight value " << firstinput << " stored value " << (*(*(storedWeights + row) + column)) << std::endl;
+
+						(*(*(storedWeights + row) + column)) = value;
+
+
+						std::cout << "weight value e/i " << value << " stored value " << (*(*(storedWeights + row) + column)) << std::endl;
 						row++;
 						column = 0;
+						datachunk = "";
 						i++;
 					}
 					else
@@ -298,17 +301,15 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 						//something to make sure there is no more white space should go here, but
 						//is ommitted for now, comma delimited conditions also should go somewhere
 
+						value = std::atof(datachunk.c_str());
 
-						std::string dummystring = " 2.5";
-						std::string trickextract = datachunk + dummystring;
-						std::string::size_type sz;     // alias of size_t
-						std::cout << (storedWeights + rowcount) << std::endl;
-						float firstinput = std::stof(trickextract, &sz);
-						float dummyfloat = std::stof(trickextract.substr(sz));
 
 						//it arranges the info for one weight in a row (each row is the info for one weight, each colum is a parameter)
-						(*(*(storedWeights + row) + column)) = firstinput;
-						std::cout << "weight value " << firstinput << " stored value " << (*(*(storedWeights + row) + column)) << std::endl;
+						(*(*(storedWeights + row) + column)) = value;
+						datachunk = "";
+
+						std::cout << "r " << row << "col " << column << std::endl;
+						std::cout << "weight value e " << value << " stored value " << storedWeights[row][column] << std::endl;
 						column++;
 
 					}

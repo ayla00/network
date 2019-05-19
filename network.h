@@ -4,12 +4,11 @@ Assignment: fINAL pROJECT
 
 NOTES:
 //reading any file assumes the format is the same for all incoming files (including variable names)
-//for some reason there is one more space in the file that this code cannot deal with
-//the weights are from current layer to next layer
+// the weights are from current layer to next layer
 // it is assumed that the hidden layer has the same or more layers than input layer
 // it is assummed a bias will always be included
-// the output is provided  for view in output file, the function returns a vector so it can be used/displayed differently if necessary
-getWeight(), storedWeights, and getsetWeights():
+// the output and weights are provided  for view in separate output files, the function returns a vector
+// so it can be used/displayed differently if necessary getWeight(), storedWeights, and getsetWeights():
 	//weight file has the following info (only data, no strings)
 	//arranged in the following order:
 	//the savedWeights pointer has the from layer, node at from layer, node at to layer, and weight
@@ -26,13 +25,12 @@ pointer is declared as derived class, it won't grab the function from derived cl
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <stdio.h>
-#include <time.h>
 #include <math.h>
 #include <vector>
 #include <stdlib.h> //library where rand is located
 #include <stdio.h>
 #include <time.h>
+#include <cstring>
 
 class Network
 {
