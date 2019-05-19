@@ -625,12 +625,12 @@ float** Neural::saveOuput()
 
 	//if there are more than one outNode would I have to produce just one y or as many as output nodes?
 	//in that case the y would be a summation of the columns
-	for (int column = 0; column < outNodes; column++)
+	for (int columna = 0; columna < outNodes; columna++)
 	{
 		for (int r = 0; r < row; r++)
 		{
 
-			(*(*(y + r) + column)) = sigmoid[r][column];
+			(*(*(y + r) + columna)) = sigmoid[r][columna];
 		}
 
 	}
