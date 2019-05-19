@@ -101,7 +101,7 @@ void Network::testnetwork()
 
 	//get out put
 	neural.calculateError(outputData);
-	writeWeight(neural.saveWeights());
+	//writeWeight(neural.saveWeights());
 	writeOutput(neural.saveOuput());
 
 }
@@ -230,8 +230,8 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 	float value;
 	int columncount = 0;
 	int rowcount = 0;
-	int row = 0;
-	int column = 0;
+	int wrow = 0;
+	int wcolumn = 0;
 
 	wFile.open(weightData);
 
@@ -249,16 +249,28 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 		wFile.clear(); //needed so file can be read again
 		wFile.seekg(0); //returns file position to 0 to be read again
 		inputdata = "";
+
 		storedWeights = new float* [rowcount];
 
 		for (int p = 0; p < rowcount; p++)
 		{
 			storedWeights[p] = new float[WPARAMETER];
-
 		}
+
 
 		while (getline(wFile, inputdata) && !wFile.eof())
 		{
+			/*if ((wrow == 0) && (wcolumn == 0))
+			{
+				storedWeights = new float* [rowcount];
+			}
+			else if ((wrow != 0) && (wcolumn == 0))
+			{
+				storedWeights[wrow] = new float[WPARAMETER];
+			}*/
+
+
+
 
 			int i = 0;
 			const int LINESIZE = inputdata.size();
@@ -283,14 +295,14 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 
 						//converts string to char[], which needs to be done first befor using atof
 						value = std::atof(datachunk.c_str());
-						std::cout << "r " << row << "col " << column << std::endl;
+						std::cout << "r " << wrow << "col " << wcolumn << std::endl;
 
-						(*(*(storedWeights + row) + column)) = value;
+						(*(*(storedWeights + wrow) + wcolumn)) = value;
 
 
-						std::cout << "weight value e/i " << value << " stored value " << (*(*(storedWeights + row) + column)) << std::endl;
-						row++;
-						column = 0;
+						std::cout << "weight value e/i " << value << " stored value " << (*(*(storedWeights + wrow) + wcolumn)) << std::endl;
+						wrow++;
+						wcolumn = 0;
 						datachunk = "";
 						i++;
 					}
@@ -305,19 +317,19 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 
 
 						//it arranges the info for one weight in a row (each row is the info for one weight, each colum is a parameter)
-						(*(*(storedWeights + row) + column)) = value;
+						(*(*(storedWeights + wrow) + wcolumn)) = value;
 						datachunk = "";
 
-						std::cout << "r " << row << "col " << column << std::endl;
-						std::cout << "weight value e " << value << " stored value " << storedWeights[row][column] << std::endl;
-						column++;
+						std::cout << "r " << wrow << "col " << wcolumn << std::endl;
+						std::cout << "weight value e " << value << " stored value " << storedWeights[wrow][wcolumn] << std::endl;
+						wcolumn++;
 
 					}
 				}
 
 			}
 			else
-				row = row;
+				wrow = wrow;
 		}
 
 

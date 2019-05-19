@@ -3,6 +3,8 @@ Name: Astrid Lozano
 Assignment: fINAL pROJECT
 
 NOTES:
+* the sample output and weights are produced by running the test() function and will be found in the same file where code
+is stored
 //reading any file assumes the format is the same for all incoming files (including variable names)
 //for some reason there is one more space in the file that this code cannot deal with
 //the weights are from current layer to next layer
@@ -65,9 +67,10 @@ protected:
 	void pushWeights(Neuron* from, Neuron* to);
 	//add a functionto empty these vectors before start of next train epoch
 	std::vector<float> adjweightStack;
+	//to be used in getsetWeights()
+	const int INLAYER = 1;
+	const int HIDLAYER = 2;
 
-	//float pop();
-	int stackindex = -1;
 	Network* netptr;
 	float** y;
 	std::vector<float*> runweights;
