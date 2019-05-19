@@ -3,6 +3,8 @@ Name: Astrid Lozano
 Assignment: fINAL pROJECT
 
 NOTES:
+* the sample output and weights are produced by running the test() function and will be found in the same file where code
+is stored
 //reading any file assumes the format is the same for all incoming files (including variable names)
 //for some reason there is one more space in the file that this code cannot deal with
 //the weights are from current layer to next layer
@@ -15,6 +17,9 @@ getWeight(), storedWeights, and getsetWeights():
 	//the savedWeights pointer has the from layer, node at from layer, node at to layer, and weight
 	//however, it will be assumed that correct info for number of nodes is given and matches the info
 	//in the file, so this simplifies its extraction, however, the whole info should be extracted just to verify
+//the network can extract info froma file that includes four parameters in this order: layer weight is
+from (1 = in, 2 = hidden), node the weight is from, node the weight is goiong to, and the weight AND has no other stuff but
+the #s in it AND has the name "neuralweigth.txt"
 */
 #include "main.h"
 
@@ -154,43 +159,38 @@ bool extraccion(int index, int row, int col, std::string extracto, Network * net
 
 	while (i < LINESIZE)
 	{
-
-		if (isdigit(extracto[i]) && ((i + 1) < LINESIZE))
+		//is digit takes care of space, comma, dot, and minus, and char
+		//condiions to allow for dots and minus signs
+		if ((extracto[i] != ',') && isdigit(extracto[i]) && ((i + 1) < LINESIZE)) //(extracto[i] == '.') && (extracto[i] == '-') && 
 		{
 			inputdata += extracto[i];
 			i++;
+			returnvalue = false;
 		}
 		else if ((i + 1) == LINESIZE)
 		{
 
 			inputdata += extracto[i];
 
-			std::string dummystring = " 2.5";
-			std::string trickextract = inputdata + dummystring;
-			std::string::size_type sz;     // alias of size_t
+			float floatinput = atof(inputdata.c_str());
 
-			float firstinput = std::stof(trickextract, &sz);
-			float dummyfloat = std::stof(trickextract.substr(sz));
 			i++;
-			assingData(row, col, firstinput, neta);
+			assingData(row, col, floatinput, neta);
 			col++;
+			returnvalue = true;
 
 		}
 		else
 		{
 			i++;
 
-			std::string dummystring = " 2.5";
-			std::string trickextract = inputdata + dummystring;
-			std::string::size_type sz;     // alias of size_t
+			float floatinput = atof(inputdata.c_str());
 
-
-			float firstinput = std::stof(trickextract, &sz);
-			float dummyfloat = std::stof(trickextract.substr(sz));
 
 			inputdata = "";
-			assingData(row, col, firstinput, neta);
+			assingData(row, col, floatinput, neta);
 			col++;
+			returnvalue = true;
 		}
 	}
 
@@ -209,7 +209,7 @@ bool getConfig(std::string extract, Network * neta)
 	for (int i = 0; i < LINESIZE; i++)
 	{
 		//takes care of constant name
-		if (extract[i] != ' ') //maybe add != '\n'
+		if ((extract[i] != ' ') && (extract[i] != ',')) //maybe add != '\n'
 		{
 			inputconstant += extract[i];
 		}
@@ -220,7 +220,7 @@ bool getConfig(std::string extract, Network * neta)
 				i = LINESIZE; //to prevent code going through loop again
 			//checks for alphabet characters in number input
 			//assigns number value to constant
-				/*if ((extract[i] >= -1) && (extract[i] <= 255))
+				/*if ((extract[i] >= -1) && (extract[i] <= 255) && (extract[i] != '.') && (extract[i] != '-'))
 				{
 					alphacheck = extract[i];
 					if (!isalpha(alphacheck))
@@ -230,23 +230,24 @@ bool getConfig(std::string extract, Network * neta)
 				}
 				else
 				{*/
-				cfgdata += extract[j];
 
+				cfgdata += extract[j];
 				//}
 			}
 
 		}
 	}
 
-	std::string dummystring = " 2.5";
-	std::string trickextract = cfgdata + dummystring;
-	std::string::size_type sz;     // alias of size_t
+	float floatdata = atof(cfgdata.c_str());
+	//std::string dummystring = " 2.5";
+	//std::string trickextract = cfgdata + dummystring;
+	//std::string::size_type sz;     // alias of size_t
 
 	//VALUE OF EE IS GETTING TRUNCATED (AT LEAST ON DISPLAY), FIX THIS LATER
-	float actualdata = std::stof(trickextract, &sz);
-	float dummyfloat = std::stof(trickextract.substr(sz));
+	//float actualdata = std::stof(trickextract, &sz);
+	//float dummyfloat = std::stof(trickextract.substr(sz));
 
-	if (assignConstant(inputconstant, actualdata, neta))
+	if (assignConstant(inputconstant, floatdata, neta))
 	{
 		//neta->displayVariables();
 		return true;

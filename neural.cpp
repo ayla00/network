@@ -16,6 +16,9 @@ getWeight(), storedWeights, and getsetWeights():
 	//the savedWeights pointer has the from layer, node at from layer, node at to layer, and weight
 	//however, it will be assumed that correct info for number of nodes is given and matches the info
 	//in the file, so this simplifies its extraction, however, the whole info should be extracted just to verify
+//the network can extract info froma file that includes four parameters in this order: layer weight is
+from(1 = in, 2 = hidden), node the weight is from, node the weight is goiong to, and the weight AND has no other stuff but
+the #s in it AND has the name "neuralweigth.txt"
 */
 
 
@@ -37,6 +40,8 @@ Neural::Neural(int pairs, int nodes, int innode, int hidnode, int outnode, float
 	outNodes = outnode;
 	ee = natexp;
 	lr = lrate;
+
+	sqError = 0;
 
 	const int INCOLUMNS = inNodes;
 	const int HIDCOLUMNS = hidNodes;
@@ -421,6 +426,8 @@ void Neural::calculateError(float** outputData)
 void Neural::error(int nodes, Neuron * layer, float** outputData)
 {
 
+	float sumError = 0;
+
 	for (int n = 0; n < nodes; n++)
 	{
 		for (int r = 0; r < 4; r++)
@@ -435,10 +442,14 @@ void Neural::error(int nodes, Neuron * layer, float** outputData)
 		for (int r = 0; r < row; r++)
 		{
 			(layer + n)->error[r] = ((layer + n)->x[r]) * (1.0 - ((layer + n)->x[r])) * (((*(*(outputData + r) + n))) - ((layer + n)->x[r]));
+			sumError = sumError + ((layer + n)->error[r] - (*(*(outputData + r) + n)));
+
 		}
 
 	}
 
+	sqError = pow(sumError, 2.0);
+	std::cout << "square error\t" << sqError << std::endl;
 
 }
 
@@ -586,6 +597,7 @@ void Neural::displayVector()
 std::vector<float*> Neural::saveWeights()
 {
 	//how to make this dynamic?
+	//add condition so weights can be written during run and test
 	pushWeights(in, hid);
 	pushWeights(hid, out);
 	return runweights;

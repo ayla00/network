@@ -14,6 +14,9 @@ NOTES:
 	//the savedWeights pointer has the from layer, node at from layer, node at to layer, and weight
 	//however, it will be assumed that correct info for number of nodes is given and matches the info
 	//in the file, so this simplifies its extraction, however, the whole info should be extracted just to verify
+//the network can extract info froma file that includes four parameters in this order: layer weight is
+from (1 = in, 2 = hidden), node the weight is from, node the weight is goiong to, and the weight AND has no
+other stuff butthe #s in it AND has the name "neuralweigth.txt"
 */
 
 #include "network.h"
@@ -22,6 +25,7 @@ NOTES:
 Network::Network()
 {
 	iopairs = 0;
+
 
 }
 
@@ -42,6 +46,7 @@ Network::Network(int pairs, int nodes, int innode, int hidnode, int outnode, flo
 Network::~Network()
 {
 	//std::cout << "you are out of network\n";
+
 }
 
 void Network::train()
@@ -100,9 +105,13 @@ void Network::testnetwork()
 	neural.outputLayer();
 
 	//get out put
+
+
 	neural.calculateError(outputData);
 	//writeWeight(neural.saveWeights());
 	writeOutput(neural.saveOuput());
+
+	std::cout << "see you later alligator\n";
 
 }
 
@@ -260,16 +269,6 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 
 		while (getline(wFile, inputdata) && !wFile.eof())
 		{
-			/*if ((wrow == 0) && (wcolumn == 0))
-			{
-				storedWeights = new float* [rowcount];
-			}
-			else if ((wrow != 0) && (wcolumn == 0))
-			{
-				storedWeights[wrow] = new float[WPARAMETER];
-			}*/
-
-
 
 
 			int i = 0;
@@ -280,7 +279,7 @@ float** Network::getWeights(std::ifstream & wFile, std::string weightData)
 				while (i < LINESIZE)
 				{
 					std::cout << inputdata << std::endl;
-					if ((inputdata[i] != ' ') && ((i + 1) < LINESIZE))
+					if ((inputdata[i] != ' ') && ((i + 1) < LINESIZE) && (inputdata[i] != ','))
 					{
 
 						datachunk += inputdata[i];

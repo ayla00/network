@@ -17,6 +17,9 @@ NOTES:
 	Notes: cannot create a pointer to derived class here, compiler gives memory
 access violation when it tries to run; if a pointer is created in cpp file, and the
 pointer is declared as derived class, it won't grab the function from derived class
+//the network can extract info froma file that includes four parameters in this order: layer weight is
+from (1 = in, 2 = hidden), node the weight is from, node the weight is goiong to, and the weight AND has no other stuff but
+the #s in it AND has the name "neuralweigth.txt"
 */
 
 #ifndef NETWORK_H
@@ -75,6 +78,7 @@ protected:
 	float onSoft;
 	float lr;
 	float ee;
+	float netsqError;
 	float** inputData;
 	float** outputData;
 	void writeWeight(std::vector<float*> neuralWeights);
