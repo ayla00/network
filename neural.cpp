@@ -206,10 +206,10 @@ void Neural::getsetWeights(float** weights)
 
 	for (int n = 0; n < nodes; n++)
 	{
-
-		for (int fr = 0; fr < 12; fr++)
+		//the index limit expression give appropriate # of elements
+		for (int fr = 0; fr < ((inNodes * hidNodes) + (hidNodes * outNodes)); fr++)
 		{
-			for (int fc = 0; fc < 4; fc++)
+			for (int fc = 0; fc < WPARAMETER; fc++)
 			{
 				//this is harcoded, the structure of weights file has to be like this
 				//first column indicates layer the weight is from
@@ -233,7 +233,7 @@ void Neural::getsetWeights(float** weights)
 				{
 					if (weights[fr][1] == n)
 					{
-						for (int r = 0; r < hidNodes; r++)
+						for (int r = 0; r < outNodes; r++)
 						{
 							if (weights[fr][2] == r)
 							{
