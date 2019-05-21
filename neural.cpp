@@ -610,6 +610,11 @@ void Neural::displayVector()
 	//estrato = nullptr;
 }
 
+float Neural::getMSError()
+{
+	return meansqError;
+}
+
 std::vector<float*> Neural::saveWeights()
 {
 	//how to make this dynamic?

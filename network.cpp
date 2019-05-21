@@ -82,6 +82,7 @@ void Network::train()
 
 	writeWeight(neural.saveWeights());
 	writeOutput(neural.saveOuput());
+	writeConfig(neural.getMSError());
 
 
 }
@@ -381,6 +382,37 @@ void Network::setInputColumn(int num)
 {
 	column = num;
 }
+
+void Network::writeConfig(float mse)
+{
+
+	float value;
+	std::ofstream outputFile("neuralconfig.txt");
+
+	if (outputFile.is_open())
+	{
+
+		outputFile << "ON " << on << std::endl;
+		outputFile << "OFF " << off << std::endl;
+		outputFile << "OFFSOFT " << offSoft << std::endl;
+		outputFile << "ONSOFT " << onSoft << std::endl;
+		outputFile << "I_UNITS " << inNodes << std::endl;
+		outputFile << "H_UNITS " << hidNodes << std::endl;
+		outputFile << "O_UNITS " << outNodes << std::endl;
+		outputFile << "MAX_EPOCH " << maxEpoch << std::endl;
+		outputFile << "LR " << lr << std::endl;
+		outputFile << "EE " << ee << std::endl;
+		outputFile << "WEIGHTFILE " << weightfile << std::endl;
+		//the one calculated in neural class is given
+		outputFile << "MEANSQERROR " << mse << std::endl;
+
+	}
+	else
+		throw OUTPUTFILE;
+
+	outputFile.close();
+}
+
 
 void Network::loadLayers()
 {

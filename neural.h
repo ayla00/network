@@ -62,6 +62,7 @@ public:
 	float** saveOuput();
 	void getsetWeights(float** weights);
 	void displayVector();
+	float getMSError();
 
 protected:
 	void allocatePointers();
@@ -95,6 +96,7 @@ protected:
 	float lr;
 	float ee;
 	float** y;
+	int* hiddenArray;
 	std::vector<float*> runweights;
 	const int BIAS = 1;
 	const float BIASVALUE = 1.0;
@@ -113,12 +115,10 @@ protected:
 	const int WPARAMETER = 4;
 	//different purpose than sumtotal, so want to keep them separate
 	float* sum;
-	float sqError;
+	float meansqError;
 
 
 };
-
-
 
 #endif  //NEURAL_H
 

@@ -45,9 +45,6 @@ public:
 	void train();
 	void testnetwork();
 	void run();
-	//void weights();
-	//void loadweights();
-	float randomWeights();
 	void loadInput(int inrow, int incoloumn, float value);
 	void loadOutput(int inrow, int incolumn, float value);
 	bool setConfig(std::string constname, float value);
@@ -58,11 +55,9 @@ public:
 	void setInputRow(int num);
 	int getInputRow();
 	void setInputColumn(int num);
-	void loadLayers();
-	Network* net;
+	//void loadLayers();
 
-
-protected:
+private:
 	//void feedForward();
 	//void backPropagate();
 	int iopairs;
@@ -84,6 +79,7 @@ protected:
 	float** outputData;
 	void writeWeight(std::vector<float*> neuralWeights);
 	void writeOutput(float** neuralOutput);
+	void writeConfig(float mse);
 	const int OUTPUTFILE = -1111111;
 	const int FILENOTOPEN = -2222222;
 	const int EMPTYFILE = -3333333;
