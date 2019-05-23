@@ -646,44 +646,68 @@ float** Neural::saveOuput()
 
 
 
-
-
-/*
-float Neural::Normalize(float *value)
+void Neural::Normalize()
 {
-	return ((*value - findMin()) / (findMax() - findMin()));
+	if (findMin() != findMax())
+	{
+		float min = findMin();
+		float max = findMax();
+
+		for (int n = 0; n < inNodes; n++)
+		{
+			for (int r = 0; r < row; r++)
+			{
+
+				(in + n)->x[r] = ((((in + n)->x[r]) - min) / (max - min));
+
+			}
+
+		}
+	}
+
 }
+
 
 float Neural::findMin()
 {
-	float min = x[0];
+	float min = (in + 0)->x[0];
 
-	for (int j = 1; j < x.size; j++)
+	for (int n = 0; n < inNodes; n++)
 	{
-		if (min < x[j])
-			min = min;
-		else
-			min = x[j];
+		//operation begins at r=1, because r=0 is the starting min
+		for (int r = 1; r < row; r++)
+		{
+
+			if (min < ((in + n)->x[r]))
+				min = min;
+			else
+				min = (in + n)->x[r];
+		}
+
 	}
 
 	return min;
 }
 
+
 float Neural::findMax()
 {
-	float max = x[0];
+	float max = (in + 0)->x[0];
 
-	for (int j = 1; j < x.size; j++)
+	for (int n = 0; n < inNodes; n++)
 	{
-		if (max > x[j])
-			max = max;
-		else
-			max = x[j];
+		//operation begins at r=1, because r=0 is the starting min
+		for (int r = 1; r < row; r++)
+		{
+
+			if (max < ((in + n)->x[r]))
+				max = max;
+			else
+				max = (in + n)->x[r];
+		}
+
 	}
 
 	return max;
 }
 
-
-
-*/
